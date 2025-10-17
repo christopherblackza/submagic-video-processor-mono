@@ -1,0 +1,452 @@
+.batch-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 3rem;
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0;
+    font-family: monospace;
+    background: #f8f9fa;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: inline-block;
+  }
+}
+
+.loading-state {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #667eea;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: #666;
+  }
+}
+
+.error-state {
+  text-align: center;
+  padding: 4rem 2rem;
+
+  .error-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  h2 {
+    color: #dc3545;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 2rem;
+  }
+
+  button {
+    margin: 0 0.5rem;
+  }
+}
+
+.batch-content {
+  .progress-section {
+    background: #f8f9fa;
+    padding: 2rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid #e9ecef;
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 20px;
+      background: #e9ecef;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 1rem;
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        transition: width 0.5s ease;
+        border-radius: 10px;
+      }
+    }
+
+    .progress-text {
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+  }
+
+  .batch-info {
+    background: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 1px solid #e9ecef;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+
+    .info-item {
+      font-size: 0.95rem;
+      color: #fff;
+
+      strong {
+        color: #667eea;
+      }
+    }
+  }
+
+  .projects-section {
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #667eea;
+    }
+
+    .projects-list {
+      display: grid;
+      gap: 1.5rem;
+
+      .project-item {
+        background: white;
+        border: 2px solid #e9ecef;
+        border-radius: 8px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        &.status-completed {
+          border-color: #28a745;
+          background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+        }
+
+        &.status-processing {
+          border-color: #ffc107;
+          background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);
+        }
+
+        &.status-failed,
+        &.status-error {
+          border-color: #dc3545;
+          background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+        }
+
+        &.status-pending {
+          border-color: #6c757d;
+          background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .project-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+
+          .project-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+
+            .status-icon {
+              font-size: 1.5rem;
+              font-weight: bold;
+            }
+
+            h3 {
+              font-size: 1.2rem;
+              font-weight: 600;
+              color: #fff;
+              margin: 0;
+            }
+          }
+
+          .status-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+
+            &.status-completed {
+              background: #28a745;
+              color: white;
+            }
+
+            &.status-processing {
+              background: #ffc107;
+              color: #212529;
+            }
+
+            &.status-failed,
+            &.status-error {
+              background: #dc3545;
+              color: white;
+            }
+
+            &.status-pending {
+              background: #6c757d;
+              color: white;
+            }
+          }
+        }
+
+        .project-details {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 0.75rem;
+          margin-bottom: 1rem;
+
+          .detail-item {
+            font-size: 0.9rem;
+            color: #555;
+
+            strong {
+              color: #fff;
+            }
+          }
+        }
+
+        .project-actions {
+          display: flex;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+
+          button {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+
+            &.view-btn {
+              background: #667eea;
+              color: white;
+
+              &:hover {
+                background: #5a6fd8;
+                transform: translateY(-1px);
+              }
+            }
+
+            &.processing-btn {
+              background: #ffc107;
+              color: #212529;
+              cursor: not-allowed;
+            }
+
+            &.retry-btn {
+              background: #dc3545;
+              color: white;
+
+              &:hover {
+                background: #c82333;
+                transform: translateY(-1px);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .actions-section {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin: 3rem 0 2rem;
+    flex-wrap: wrap;
+
+    button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &.refresh-btn {
+        background: #17a2b8;
+        color: white;
+
+        &:hover {
+          background: #138496;
+          transform: translateY(-1px);
+        }
+      }
+
+      &.home-btn {
+        background: #28a745;
+        color: white;
+
+        &:hover {
+          background: #218838;
+          transform: translateY(-1px);
+        }
+      }
+    }
+  }
+
+  .auto-refresh-notice {
+    text-align: center;
+    background: #e7f3ff;
+    border: 1px solid #b3d9ff;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 2rem;
+
+    p {
+      margin: 0;
+      color: #0056b3;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .batch-container {
+    padding: 1rem;
+    margin: 0;
+    border-radius: 0;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .batch-content {
+    .batch-info {
+      grid-template-columns: 1fr;
+    }
+
+    .projects-section .projects-list .project-item {
+      .project-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+      }
+
+      .project-details {
+        grid-template-columns: 1fr;
+      }
+
+      .project-actions {
+        justify-content: center;
+      }
+    }
+
+    .actions-section {
+      flex-direction: column;
+      align-items: center;
+
+      button {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  }
+}
+
+// Dark mode support
+@media (prefers-color-scheme: dark) {
+  .batch-container {
+    background: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .batch-content {
+    .progress-section,
+    .batch-info {
+      background: #2d2d2d;
+      border-color: #404040;
+    }
+
+    .projects-section .projects-list .project-item {
+      background: #333;
+      border-color: #404040;
+
+      &.status-completed {
+        background: linear-gradient(135deg, #1e4d2b 0%, #2d5a3d 100%);
+      }
+
+      &.status-processing {
+        background: linear-gradient(135deg, #4d3d1e 0%, #5a4a2d 100%);
+      }
+
+      &.status-failed,
+      &.status-error {
+        background: linear-gradient(135deg, #4d1e1e 0%, #5a2d2d 100%);
+      }
+
+      &.status-pending {
+        background: linear-gradient(135deg, #2d2d2d 0%, #404040 100%);
+      }
+    }
+  }
+
+  .auto-refresh-notice {
+    background: #1e3a5f;
+    border-color: #2d5a87;
+
+    p {
+      color: #87ceeb;
+    }
+  }
+}

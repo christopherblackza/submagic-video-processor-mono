@@ -1,0 +1,166 @@
+<div class="completion-container">
+  <div class="header">
+    <h1>Project Results</h1>
+    <p *ngIf="completionData">{{ completionData.project.title }}</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading project details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <h2>Error</h2>
+    <p>{{ error }}</p>
+    <div class="error-actions">
+      <button class="retry-btn" (click)="refreshData()">Try Again</button>
+      <button class="back-btn" (click)="goBack()">Go Back</button>
+      <button class="home-btn" (click)="goHome()">Go Home</button>
+    </div>
+  </div>
+
+  <!-- Still Processing State -->
+  <div *ngIf="completionData?.stillProcessing && !loading" class="processing-state">
+    <div class="processing-icon">⟳</div>
+    <h2>Still Processing</h2>
+    <p>Your video is still being processed. Please check back in a few minutes.</p>
+    <div class="processing-actions">
+      <button class="refresh-btn" (click)="refreshData()">Refresh</button>
+      <button class="back-btn" (click)="goBack()">Go Back</button>
+    </div>
+  </div>
+
+  <!-- Completion Content -->
+  <div *ngIf="completionData && !completionData.stillProcessing && !loading" class="completion-content">
+    <!-- Project Info -->
+    <div class="project-info">
+      <div class="info-grid">
+        <div class="info-item">
+          <strong>Status:</strong>
+          <span class="status-badge" [class]="'status-' + completionData.project.status">
+            {{ completionData.project.status | titlecase }}
+          </span>
+        </div>
+        <div class="info-item">
+          <strong>Language:</strong>
+          <span>{{ completionData.project.language }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Template:</strong>
+          <span>{{ completionData.project.templateName }}</span>
+        </div>
+        <div class="info-item">
+          <strong>Created:</strong>
+          <span>{{ completionData.project.createdAt | date:'medium' }}</span>
+        </div>
+        <div class="info-item" *ngIf="completionData.project.completedAt">
+          <strong>Completed:</strong>
+          <span>{{ completionData.project.completedAt | date:'medium' }}</span>
+        </div>
+        <div class="info-item" *ngIf="completionData.duration">
+          <strong>Duration:</strong>
+          <span>{{ formatDuration(completionData.duration) }}</span>
+        </div>
+        <div class="info-item" *ngIf="completionData.fileSize">
+          <strong>File Size:</strong>
+          <span>{{ formatFileSize(completionData.fileSize) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Video Preview -->
+    <div class="video-section" *ngIf="completionData.previewUrl || completionData.thumbnailUrl">
+      <h2>Preview</h2>
+      <div class="video-container">
+        <video 
+          *ngIf="completionData.previewUrl" 
+          [src]="completionData.previewUrl" 
+          controls 
+          class="video-player"
+          preload="metadata"
+        >
+          Your browser does not support the video tag.
+        </video>
+        <img 
+          *ngIf="!completionData.previewUrl && completionData.thumbnailUrl" 
+          [src]="completionData.thumbnailUrl" 
+          alt="Video thumbnail"
+          class="video-thumbnail"
+        >
+      </div>
+    </div>
+
+    <!-- Download Section -->
+    <div class="download-section" *ngIf="completionData.downloadUrl">
+      <h2>Download</h2>
+      <div class="download-container">
+        <div class="download-info">
+          <p>Your processed video is ready for download!</p>
+          <div class="download-details" *ngIf="completionData.fileSize">
+            <span>File size: {{ formatFileSize(completionData.fileSize) }}</span>
+          </div>
+        </div>
+        <button class="download-btn" (click)="downloadVideo()">
+          📥 Download Video
+        </button>
+      </div>
+    </div>
+
+    <!-- Project Details -->
+    <div class="details-section">
+      <h2>Project Details</h2>
+      <div class="details-grid">
+        <div class="detail-item">
+          <strong>Project ID:</strong>
+          <span class="monospace">{{ completionData.project.id }}</span>
+          <button class="copy-btn" (click)="copyToClipboard(completionData.project.id)" title="Copy to clipboard">
+            📋
+          </button>
+        </div>
+        <div class="detail-item" *ngIf="completionData.project.originalTitle">
+          <strong>Original Title:</strong>
+          <span>{{ completionData.project.originalTitle }}</span>
+        </div>
+        <div class="detail-item" *ngIf="completionData.project.magicZooms">
+          <strong>Magic Zooms:</strong>
+          <span class="feature-enabled">✓ Enabled</span>
+        </div>
+        <div class="detail-item" *ngIf="completionData.project.magicBrolls">
+          <strong>Magic B-rolls:</strong>
+          <span class="feature-enabled">✓ Enabled ({{ completionData.project.magicBrollsPercentage }}%)</span>
+        </div>
+        <div class="detail-item" *ngIf="completionData.project.dictionary">
+          <strong>Custom Dictionary:</strong>
+          <span>{{ completionData.project.dictionary }}</span>
+        </div>
+        <div class="detail-item" *ngIf="completionData.project.webhookUrl">
+          <strong>Webhook URL:</strong>
+          <span class="monospace">{{ completionData.project.webhookUrl }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Details -->
+    <div class="error-details-section" *ngIf="completionData.project.status === 'failed' || completionData.project.status === 'error'">
+      <h2>Error Details</h2>
+      <div class="error-details">
+        <p *ngIf="completionData.project.error">{{ completionData.project.error }}</p>
+        <p *ngIf="!completionData.project.error">An unknown error occurred during processing.</p>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section">
+      <button class="back-btn" (click)="goBack()">
+        <span *ngIf="fromBatch">← Back to Batch</span>
+        <span *ngIf="!fromBatch">← Go Back</span>
+      </button>
+      <button class="home-btn" (click)="goHome()">
+        🏠 Process More Videos
+      </button>
+    </div>
+  </div>
+</div>

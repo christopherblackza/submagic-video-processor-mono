@@ -1,0 +1,197 @@
+<div class="upload-container">
+  <div class="header">
+    <h1>Submagic Video Processor</h1>
+    <p>Upload your videos and let AI create amazing content</p>
+  </div>
+
+  <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="upload-form">
+    <!-- Global Settings -->
+    <div class="settings-section">
+
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="language">Language</label>
+          <select id="language" formControlName="language" class="form-control">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+            <option value="pt">Portuguese</option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('language')">
+            {{ getFieldError('language') }}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="templateName">Template</label>
+          <select id="templateName" formControlName="templateName" class="form-control">
+            <option value="Hormozi 2">Hormozi 2</option>
+            <option value="MrBeast">MrBeast</option>
+            <option value="Ali Abdaal">Ali Abdaal</option>
+              <option value="Dan">Dan</option>
+            <option value="Nema">Nema</option>
+            <option value="Default">Default</option>
+          </select>
+          <div class="error-message" *ngIf="isFieldInvalid('templateName')">
+            {{ getFieldError('templateName') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="webhookUrl">Webhook URL (Optional)</label>
+          <input 
+            type="url" 
+            id="webhookUrl" 
+            formControlName="webhookUrl" 
+            class="form-control"
+            placeholder="https://your-webhook-url.com/callback"
+          >
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="magicZooms">
+            <span class="checkmark"></span>
+            Enable Magic Zooms
+          </label>
+        </div>
+
+        <div class="checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" formControlName="magicBrolls">
+            <span class="checkmark"></span>
+            Enable Magic B-rolls
+          </label>
+        </div>
+      </div>
+
+      <div class="form-row" *ngIf="uploadForm.get('magicBrolls')?.value">
+        <div class="form-group">
+          <label for="magicBrollsPercentage">Magic B-rolls Percentage</label>
+          <input 
+            type="number" 
+            id="magicBrollsPercentage" 
+            formControlName="magicBrollsPercentage" 
+            class="form-control"
+            min="0" 
+            max="100"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid('magicBrollsPercentage')">
+            {{ getFieldError('magicBrollsPercentage') }}
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="dictionary">Custom Dictionary (Optional)</label>
+          <textarea 
+            id="dictionary" 
+            formControlName="dictionary" 
+            class="form-control"
+            rows="3"
+            placeholder="Enter custom words or phrases, separated by commas"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Videos Section -->
+    <div class="videos-section">
+      <h2>Videos</h2>
+      
+      <div formArrayName="videos" class="videos-list">
+        <div 
+          *ngFor="let video of videosArray.controls; let i = index" 
+          [formGroupName]="i" 
+          class="video-item"
+        >
+          <div class="video-header">
+            <h3>Video {{ i + 1 }}</h3>
+            <button 
+              type="button" 
+              class="remove-btn" 
+              (click)="removeVideo(i)"
+              *ngIf="videosArray.length > 1"
+            >
+              Remove
+            </button>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label [for]="'title-' + i">Video Title</label>
+              <input 
+                type="text" 
+                [id]="'title-' + i"
+                formControlName="title" 
+                class="form-control"
+                placeholder="Enter video title"
+              >
+              <div class="error-message" *ngIf="isFieldInvalid('title', i)">
+                {{ getFieldError('title', i) }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label [for]="'videoUrl-' + i">Video URL (Optional)</label>
+              <input 
+                type="url" 
+                [id]="'videoUrl-' + i"
+                formControlName="videoUrl" 
+                class="form-control"
+                placeholder="https://drive.google.com/... or direct video URL"
+              >
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label [for]="'file-' + i">Or Upload File</label>
+              <input 
+                type="file" 
+                [id]="'file-' + i"
+                accept="video/*"
+                class="form-control file-input"
+                (change)="onFileSelected($event, i)"
+              >
+              <div class="file-info">
+                Supported formats: MP4, MOV, AVI, MKV (Max 500MB)
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="add-video-btn" (click)="addVideo()">
+        + Add Another Video
+      </button>
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message global-error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Submit Button -->
+    <div class="submit-section">
+      <button 
+        type="submit" 
+        class="submit-btn"
+        [disabled]="isSubmitting || uploadForm.invalid"
+      >
+        <span *ngIf="!isSubmitting">Start Processing</span>
+        <span *ngIf="isSubmitting">Processing...</span>
+      </button>
+    </div>
+  </form>
+</div>

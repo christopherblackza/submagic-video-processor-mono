@@ -1,0 +1,126 @@
+<div class="batch-container">
+  <div class="header">
+    <h1>Batch Processing Status</h1>
+    <p *ngIf="batch">Batch ID: {{ batchId }}</p>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading batch information...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <h2>Error</h2>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="refreshBatch()">Try Again</button>
+    <button class="home-btn" (click)="goHome()">Go Home</button>
+  </div>
+
+  <!-- Batch Content -->
+  <div *ngIf="batch && !loading" class="batch-content">
+    <!-- Progress Overview -->
+    <div class="progress-section">
+      <h2>Overall Progress</h2>
+      <div class="progress-bar">
+        <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+      </div>
+      <div class="progress-text">
+        {{ getCompletedCount() }} of {{ getTotalCount() }} videos completed ({{ getProgressPercentage() }}%)
+      </div>
+    </div>
+
+    <!-- Batch Info -->
+    <div class="batch-info">
+      <div class="info-item">
+        <strong>Created:</strong> {{ batch.createdAt | date:'medium' }}
+      </div>
+      <div class="info-item">
+        <strong>Language:</strong> {{ batch.language }}
+      </div>
+      <div class="info-item">
+        <strong>Template:</strong> {{ batch.templateName }}
+      </div>
+      <div class="info-item" *ngIf="batch.magicZooms">
+        <strong>Magic Zooms:</strong> Enabled
+      </div>
+      <div class="info-item" *ngIf="batch.magicBrolls">
+        <strong>Magic B-rolls:</strong> Enabled ({{ batch.magicBrollsPercentage }}%)
+      </div>
+    </div>
+
+    <!-- Projects List -->
+    <div class="projects-section">
+      <h2>Videos</h2>
+      <div class="projects-list">
+        <div 
+          *ngFor="let project of batch.projects" 
+          class="project-item"
+          [class]="getStatusClass(project.status)"
+        >
+          <div class="project-header">
+            <div class="project-title">
+              <span class="status-icon">{{ getStatusIcon(project.status) }}</span>
+              <h3>{{ project.title }}</h3>
+            </div>
+            <div class="project-status">
+              <span class="status-badge" [class]="getStatusClass(project.status)">
+                {{ project.status | titlecase }}
+              </span>
+            </div>
+          </div>
+
+          <div class="project-details">
+            <div class="detail-item">
+              <strong>Created:</strong> {{ project.createdAt | date:'short' }}
+            </div>
+            <div class="detail-item" *ngIf="project.error">
+              <strong>Error:</strong> {{ project.error }}
+            </div>
+          </div>
+
+          <div class="project-actions">
+            <button 
+              *ngIf="project.status === 'completed'" 
+              class="view-btn"
+              (click)="viewProject(project)"
+            >
+              View Results
+            </button>
+            <button 
+              *ngIf="project.status === 'processing'" 
+              class="processing-btn" 
+              disabled
+            >
+              Processing...
+            </button>
+            <button 
+              *ngIf="project.status === 'failed' || project.status === 'error'" 
+              class="retry-btn"
+              (click)="refreshBatch()"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions-section">
+      <button class="refresh-btn" (click)="refreshBatch()">
+        🔄 Refresh Status
+      </button>
+      <button class="home-btn" (click)="goHome()">
+        🏠 Process More Videos
+      </button>
+    </div>
+
+    <!-- Auto-refresh Notice -->
+    <div class="auto-refresh-notice" *ngIf="hasIncompleteProjects()">
+      <p>🔄 This page automatically refreshes every 5 seconds while videos are processing.</p>
+    </div>
+  </div>
+</div>
