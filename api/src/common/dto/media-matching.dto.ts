@@ -10,6 +10,12 @@ export class MediaItemDto {
   @ApiProperty({ description: 'Description of the media content' })
   @IsString()
   description: string;
+
+  @ApiProperty({ description: 'Tags for the media item' })
+  @IsOptional()
+  @IsArray()
+  tags?: string[];
+
 }
 
 export class MediaMatchingRequestDto {
@@ -21,6 +27,7 @@ export class MediaMatchingRequestDto {
     description: 'Array of available media items',
     type: [MediaItemDto]
   })
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MediaItemDto)

@@ -1,0 +1,167 @@
+{
+    "projectId": "251d9007-8ce4-4cc9-9bb7-5556b2221329",
+    "matches": [
+        {
+            "userMediaId": "d734bb2f-1372-4ee2-99be-1db5922fd416",
+            "startTime": 0.88,
+            "endTime": 7.44,
+            "confidence": 0.85,
+            "reason": "The line explicitly calls out \"image conscious gay men\" — this clip of a happy/successful gay man visually represents the target audience and tone for the opening statement.",
+            "matchedText": "So for image conscious gay men fat loss really comes down to just one really simple thing and it's not what you're expecting"
+        },
+        {
+            "userMediaId": "daf5d010-0138-49f0-8c17-e5678b56ff25",
+            "startTime": 7.44,
+            "endTime": 13.36,
+            "confidence": 0.8,
+            "reason": "The speaker rejects supplements/fat burners; a shot of a man organizing supplements and nutrition products directly illustrates the 'not taking a fat burner' point.",
+            "matchedText": "So it's not like calorie counting it's not doing interval workouts it's definitely not taking a fat burner"
+        },
+        {
+            "userMediaId": "8f85e5f9-65f1-4d13-b59b-661d69ee9261",
+            "startTime": 13.6,
+            "endTime": 19.68,
+            "confidence": 0.8,
+            "reason": "Describing fat loss as a skill to be mastered — a thoughtful executive visual conveys focus, discipline and the skill-building concept.",
+            "matchedText": "It's actually a skill that you've got to be able to master if you're going to be able to do fat loss more than like a few weeks at a time"
+        },
+        {
+            "userMediaId": "bcc3d882-b606-49c1-b2af-df9934a48584",
+            "startTime": 22.4,
+            "endTime": 31.91,
+            "confidence": 0.8,
+            "reason": "The segment mentions food prep and fasting; a close-up of a nutrition plan and macros visually supports 'prepping your food' and the nutritional planning aspect.",
+            "matchedText": "And it doesn't matter how good you think you are at something like prepping your food or how good you think you are at just raw dogging it from waking up till like 3am and fasting eventually"
+        },
+        {
+            "userMediaId": "bb920472-cf65-4c5b-aa2b-dc523f8efa6a",
+            "startTime": 32.78,
+            "endTime": 38.38,
+            "confidence": 0.75,
+            "reason": "Managing hunger before it gets the best of you implies mindfulness and self-regulation — a calm yoga/meditation shot pairs well with that message.",
+            "matchedText": "as you get lighter or leaner you'll want to be very careful at how you manage hunger before it gets the best of you"
+        },
+        {
+            "userMediaId": "8f85e5f9-65f1-4d13-b59b-661d69ee9261",
+            "startTime": 38.78,
+            "endTime": 41.82,
+            "confidence": 0.7,
+            "reason": "Introducing two practical strategies — a thoughtful executive visual supports the instructional, advisory tone.",
+            "matchedText": "So here are two great ways for you to effectively manage hunger"
+        },
+        {
+            "userMediaId": "8f85e5f9-65f1-4d13-b59b-661d69ee9261",
+            "startTime": 41.82,
+            "endTime": 44.38,
+            "confidence": 0.8,
+            "reason": "Claiming long coaching experience benefits from an authoritative, thoughtful visual that implies expertise.",
+            "matchedText": "This is based on my 13 years of coaching experience"
+        },
+        {
+            "userMediaId": "bb920472-cf65-4c5b-aa2b-dc523f8efa6a",
+            "startTime": 45.18,
+            "endTime": 50.06,
+            "confidence": 0.8,
+            "reason": "Recognizing transient hunger cues is a mindfulness skill; a yoga/meditation clip visually conveys noticing cues and transient sensations.",
+            "matchedText": "So first of all you've got to recognize your hunger cues and you've got to notice that they can be quite transient"
+        },
+        {
+            "userMediaId": "8f85e5f9-65f1-4d13-b59b-661d69ee9261",
+            "startTime": 50.62,
+            "endTime": 53.74,
+            "confidence": 0.7,
+            "reason": "Talking about reactive food choices pairs with a thoughtful, introspective visual to show someone considering their behavior before acting.",
+            "matchedText": "So a lot of the time the food choices we make are very reactive"
+        },
+        {
+            "userMediaId": "f1497c37-103f-4082-a7b3-bce94bdeaf8f",
+            "startTime": 53.74,
+            "endTime": 57.74,
+            "confidence": 0.75,
+            "reason": "Describing regretted reactive eating fits a stressed or frustrated emotional reaction — this clip communicates post‑choice regret and frustration.",
+            "matchedText": "We go to put food in our mouths and we don't really need it and often we regret it afterwards"
+        },
+        {
+            "userMediaId": "8f85e5f9-65f1-4d13-b59b-661d69ee9261",
+            "startTime": 57.74,
+            "endTime": 60.7,
+            "confidence": 0.65,
+            "reason": "The line 'we've all been there' is reflective and inclusive — a contemplative/executive visual maintains the empathetic tone.",
+            "matchedText": "I think we've all been there after the moment has passed"
+        },
+        {
+            "userMediaId": "bb920472-cf65-4c5b-aa2b-dc523f8efa6a",
+            "startTime": 61.1,
+            "endTime": 64.36,
+            "confidence": 0.8,
+            "reason": "Prompting self-questioning ('am I genuinely hungry or can I actually weight') aligns with mindful practice; a meditation shot supports pausing and checking in with yourself.",
+            "matchedText": "So ask yourself am I genuinely hungry or can I actually weight"
+        },
+        {
+            "userMediaId": "bcc3d882-b606-49c1-b2af-df9934a48584",
+            "startTime": 64.84,
+            "endTime": 69.96,
+            "confidence": 0.85,
+            "reason": "Introducing 'satiating' foods and nutrient density is well illustrated by a close-up nutrition plan showing protein, carbs and macros.",
+            "matchedText": "And the second one is as obvious as it sounds there are foods that we might refer to as satiating"
+        },
+        {
+            "userMediaId": "bcc3d882-b606-49c1-b2af-df9934a48584",
+            "startTime": 70.04,
+            "endTime": 74.08,
+            "confidence": 0.85,
+            "reason": "Describing 'nutrient dense and fairly calorie poor' foods pairs directly with a macro/nutrition plan visual that explains calorie density and nutrients.",
+            "matchedText": "So these are the ones that are like nutrient dense and fairly calorie poor"
+        },
+        {
+            "userMediaId": "bcc3d882-b606-49c1-b2af-df9934a48584",
+            "startTime": 74.08,
+            "endTime": 75.56,
+            "confidence": 0.75,
+            "reason": "Saying 'These are things that will fill you up' continues the nutrition theme; the close-up nutrition plan reinforces satiating food examples.",
+            "matchedText": "These are things that will fill you up"
+        },
+        {
+            "userMediaId": "bcc3d882-b606-49c1-b2af-df9934a48584",
+            "startTime": 75.96,
+            "endTime": 86.12,
+            "confidence": 0.8,
+            "reason": "Listing fibrous vegetables, oatmeal, potatoes — concrete examples of satiating foods are best shown with a nutrition/macro close-up or food imagery; the nutrition plan clip supports this detail.",
+            "matchedText": "So you know things like fibrous vegetables or oatmeal or potatoes the sort of random stuff that gets demonized by idiotic 19 year old wellness influencers"
+        },
+        {
+            "userMediaId": "bcc3d882-b606-49c1-b2af-df9934a48584",
+            "startTime": 86.12,
+            "endTime": 91.56,
+            "confidence": 0.8,
+            "reason": "Advising these foods as 'go to' options for hunger pangs continues the nutrition visual thread; the macro/nutrition close-up reinforces practical food choices.",
+            "matchedText": "So these need to be your go to food types for when you're actually genuinely experiencing hunger pangs"
+        },
+        {
+            "userMediaId": "daf5d010-0138-49f0-8c17-e5678b56ff25",
+            "startTime": 91.56,
+            "endTime": 102.34,
+            "confidence": 0.85,
+            "reason": "Warning against reaching for protein/snack bars pairs well with footage of someone handling supplements and nutrition products (e.g., bars), illustrating the common but ineffective choice.",
+            "matchedText": "Because the mistake you're making is often you guys are reaching for a snack food or a protein this thing like a protein bar or a snack bar and this won't leave you satisfied you'll just end up wanting to eat more afterwards"
+        },
+        {
+            "userMediaId": "f1497c37-103f-4082-a7b3-bce94bdeaf8f",
+            "startTime": 102.5,
+            "endTime": 103.7,
+            "confidence": 0.7,
+            "reason": "The short line 'And we know what happens then' implies a negative outcome; a frustrated/stressed reaction visual conveys the consequence.",
+            "matchedText": "And we know what happens then"
+        },
+        {
+            "userMediaId": "bb920472-cf65-4c5b-aa2b-dc523f8efa6a",
+            "startTime": 104.82,
+            "endTime": 111.38,
+            "confidence": 0.9,
+            "reason": "The summary emphasizes being present and mindful when navigating hunger signals — a meditation/yoga clip strongly matches the message of mindful awareness.",
+            "matchedText": "So in summary a lot of this just comes down to being present and mindful when you're navigating your sort of day to day hunger signals"
+        }
+    ],
+    "totalMatches": 20,
+    "processedAt": "2025-10-17T19:30:16.075Z"
+}

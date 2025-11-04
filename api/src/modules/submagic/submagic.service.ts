@@ -37,11 +37,14 @@ export class SubmagicService {
     this.defaultMagicZooms = this.configService.get<boolean>('DEFAULT_MAGIC_ZOOMS', true);
     this.defaultMagicBrolls = this.configService.get<boolean>('DEFAULT_MAGIC_BROLLS', true);
     this.defaultMagicBrollsPercentage = this.configService.get<number>('DEFAULT_MAGIC_BROLLS_PERCENTAGE', 60);
+    console.error('API KEY: ', this.apiKey);
 
     if (!this.apiKey) {
+      this.logger.error('SUBMAGIC_API_KEY is required');
       throw new Error('SUBMAGIC_API_KEY is required');
     }
     if (!this.publicBaseUrl) {
+      this.logger.error('PUBLIC_BASE_URL is required');
       throw new Error('PUBLIC_BASE_URL is required');
     }
   }
@@ -144,10 +147,6 @@ export class SubmagicService {
       const response = await firstValueFrom(
         this.httpService.get(`https://api.submagic.co/v1/projects/${projectId}`, { headers })
       );
-      
-      // Log only the response data to avoid circular structure
-      console.log("GET PROJECT RESPONSE DATA: ", JSON.stringify(response.data, null, 2));
-      
       return response;
     } catch (error) {
       this.handleSubmagicApiError(error);
@@ -290,6 +289,7 @@ export class SubmagicService {
   }
 
   private handleSubmagicApiError(error: any): never {
+    console.error("Submagic API Error:", error);
     if (error.response) {
       const { status, data } = error.response;
       const errorMessage = data?.message || data?.error || 'Unknown error from Submagic API';

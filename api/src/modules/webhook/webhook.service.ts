@@ -60,13 +60,13 @@ export class WebhookService {
 
           // If matches were found, call analyze-and-update endpoint
           if (analysisResult.matches.length > 0) {
-            const updateResult = await this.openaiService.analyzeAndUpdateProject(
-              projectId,
-              MEDIA_ITEMS,
-              0.7
-            );
+            // const updateResult = await this.openaiService.analyzeAndUpdateProject(
+            //   projectId,
+            //   MEDIA_ITEMS,
+            //   0.7
+            // );
 
-            this.logger.log(`Successfully updated project ${projectId} with media matches:`, updateResult);
+            // this.logger.log(`Successfully updated project ${projectId} with media matches:`, updateResult);
           } else {
             this.logger.log(`No media matches found for project ${projectId}`);
           }

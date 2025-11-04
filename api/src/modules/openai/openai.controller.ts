@@ -36,19 +36,15 @@ export class OpenAIController {
     return this.openaiService.analyzeProjectForMediaMatching(request);
   }
 
-  @Post('analyze-and-update/:projectId')
+  @Post('analyze-and-update')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ 
-    summary: 'Analyze and update project with media matches',
-    description: 'Analyzes video content for media matching and automatically updates the project with the matches'
-  })
-  @ApiParam({ 
-    name: 'projectId', 
-    description: 'ID of the project to analyze and update' 
+    summary: 'Update project with pre-analyzed media matches',
+    description: 'Updates the project with provided media matches without performing analysis'
   })
   @ApiResponse({ 
     status: 200, 
-    description: 'Project analyzed and updated successfully' 
+    description: 'Project updated successfully with media matches' 
   })
   @ApiResponse({ 
     status: 400, 
@@ -59,13 +55,8 @@ export class OpenAIController {
     description: 'Internal server error during processing' 
   })
   async analyzeAndUpdateProject(
-    @Param('projectId') projectId: string,
-    @Body() body: { mediaItems: MediaItemDto[]; confidenceThreshold?: number }
+    @Body() request: UpdateProjectRequestDto
   ): Promise<any> {
-    return this.openaiService.analyzeAndUpdateProject(
-      projectId, 
-      body.mediaItems, 
-      body.confidenceThreshold
-    );
+    return this.openaiService.analyzeAndUpdateProject(request);
   }
 }

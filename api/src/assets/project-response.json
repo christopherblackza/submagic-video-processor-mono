@@ -1,0 +1,3766 @@
+{
+    "id": "251d9007-8ce4-4cc9-9bb7-5556b2221329",
+    "title": "James No-Brolls",
+    "language": "en",
+    "status": "completed",
+    "webhookUrl": "http://localhost:3000/webhook/submagic",
+    "downloadUrl": "https://app.submagic.co/api/file/download?path=api/f4f09911-609b-4a78-a0cd-4be5933395c1/251d9007-8ce4-4cc9-9bb7-5556b2221329/video.mp4-download.mp4&newFileName=James%20No-Brolls.mp4",
+    "directUrl": "https://dqu1p08d61fh.cloudfront.net/api/f4f09911-609b-4a78-a0cd-4be5933395c1/251d9007-8ce4-4cc9-9bb7-5556b2221329/video.mp4-download.mp4",
+    "transcriptionStatus": "COMPLETED",
+    "videoMetaData": {
+        "fps": 30,
+        "width": 480,
+        "format": "HEVC",
+        "height": 854,
+        "duration": 127,
+        "colorSpace": "bt709",
+        "originalWidth": 480,
+        "originalHeight": 854
+    },
+    "magicZooms": true,
+    "magicBrolls": false,
+    "createdAt": "2025-10-17T18:41:50.910Z",
+    "updatedAt": "2025-10-17T18:44:46.797Z",
+    "words": [
+        {
+            "id": "silence_c65e36c0-83f3-441b-948d-1edfc5e200ef",
+            "text": "",
+            "type": "silence",
+            "startTime": 0,
+            "endTime": 0.88
+        },
+        {
+            "id": "SfczrB96",
+            "text": "So",
+            "type": "word",
+            "startTime": 0.88,
+            "endTime": 0.96
+        },
+        {
+            "id": "9agldjTi",
+            "text": "for",
+            "type": "word",
+            "startTime": 0.96,
+            "endTime": 1.12
+        },
+        {
+            "id": "uzF4PGww",
+            "text": "image",
+            "type": "word",
+            "startTime": 1.12,
+            "endTime": 1.44
+        },
+        {
+            "id": "ye3eutr7",
+            "text": "conscious",
+            "type": "word",
+            "startTime": 1.44,
+            "endTime": 1.84
+        },
+        {
+            "id": "OpMImY0l",
+            "text": "gay",
+            "type": "word",
+            "startTime": 1.84,
+            "endTime": 2.12
+        },
+        {
+            "id": "T8qIygJf",
+            "text": "men",
+            "type": "word",
+            "startTime": 2.12,
+            "endTime": 2.4
+        },
+        {
+            "id": "Y0DLmyXt",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 2.4,
+            "endTime": 2.4
+        },
+        {
+            "id": "Gn1RPElJ",
+            "text": "fat",
+            "type": "word",
+            "startTime": 2.4,
+            "endTime": 2.76
+        },
+        {
+            "id": "Vgf11Gl9",
+            "text": "loss",
+            "type": "word",
+            "startTime": 2.76,
+            "endTime": 3
+        },
+        {
+            "id": "Rgd14R0l",
+            "text": "really",
+            "type": "word",
+            "startTime": 3,
+            "endTime": 3.28
+        },
+        {
+            "id": "c7EzozYX",
+            "text": "comes",
+            "type": "word",
+            "startTime": 3.28,
+            "endTime": 3.52
+        },
+        {
+            "id": "TwBJcuDy",
+            "text": "down",
+            "type": "word",
+            "startTime": 3.52,
+            "endTime": 3.72
+        },
+        {
+            "id": "bMHcliIF",
+            "text": "to",
+            "type": "word",
+            "startTime": 3.72,
+            "endTime": 3.88
+        },
+        {
+            "id": "eSebk6Ae",
+            "text": "just",
+            "type": "word",
+            "startTime": 3.88,
+            "endTime": 4.12
+        },
+        {
+            "id": "DNyyCc0w",
+            "text": "one",
+            "type": "word",
+            "startTime": 4.12,
+            "endTime": 4.48
+        },
+        {
+            "id": "silence_8aa22910-364b-41ad-99c0-f48df164dc6d",
+            "text": "",
+            "type": "silence",
+            "startTime": 4.48,
+            "endTime": 4.72
+        },
+        {
+            "id": "Y3GKWyv3",
+            "text": "really",
+            "type": "word",
+            "startTime": 4.72,
+            "endTime": 5.04
+        },
+        {
+            "id": "xmOUF77m",
+            "text": "simple",
+            "type": "word",
+            "startTime": 5.04,
+            "endTime": 5.52
+        },
+        {
+            "id": "E4MT2LoG",
+            "text": "thing",
+            "type": "word",
+            "startTime": 5.52,
+            "endTime": 5.84
+        },
+        {
+            "id": "silence_6971a3e1-31ef-4c34-bbdd-bbfc76c1c5d4",
+            "text": "",
+            "type": "silence",
+            "startTime": 5.84,
+            "endTime": 5.92
+        },
+        {
+            "id": "8QjHg0Em",
+            "text": "and",
+            "type": "word",
+            "startTime": 5.92,
+            "endTime": 6.2
+        },
+        {
+            "id": "tocmBRG4",
+            "text": "it's",
+            "type": "word",
+            "startTime": 6.2,
+            "endTime": 6.4
+        },
+        {
+            "id": "GBX550ze",
+            "text": "not",
+            "type": "word",
+            "startTime": 6.4,
+            "endTime": 6.52
+        },
+        {
+            "id": "n2fjwp3n",
+            "text": "what",
+            "type": "word",
+            "startTime": 6.52,
+            "endTime": 6.68
+        },
+        {
+            "id": "EEh1nPzb",
+            "text": "you're",
+            "type": "word",
+            "startTime": 6.68,
+            "endTime": 6.92
+        },
+        {
+            "id": "OA24z8QF",
+            "text": "expecting",
+            "type": "word",
+            "startTime": 6.92,
+            "endTime": 7.44
+        },
+        {
+            "id": "5m9D457v",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 7.44,
+            "endTime": 7.44
+        },
+        {
+            "id": "yVx9hFPB",
+            "text": "So",
+            "type": "word",
+            "startTime": 7.44,
+            "endTime": 7.68
+        },
+        {
+            "id": "IzJDY94e",
+            "text": "it's",
+            "type": "word",
+            "startTime": 7.68,
+            "endTime": 7.84
+        },
+        {
+            "id": "I813ssVx",
+            "text": "not",
+            "type": "word",
+            "startTime": 7.84,
+            "endTime": 8.08
+        },
+        {
+            "id": "silence_a3752beb-391e-4db7-8f71-31a2bb07e900",
+            "text": "",
+            "type": "silence",
+            "startTime": 8.08,
+            "endTime": 8.24
+        },
+        {
+            "id": "o0jpe7VP",
+            "text": "like",
+            "type": "word",
+            "startTime": 8.24,
+            "endTime": 8.52
+        },
+        {
+            "id": "eP6DIMdU",
+            "text": "calorie",
+            "type": "word",
+            "startTime": 8.52,
+            "endTime": 8.92
+        },
+        {
+            "id": "dI1Jc4m3",
+            "text": "counting",
+            "type": "word",
+            "startTime": 8.92,
+            "endTime": 9.36
+        },
+        {
+            "id": "TT9dpIVq",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 9.36,
+            "endTime": 9.36
+        },
+        {
+            "id": "1ZaEswW7",
+            "text": "it's",
+            "type": "word",
+            "startTime": 9.36,
+            "endTime": 9.6
+        },
+        {
+            "id": "DNG6l611",
+            "text": "not",
+            "type": "word",
+            "startTime": 9.6,
+            "endTime": 9.72
+        },
+        {
+            "id": "nEdNOoKE",
+            "text": "doing",
+            "type": "word",
+            "startTime": 9.72,
+            "endTime": 10
+        },
+        {
+            "id": "silence_067de3f2-f576-4e45-b266-3428b042bb9d",
+            "text": "",
+            "type": "silence",
+            "startTime": 10,
+            "endTime": 10.24
+        },
+        {
+            "id": "S7zUh6H9",
+            "text": "interval",
+            "type": "word",
+            "startTime": 10.24,
+            "endTime": 10.84
+        },
+        {
+            "id": "7eX44y23",
+            "text": "workouts",
+            "type": "word",
+            "startTime": 10.84,
+            "endTime": 11.4
+        },
+        {
+            "id": "oGnpcnQB",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 11.4,
+            "endTime": 11.4
+        },
+        {
+            "id": "TSXERj3f",
+            "text": "it's",
+            "type": "word",
+            "startTime": 11.4,
+            "endTime": 11.6
+        },
+        {
+            "id": "gIH4i9kP",
+            "text": "definitely",
+            "type": "word",
+            "startTime": 11.6,
+            "endTime": 11.88
+        },
+        {
+            "id": "n0x2YJDB",
+            "text": "not",
+            "type": "word",
+            "startTime": 11.88,
+            "endTime": 12.12
+        },
+        {
+            "id": "KUNWDVkY",
+            "text": "taking",
+            "type": "word",
+            "startTime": 12.12,
+            "endTime": 12.44
+        },
+        {
+            "id": "rrakSYix",
+            "text": "a",
+            "type": "word",
+            "startTime": 12.44,
+            "endTime": 12.68
+        },
+        {
+            "id": "0ttEoMv1",
+            "text": "fat",
+            "type": "word",
+            "startTime": 12.68,
+            "endTime": 12.92
+        },
+        {
+            "id": "bIMrbgFP",
+            "text": "burner",
+            "type": "word",
+            "startTime": 12.92,
+            "endTime": 13.36
+        },
+        {
+            "id": "ZMLhvnI2",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 13.36,
+            "endTime": 13.36
+        },
+        {
+            "id": "silence_93f45c6e-3e79-4a84-b69e-7dea61957bef",
+            "text": "",
+            "type": "silence",
+            "startTime": 13.36,
+            "endTime": 13.6
+        },
+        {
+            "id": "GmibmpiU",
+            "text": "It's",
+            "type": "word",
+            "startTime": 13.6,
+            "endTime": 13.96
+        },
+        {
+            "id": "N2554HOb",
+            "text": "actually",
+            "type": "word",
+            "startTime": 13.96,
+            "endTime": 14.16
+        },
+        {
+            "id": "V3g8R3OF",
+            "text": "a",
+            "type": "word",
+            "startTime": 14.16,
+            "endTime": 14.36
+        },
+        {
+            "id": "UwNOBPYo",
+            "text": "skill",
+            "type": "word",
+            "startTime": 14.36,
+            "endTime": 14.64
+        },
+        {
+            "id": "qqVIIx1P",
+            "text": "that",
+            "type": "word",
+            "startTime": 14.64,
+            "endTime": 14.84
+        },
+        {
+            "id": "nSiJbBqf",
+            "text": "you've",
+            "type": "word",
+            "startTime": 14.84,
+            "endTime": 15.04
+        },
+        {
+            "id": "CLYll2e5",
+            "text": "got",
+            "type": "word",
+            "startTime": 15.04,
+            "endTime": 15.12
+        },
+        {
+            "id": "nQQnWrWw",
+            "text": "to",
+            "type": "word",
+            "startTime": 15.12,
+            "endTime": 15.24
+        },
+        {
+            "id": "fUOmwu2L",
+            "text": "be",
+            "type": "word",
+            "startTime": 15.24,
+            "endTime": 15.36
+        },
+        {
+            "id": "UsyIjB4P",
+            "text": "able",
+            "type": "word",
+            "startTime": 15.36,
+            "endTime": 15.44
+        },
+        {
+            "id": "PVcWULzd",
+            "text": "to",
+            "type": "word",
+            "startTime": 15.44,
+            "endTime": 15.56
+        },
+        {
+            "id": "fgEyY8Vm",
+            "text": "master",
+            "type": "word",
+            "startTime": 15.56,
+            "endTime": 16.08
+        },
+        {
+            "id": "silence_730e70ae-9537-464c-bf85-85d7c66ef89e",
+            "text": "",
+            "type": "silence",
+            "startTime": 16.08,
+            "endTime": 16.16
+        },
+        {
+            "id": "uKoUZmo8",
+            "text": "if",
+            "type": "word",
+            "startTime": 16.16,
+            "endTime": 16.44
+        },
+        {
+            "id": "ThSYMujm",
+            "text": "you're",
+            "type": "word",
+            "startTime": 16.44,
+            "endTime": 16.64
+        },
+        {
+            "id": "PRm8hrwa",
+            "text": "going",
+            "type": "word",
+            "startTime": 16.64,
+            "endTime": 16.72
+        },
+        {
+            "id": "4QLrSO6Q",
+            "text": "to",
+            "type": "word",
+            "startTime": 16.72,
+            "endTime": 16.8
+        },
+        {
+            "id": "Se4vwpsO",
+            "text": "be",
+            "type": "word",
+            "startTime": 16.8,
+            "endTime": 16.88
+        },
+        {
+            "id": "QiNkFHgP",
+            "text": "able",
+            "type": "word",
+            "startTime": 16.88,
+            "endTime": 17
+        },
+        {
+            "id": "cXEGl5HA",
+            "text": "to",
+            "type": "word",
+            "startTime": 17,
+            "endTime": 17.16
+        },
+        {
+            "id": "IySu616R",
+            "text": "do",
+            "type": "word",
+            "startTime": 17.16,
+            "endTime": 17.36
+        },
+        {
+            "id": "UCUihrhK",
+            "text": "fat",
+            "type": "word",
+            "startTime": 17.36,
+            "endTime": 17.64
+        },
+        {
+            "id": "BjvUbdro",
+            "text": "loss",
+            "type": "word",
+            "startTime": 17.64,
+            "endTime": 17.88
+        },
+        {
+            "id": "ORNXFItM",
+            "text": "more",
+            "type": "word",
+            "startTime": 17.88,
+            "endTime": 18.16
+        },
+        {
+            "id": "40VxMTK8",
+            "text": "than",
+            "type": "word",
+            "startTime": 18.16,
+            "endTime": 18.4
+        },
+        {
+            "id": "6zKgCSFb",
+            "text": "like",
+            "type": "word",
+            "startTime": 18.4,
+            "endTime": 18.6
+        },
+        {
+            "id": "X7QogYg7",
+            "text": "a",
+            "type": "word",
+            "startTime": 18.6,
+            "endTime": 18.76
+        },
+        {
+            "id": "u1wAbaX7",
+            "text": "few",
+            "type": "word",
+            "startTime": 18.76,
+            "endTime": 18.92
+        },
+        {
+            "id": "17F8fSlV",
+            "text": "weeks",
+            "type": "word",
+            "startTime": 18.92,
+            "endTime": 19.12
+        },
+        {
+            "id": "OBOea0f6",
+            "text": "at",
+            "type": "word",
+            "startTime": 19.12,
+            "endTime": 19.32
+        },
+        {
+            "id": "8gJ1kqLA",
+            "text": "a",
+            "type": "word",
+            "startTime": 19.32,
+            "endTime": 19.44
+        },
+        {
+            "id": "YrBCuzII",
+            "text": "time",
+            "type": "word",
+            "startTime": 19.44,
+            "endTime": 19.68
+        },
+        {
+            "id": "dm7KTea0",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 19.68,
+            "endTime": 19.68
+        },
+        {
+            "id": "silence_3902aef4-e45d-4020-9ec6-33cea783d1a5",
+            "text": "",
+            "type": "silence",
+            "startTime": 19.68,
+            "endTime": 20.4
+        },
+        {
+            "id": "ZGAmvrM4",
+            "text": "So",
+            "type": "word",
+            "startTime": 20.4,
+            "endTime": 20.68
+        },
+        {
+            "id": "EwY9MnJ8",
+            "text": "it's",
+            "type": "word",
+            "startTime": 20.68,
+            "endTime": 20.92
+        },
+        {
+            "id": "yAHtXz3m",
+            "text": "actually",
+            "type": "word",
+            "startTime": 20.92,
+            "endTime": 21.2
+        },
+        {
+            "id": "silence_4cec775c-eff8-4422-b8eb-0d623682e487",
+            "text": "",
+            "type": "silence",
+            "startTime": 21.2,
+            "endTime": 21.28
+        },
+        {
+            "id": "DMZnZpV5",
+            "text": "managing",
+            "type": "word",
+            "startTime": 21.28,
+            "endTime": 21.84
+        },
+        {
+            "id": "JH0lgGxH",
+            "text": "hunger",
+            "type": "word",
+            "startTime": 21.84,
+            "endTime": 22.4
+        },
+        {
+            "id": "p9Latq2P",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 22.4,
+            "endTime": 22.4
+        },
+        {
+            "id": "GaVJx5AM",
+            "text": "And",
+            "type": "word",
+            "startTime": 22.4,
+            "endTime": 22.68
+        },
+        {
+            "id": "chq6CMgd",
+            "text": "it",
+            "type": "word",
+            "startTime": 22.68,
+            "endTime": 22.84
+        },
+        {
+            "id": "uA0DmeCu",
+            "text": "doesn't",
+            "type": "word",
+            "startTime": 22.84,
+            "endTime": 23.08
+        },
+        {
+            "id": "L28CrrsC",
+            "text": "matter",
+            "type": "word",
+            "startTime": 23.08,
+            "endTime": 23.28
+        },
+        {
+            "id": "n5hGty1o",
+            "text": "how",
+            "type": "word",
+            "startTime": 23.28,
+            "endTime": 23.48
+        },
+        {
+            "id": "G7XQDJmb",
+            "text": "good",
+            "type": "word",
+            "startTime": 23.48,
+            "endTime": 23.64
+        },
+        {
+            "id": "GeyMEid0",
+            "text": "you",
+            "type": "word",
+            "startTime": 23.64,
+            "endTime": 23.84
+        },
+        {
+            "id": "cfLLPLcD",
+            "text": "think",
+            "type": "word",
+            "startTime": 23.84,
+            "endTime": 24.08
+        },
+        {
+            "id": "ocKpEN5T",
+            "text": "you",
+            "type": "word",
+            "startTime": 24.08,
+            "endTime": 24.28
+        },
+        {
+            "id": "HP2xmVQl",
+            "text": "are",
+            "type": "word",
+            "startTime": 24.28,
+            "endTime": 24.44
+        },
+        {
+            "id": "JobXafKY",
+            "text": "at",
+            "type": "word",
+            "startTime": 24.44,
+            "endTime": 24.72
+        },
+        {
+            "id": "1zPUcALB",
+            "text": "something",
+            "type": "word",
+            "startTime": 24.72,
+            "endTime": 25.04
+        },
+        {
+            "id": "WR6tx4hT",
+            "text": "like",
+            "type": "word",
+            "startTime": 25.04,
+            "endTime": 25.28
+        },
+        {
+            "id": "V5L02S0l",
+            "text": "prepping",
+            "type": "word",
+            "startTime": 25.28,
+            "endTime": 25.64
+        },
+        {
+            "id": "m0bcmTG6",
+            "text": "your",
+            "type": "word",
+            "startTime": 25.64,
+            "endTime": 25.84
+        },
+        {
+            "id": "2ztt5RHo",
+            "text": "food",
+            "type": "word",
+            "startTime": 25.84,
+            "endTime": 26.16
+        },
+        {
+            "id": "silence_863cfc48-3e7f-4f17-88d4-8f14ad1511dd",
+            "text": "",
+            "type": "silence",
+            "startTime": 26.16,
+            "endTime": 26.48
+        },
+        {
+            "id": "wHDisNV7",
+            "text": "or",
+            "type": "word",
+            "startTime": 26.48,
+            "endTime": 26.76
+        },
+        {
+            "id": "pbEqbdfm",
+            "text": "how",
+            "type": "word",
+            "startTime": 26.76,
+            "endTime": 26.92
+        },
+        {
+            "id": "FCKomYw3",
+            "text": "good",
+            "type": "word",
+            "startTime": 26.92,
+            "endTime": 27.08
+        },
+        {
+            "id": "r7ik8eVp",
+            "text": "you",
+            "type": "word",
+            "startTime": 27.08,
+            "endTime": 27.24
+        },
+        {
+            "id": "JYzIdGNy",
+            "text": "think",
+            "type": "word",
+            "startTime": 27.24,
+            "endTime": 27.4
+        },
+        {
+            "id": "XL0sGa3E",
+            "text": "you",
+            "type": "word",
+            "startTime": 27.4,
+            "endTime": 27.56
+        },
+        {
+            "id": "gqrRbMhn",
+            "text": "are",
+            "type": "word",
+            "startTime": 27.56,
+            "endTime": 27.72
+        },
+        {
+            "id": "r07Nk6nq",
+            "text": "at",
+            "type": "word",
+            "startTime": 27.72,
+            "endTime": 27.88
+        },
+        {
+            "id": "ZoHuTBkO",
+            "text": "just",
+            "type": "word",
+            "startTime": 27.88,
+            "endTime": 28.08
+        },
+        {
+            "id": "Gsnv8Gzv",
+            "text": "raw",
+            "type": "word",
+            "startTime": 28.08,
+            "endTime": 28.36
+        },
+        {
+            "id": "UCAqmqZ5",
+            "text": "dogging",
+            "type": "word",
+            "startTime": 28.36,
+            "endTime": 28.76
+        },
+        {
+            "id": "aOItodG2",
+            "text": "it",
+            "type": "word",
+            "startTime": 28.76,
+            "endTime": 29.04
+        },
+        {
+            "id": "jlW5yDSr",
+            "text": "from",
+            "type": "word",
+            "startTime": 29.04,
+            "endTime": 29.32
+        },
+        {
+            "id": "6lhSvx5C",
+            "text": "waking",
+            "type": "word",
+            "startTime": 29.32,
+            "endTime": 29.56
+        },
+        {
+            "id": "hleoezxA",
+            "text": "up",
+            "type": "word",
+            "startTime": 29.56,
+            "endTime": 29.76
+        },
+        {
+            "id": "o8nw2jjv",
+            "text": "till",
+            "type": "word",
+            "startTime": 29.76,
+            "endTime": 30.04
+        },
+        {
+            "id": "3kd1YPLq",
+            "text": "like",
+            "type": "word",
+            "startTime": 30.04,
+            "endTime": 30.2
+        },
+        {
+            "id": "YebXNKf6",
+            "text": "3am",
+            "type": "word",
+            "startTime": 30.2,
+            "endTime": 30.6
+        },
+        {
+            "id": "2hDJ3FSA",
+            "text": "and",
+            "type": "word",
+            "startTime": 30.6,
+            "endTime": 30.84
+        },
+        {
+            "id": "bp0ZQ8oL",
+            "text": "fasting",
+            "type": "word",
+            "startTime": 30.84,
+            "endTime": 31.36
+        },
+        {
+            "id": "SZGSZls7",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 31.36,
+            "endTime": 31.36
+        },
+        {
+            "id": "silence_9ec29d00-8a5e-4167-9dc2-c16187df3669",
+            "text": "",
+            "type": "silence",
+            "startTime": 31.36,
+            "endTime": 31.44
+        },
+        {
+            "id": "wAHKttdK",
+            "text": "eventually",
+            "type": "word",
+            "startTime": 31.44,
+            "endTime": 31.91
+        },
+        {
+            "id": "silence_c3268c2c-bb0f-4e88-abe5-6a5b94913565",
+            "text": "",
+            "type": "silence",
+            "startTime": 31.91,
+            "endTime": 32.78
+        },
+        {
+            "id": "C3nhDzex",
+            "text": "as",
+            "type": "word",
+            "startTime": 32.78,
+            "endTime": 32.9
+        },
+        {
+            "id": "NAjjWL5D",
+            "text": "you",
+            "type": "word",
+            "startTime": 32.9,
+            "endTime": 33.02
+        },
+        {
+            "id": "KN1oJAOx",
+            "text": "get",
+            "type": "word",
+            "startTime": 33.02,
+            "endTime": 33.18
+        },
+        {
+            "id": "wIS0OvFY",
+            "text": "lighter",
+            "type": "word",
+            "startTime": 33.18,
+            "endTime": 33.54
+        },
+        {
+            "id": "Xe6JCmmN",
+            "text": "or",
+            "type": "word",
+            "startTime": 33.54,
+            "endTime": 33.7
+        },
+        {
+            "id": "6VqJ6M8A",
+            "text": "leaner",
+            "type": "word",
+            "startTime": 33.7,
+            "endTime": 34.22
+        },
+        {
+            "id": "0uznSmk9",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 34.22,
+            "endTime": 34.22
+        },
+        {
+            "id": "silence_68899242-1c89-48e2-adbd-b7636a09680e",
+            "text": "",
+            "type": "silence",
+            "startTime": 34.22,
+            "endTime": 34.38
+        },
+        {
+            "id": "8J3nNdPc",
+            "text": "you'll",
+            "type": "word",
+            "startTime": 34.38,
+            "endTime": 34.86
+        },
+        {
+            "id": "uhHgca1U",
+            "text": "want",
+            "type": "word",
+            "startTime": 34.86,
+            "endTime": 35.06
+        },
+        {
+            "id": "x4vZE1nB",
+            "text": "to",
+            "type": "word",
+            "startTime": 35.06,
+            "endTime": 35.22
+        },
+        {
+            "id": "1veriGgS",
+            "text": "be",
+            "type": "word",
+            "startTime": 35.22,
+            "endTime": 35.42
+        },
+        {
+            "id": "OQgQFVZC",
+            "text": "very",
+            "type": "word",
+            "startTime": 35.42,
+            "endTime": 35.62
+        },
+        {
+            "id": "JtGuZV1I",
+            "text": "careful",
+            "type": "word",
+            "startTime": 35.62,
+            "endTime": 35.98
+        },
+        {
+            "id": "4o3QoP4O",
+            "text": "at",
+            "type": "word",
+            "startTime": 35.98,
+            "endTime": 36.18
+        },
+        {
+            "id": "3Cw3voqi",
+            "text": "how",
+            "type": "word",
+            "startTime": 36.18,
+            "endTime": 36.34
+        },
+        {
+            "id": "K6YriLJ2",
+            "text": "you",
+            "type": "word",
+            "startTime": 36.34,
+            "endTime": 36.46
+        },
+        {
+            "id": "YNzhN4mz",
+            "text": "manage",
+            "type": "word",
+            "startTime": 36.46,
+            "endTime": 36.66
+        },
+        {
+            "id": "Z7wsPkFL",
+            "text": "hunger",
+            "type": "word",
+            "startTime": 36.66,
+            "endTime": 37.06
+        },
+        {
+            "id": "zI74QxnN",
+            "text": "before",
+            "type": "word",
+            "startTime": 37.06,
+            "endTime": 37.26
+        },
+        {
+            "id": "YSTuoZO7",
+            "text": "it",
+            "type": "word",
+            "startTime": 37.26,
+            "endTime": 37.42
+        },
+        {
+            "id": "RF1uR8JF",
+            "text": "gets",
+            "type": "word",
+            "startTime": 37.42,
+            "endTime": 37.62
+        },
+        {
+            "id": "3eStS1n4",
+            "text": "the",
+            "type": "word",
+            "startTime": 37.62,
+            "endTime": 37.78
+        },
+        {
+            "id": "OD08qx29",
+            "text": "best",
+            "type": "word",
+            "startTime": 37.78,
+            "endTime": 37.94
+        },
+        {
+            "id": "PSgSpuuM",
+            "text": "of",
+            "type": "word",
+            "startTime": 37.94,
+            "endTime": 38.1
+        },
+        {
+            "id": "DlZoHCCP",
+            "text": "you",
+            "type": "word",
+            "startTime": 38.1,
+            "endTime": 38.38
+        },
+        {
+            "id": "WHLiFX2b",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 38.38,
+            "endTime": 38.38
+        },
+        {
+            "id": "silence_27bb37a0-1a27-4c47-a7a0-b4de8e758c09",
+            "text": "",
+            "type": "silence",
+            "startTime": 38.38,
+            "endTime": 38.78
+        },
+        {
+            "id": "CXvVuUll",
+            "text": "So",
+            "type": "word",
+            "startTime": 38.78,
+            "endTime": 39.02
+        },
+        {
+            "id": "YNffNL1p",
+            "text": "here",
+            "type": "word",
+            "startTime": 39.02,
+            "endTime": 39.14
+        },
+        {
+            "id": "MdYFIxoL",
+            "text": "are",
+            "type": "word",
+            "startTime": 39.14,
+            "endTime": 39.26
+        },
+        {
+            "id": "JqL1HPtO",
+            "text": "two",
+            "type": "word",
+            "startTime": 39.26,
+            "endTime": 39.38
+        },
+        {
+            "id": "OIIHY4uG",
+            "text": "great",
+            "type": "word",
+            "startTime": 39.38,
+            "endTime": 39.58
+        },
+        {
+            "id": "0AwQy5ml",
+            "text": "ways",
+            "type": "word",
+            "startTime": 39.58,
+            "endTime": 39.94
+        },
+        {
+            "id": "uJqgPLEA",
+            "text": "for",
+            "type": "word",
+            "startTime": 39.94,
+            "endTime": 40.14
+        },
+        {
+            "id": "eQNivkQ7",
+            "text": "you",
+            "type": "word",
+            "startTime": 40.14,
+            "endTime": 40.26
+        },
+        {
+            "id": "ypTKEY9Q",
+            "text": "to",
+            "type": "word",
+            "startTime": 40.26,
+            "endTime": 40.42
+        },
+        {
+            "id": "LeglIKef",
+            "text": "effectively",
+            "type": "word",
+            "startTime": 40.42,
+            "endTime": 40.9
+        },
+        {
+            "id": "Q25TN6hL",
+            "text": "manage",
+            "type": "word",
+            "startTime": 40.9,
+            "endTime": 41.22
+        },
+        {
+            "id": "MBidNEC1",
+            "text": "hunger",
+            "type": "word",
+            "startTime": 41.22,
+            "endTime": 41.82
+        },
+        {
+            "id": "cFZwMRcm",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 41.82,
+            "endTime": 41.82
+        },
+        {
+            "id": "is8WvSJd",
+            "text": "This",
+            "type": "word",
+            "startTime": 41.82,
+            "endTime": 42.1
+        },
+        {
+            "id": "Y0cbTuMl",
+            "text": "is",
+            "type": "word",
+            "startTime": 42.1,
+            "endTime": 42.26
+        },
+        {
+            "id": "t5uhm6BK",
+            "text": "based",
+            "type": "word",
+            "startTime": 42.26,
+            "endTime": 42.46
+        },
+        {
+            "id": "2QwtnOKy",
+            "text": "on",
+            "type": "word",
+            "startTime": 42.46,
+            "endTime": 42.66
+        },
+        {
+            "id": "72ylGCxI",
+            "text": "my",
+            "type": "word",
+            "startTime": 42.66,
+            "endTime": 42.86
+        },
+        {
+            "id": "K6OyTKN9",
+            "text": "13",
+            "type": "word",
+            "startTime": 42.86,
+            "endTime": 43.18
+        },
+        {
+            "id": "rvSpfJfr",
+            "text": "years",
+            "type": "word",
+            "startTime": 43.18,
+            "endTime": 43.5
+        },
+        {
+            "id": "RvsETtYk",
+            "text": "of",
+            "type": "word",
+            "startTime": 43.5,
+            "endTime": 43.7
+        },
+        {
+            "id": "tIgx12gs",
+            "text": "coaching",
+            "type": "word",
+            "startTime": 43.7,
+            "endTime": 44.06
+        },
+        {
+            "id": "zV6xSjfx",
+            "text": "experience",
+            "type": "word",
+            "startTime": 44.06,
+            "endTime": 44.38
+        },
+        {
+            "id": "8YHk85WX",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 44.38,
+            "endTime": 44.38
+        },
+        {
+            "id": "silence_f5c206e0-7365-4f43-bc2a-23beb89718c9",
+            "text": "",
+            "type": "silence",
+            "startTime": 44.38,
+            "endTime": 45.18
+        },
+        {
+            "id": "YP4IStb9",
+            "text": "So",
+            "type": "word",
+            "startTime": 45.18,
+            "endTime": 45.46
+        },
+        {
+            "id": "qmBYMSgP",
+            "text": "first",
+            "type": "word",
+            "startTime": 45.46,
+            "endTime": 45.62
+        },
+        {
+            "id": "zXZUQrm7",
+            "text": "of",
+            "type": "word",
+            "startTime": 45.62,
+            "endTime": 45.78
+        },
+        {
+            "id": "AxHe34uN",
+            "text": "all",
+            "type": "word",
+            "startTime": 45.78,
+            "endTime": 46.02
+        },
+        {
+            "id": "fKzSIzJJ",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 46.02,
+            "endTime": 46.02
+        },
+        {
+            "id": "xfSPyGjd",
+            "text": "you've",
+            "type": "word",
+            "startTime": 46.02,
+            "endTime": 46.3
+        },
+        {
+            "id": "nbczsEf8",
+            "text": "got",
+            "type": "word",
+            "startTime": 46.3,
+            "endTime": 46.42
+        },
+        {
+            "id": "0i1Ce9Fb",
+            "text": "to",
+            "type": "word",
+            "startTime": 46.42,
+            "endTime": 46.58
+        },
+        {
+            "id": "GfbrWsuB",
+            "text": "recognize",
+            "type": "word",
+            "startTime": 46.58,
+            "endTime": 47.06
+        },
+        {
+            "id": "uCc8hIsF",
+            "text": "your",
+            "type": "word",
+            "startTime": 47.06,
+            "endTime": 47.22
+        },
+        {
+            "id": "MWbdnRhx",
+            "text": "hunger",
+            "type": "word",
+            "startTime": 47.22,
+            "endTime": 47.54
+        },
+        {
+            "id": "LlgGQM2h",
+            "text": "cues",
+            "type": "word",
+            "startTime": 47.54,
+            "endTime": 47.86
+        },
+        {
+            "id": "doEEw58R",
+            "text": "and",
+            "type": "word",
+            "startTime": 47.86,
+            "endTime": 48.06
+        },
+        {
+            "id": "d5eDYObA",
+            "text": "you've",
+            "type": "word",
+            "startTime": 48.06,
+            "endTime": 48.22
+        },
+        {
+            "id": "N93orkdY",
+            "text": "got",
+            "type": "word",
+            "startTime": 48.22,
+            "endTime": 48.34
+        },
+        {
+            "id": "m2pogsAY",
+            "text": "to",
+            "type": "word",
+            "startTime": 48.34,
+            "endTime": 48.46
+        },
+        {
+            "id": "r7ne7jDc",
+            "text": "notice",
+            "type": "word",
+            "startTime": 48.46,
+            "endTime": 48.66
+        },
+        {
+            "id": "O94q4RZl",
+            "text": "that",
+            "type": "word",
+            "startTime": 48.66,
+            "endTime": 48.82
+        },
+        {
+            "id": "Hf6W8v5x",
+            "text": "they",
+            "type": "word",
+            "startTime": 48.82,
+            "endTime": 48.94
+        },
+        {
+            "id": "SOjaCsNZ",
+            "text": "can",
+            "type": "word",
+            "startTime": 48.94,
+            "endTime": 49.06
+        },
+        {
+            "id": "peMZmviY",
+            "text": "be",
+            "type": "word",
+            "startTime": 49.06,
+            "endTime": 49.22
+        },
+        {
+            "id": "eao9ACYc",
+            "text": "quite",
+            "type": "word",
+            "startTime": 49.22,
+            "endTime": 49.46
+        },
+        {
+            "id": "R6e8EvYU",
+            "text": "transient",
+            "type": "word",
+            "startTime": 49.46,
+            "endTime": 50.06
+        },
+        {
+            "id": "gUCjm0PN",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 50.06,
+            "endTime": 50.06
+        },
+        {
+            "id": "silence_ea988770-d894-4596-ac89-be22c65b7879",
+            "text": "",
+            "type": "silence",
+            "startTime": 50.06,
+            "endTime": 50.62
+        },
+        {
+            "id": "MKCwrIy4",
+            "text": "So",
+            "type": "word",
+            "startTime": 50.62,
+            "endTime": 50.86
+        },
+        {
+            "id": "eRMZxug2",
+            "text": "a",
+            "type": "word",
+            "startTime": 50.86,
+            "endTime": 50.94
+        },
+        {
+            "id": "neHzgcMv",
+            "text": "lot",
+            "type": "word",
+            "startTime": 50.94,
+            "endTime": 51.06
+        },
+        {
+            "id": "2CCijrHD",
+            "text": "of",
+            "type": "word",
+            "startTime": 51.06,
+            "endTime": 51.18
+        },
+        {
+            "id": "Tpn6wNp5",
+            "text": "the",
+            "type": "word",
+            "startTime": 51.18,
+            "endTime": 51.26
+        },
+        {
+            "id": "i4bfPcwl",
+            "text": "time",
+            "type": "word",
+            "startTime": 51.26,
+            "endTime": 51.42
+        },
+        {
+            "id": "JB6XlDMB",
+            "text": "the",
+            "type": "word",
+            "startTime": 51.42,
+            "endTime": 51.62
+        },
+        {
+            "id": "eT363Us8",
+            "text": "food",
+            "type": "word",
+            "startTime": 51.62,
+            "endTime": 51.82
+        },
+        {
+            "id": "vtoQTlR8",
+            "text": "choices",
+            "type": "word",
+            "startTime": 51.82,
+            "endTime": 52.26
+        },
+        {
+            "id": "tUtCGRMb",
+            "text": "we",
+            "type": "word",
+            "startTime": 52.26,
+            "endTime": 52.42
+        },
+        {
+            "id": "UfG9Xx3F",
+            "text": "make",
+            "type": "word",
+            "startTime": 52.42,
+            "endTime": 52.66
+        },
+        {
+            "id": "t69TNXZ6",
+            "text": "are",
+            "type": "word",
+            "startTime": 52.66,
+            "endTime": 52.9
+        },
+        {
+            "id": "1xAz6BmX",
+            "text": "very",
+            "type": "word",
+            "startTime": 52.9,
+            "endTime": 53.1
+        },
+        {
+            "id": "lgaGwOMy",
+            "text": "reactive",
+            "type": "word",
+            "startTime": 53.1,
+            "endTime": 53.74
+        },
+        {
+            "id": "ezMOK21i",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 53.74,
+            "endTime": 53.74
+        },
+        {
+            "id": "fVzaDVfS",
+            "text": "We",
+            "type": "word",
+            "startTime": 53.74,
+            "endTime": 54.02
+        },
+        {
+            "id": "xPq0pWO2",
+            "text": "go",
+            "type": "word",
+            "startTime": 54.02,
+            "endTime": 54.18
+        },
+        {
+            "id": "FlcbLUDf",
+            "text": "to",
+            "type": "word",
+            "startTime": 54.18,
+            "endTime": 54.3
+        },
+        {
+            "id": "pkuGOa8c",
+            "text": "put",
+            "type": "word",
+            "startTime": 54.3,
+            "endTime": 54.46
+        },
+        {
+            "id": "G229xfO7",
+            "text": "food",
+            "type": "word",
+            "startTime": 54.46,
+            "endTime": 54.66
+        },
+        {
+            "id": "w1YUuX8A",
+            "text": "in",
+            "type": "word",
+            "startTime": 54.66,
+            "endTime": 54.78
+        },
+        {
+            "id": "hoqUNqzp",
+            "text": "our",
+            "type": "word",
+            "startTime": 54.78,
+            "endTime": 54.9
+        },
+        {
+            "id": "07SgVQcJ",
+            "text": "mouths",
+            "type": "word",
+            "startTime": 54.9,
+            "endTime": 55.22
+        },
+        {
+            "id": "PzKSV1Em",
+            "text": "and",
+            "type": "word",
+            "startTime": 55.22,
+            "endTime": 55.34
+        },
+        {
+            "id": "O76rrHJZ",
+            "text": "we",
+            "type": "word",
+            "startTime": 55.34,
+            "endTime": 55.42
+        },
+        {
+            "id": "gNs7R9Gh",
+            "text": "don't",
+            "type": "word",
+            "startTime": 55.42,
+            "endTime": 55.62
+        },
+        {
+            "id": "OwuDvFWF",
+            "text": "really",
+            "type": "word",
+            "startTime": 55.62,
+            "endTime": 55.82
+        },
+        {
+            "id": "jiJXv7nE",
+            "text": "need",
+            "type": "word",
+            "startTime": 55.82,
+            "endTime": 56.02
+        },
+        {
+            "id": "Sh6pxJ5h",
+            "text": "it",
+            "type": "word",
+            "startTime": 56.02,
+            "endTime": 56.22
+        },
+        {
+            "id": "6IZGlgOK",
+            "text": "and",
+            "type": "word",
+            "startTime": 56.22,
+            "endTime": 56.42
+        },
+        {
+            "id": "FLpxY9lY",
+            "text": "often",
+            "type": "word",
+            "startTime": 56.42,
+            "endTime": 56.62
+        },
+        {
+            "id": "5wk1CBcS",
+            "text": "we",
+            "type": "word",
+            "startTime": 56.62,
+            "endTime": 56.82
+        },
+        {
+            "id": "BbRtwncn",
+            "text": "regret",
+            "type": "word",
+            "startTime": 56.82,
+            "endTime": 57.14
+        },
+        {
+            "id": "8rqG0jTr",
+            "text": "it",
+            "type": "word",
+            "startTime": 57.14,
+            "endTime": 57.3
+        },
+        {
+            "id": "hZQdbzWP",
+            "text": "afterwards",
+            "type": "word",
+            "startTime": 57.3,
+            "endTime": 57.74
+        },
+        {
+            "id": "U4B9SwKu",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 57.74,
+            "endTime": 57.74
+        },
+        {
+            "id": "8dtdBOEa",
+            "text": "I",
+            "type": "word",
+            "startTime": 57.74,
+            "endTime": 57.9
+        },
+        {
+            "id": "5QZwArIB",
+            "text": "think",
+            "type": "word",
+            "startTime": 57.9,
+            "endTime": 58.02
+        },
+        {
+            "id": "s6mzidmB",
+            "text": "we've",
+            "type": "word",
+            "startTime": 58.02,
+            "endTime": 58.22
+        },
+        {
+            "id": "6xOYr5y7",
+            "text": "all",
+            "type": "word",
+            "startTime": 58.22,
+            "endTime": 58.34
+        },
+        {
+            "id": "ZkJdLHWP",
+            "text": "been",
+            "type": "word",
+            "startTime": 58.34,
+            "endTime": 58.5
+        },
+        {
+            "id": "khyKiic7",
+            "text": "there",
+            "type": "word",
+            "startTime": 58.5,
+            "endTime": 58.78
+        },
+        {
+            "id": "silence_372a2f1e-4138-4b58-a84b-b52b31b3b7a2",
+            "text": "",
+            "type": "silence",
+            "startTime": 58.78,
+            "endTime": 59.1
+        },
+        {
+            "id": "p2dwsW5t",
+            "text": "after",
+            "type": "word",
+            "startTime": 59.1,
+            "endTime": 59.46
+        },
+        {
+            "id": "LfY2vVZP",
+            "text": "the",
+            "type": "word",
+            "startTime": 59.46,
+            "endTime": 59.7
+        },
+        {
+            "id": "DyBvxw6Z",
+            "text": "moment",
+            "type": "word",
+            "startTime": 59.7,
+            "endTime": 59.98
+        },
+        {
+            "id": "puIIVaH3",
+            "text": "has",
+            "type": "word",
+            "startTime": 59.98,
+            "endTime": 60.22
+        },
+        {
+            "id": "XJfAnzLN",
+            "text": "passed",
+            "type": "word",
+            "startTime": 60.22,
+            "endTime": 60.7
+        },
+        {
+            "id": "BkN0j5IS",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 60.7,
+            "endTime": 60.7
+        },
+        {
+            "id": "silence_1da46fc9-034d-4903-b01d-27b9b64d20c2",
+            "text": "",
+            "type": "silence",
+            "startTime": 60.7,
+            "endTime": 61.1
+        },
+        {
+            "id": "tARzXi9v",
+            "text": "So",
+            "type": "word",
+            "startTime": 61.1,
+            "endTime": 61.38
+        },
+        {
+            "id": "HQVurwPq",
+            "text": "ask",
+            "type": "word",
+            "startTime": 61.38,
+            "endTime": 61.58
+        },
+        {
+            "id": "rMhI42VF",
+            "text": "yourself",
+            "type": "word",
+            "startTime": 61.58,
+            "endTime": 61.98
+        },
+        {
+            "id": "xviH8SrR",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 61.98,
+            "endTime": 61.98
+        },
+        {
+            "id": "aZjVeHNt",
+            "text": "am",
+            "type": "word",
+            "startTime": 61.98,
+            "endTime": 62.18
+        },
+        {
+            "id": "Hds9bVGr",
+            "text": "I",
+            "type": "word",
+            "startTime": 62.18,
+            "endTime": 62.34
+        },
+        {
+            "id": "JAHsmEcR",
+            "text": "genuinely",
+            "type": "word",
+            "startTime": 62.34,
+            "endTime": 62.74
+        },
+        {
+            "id": "kUHJQZCr",
+            "text": "hungry",
+            "type": "word",
+            "startTime": 62.74,
+            "endTime": 63.06
+        },
+        {
+            "id": "Lk95cBwu",
+            "text": "or",
+            "type": "word",
+            "startTime": 63.06,
+            "endTime": 63.22
+        },
+        {
+            "id": "Y3fYeBej",
+            "text": "can",
+            "type": "word",
+            "startTime": 63.22,
+            "endTime": 63.34
+        },
+        {
+            "id": "AdWRHi3t",
+            "text": "I",
+            "type": "word",
+            "startTime": 63.34,
+            "endTime": 63.46
+        },
+        {
+            "id": "hLmfn3Hy",
+            "text": "actually",
+            "type": "word",
+            "startTime": 63.46,
+            "endTime": 63.74
+        },
+        {
+            "id": "silence_ee775693-f4f1-4d77-93d0-0f4ae03ac556",
+            "text": "",
+            "type": "silence",
+            "startTime": 63.74,
+            "endTime": 64.04
+        },
+        {
+            "id": "CgERR9So",
+            "text": "weight",
+            "type": "word",
+            "startTime": 64.04,
+            "endTime": 64.36
+        },
+        {
+            "id": "W1n7Upgd",
+            "text": "?",
+            "type": "punctuation",
+            "startTime": 64.36,
+            "endTime": 64.36
+        },
+        {
+            "id": "silence_0036b406-52d3-4b1b-aa61-9885108da006",
+            "text": "",
+            "type": "silence",
+            "startTime": 64.36,
+            "endTime": 64.84
+        },
+        {
+            "id": "8hWl9tRl",
+            "text": "And",
+            "type": "word",
+            "startTime": 64.84,
+            "endTime": 65.12
+        },
+        {
+            "id": "eCeJASfm",
+            "text": "the",
+            "type": "word",
+            "startTime": 65.12,
+            "endTime": 65.24
+        },
+        {
+            "id": "SaQy0Tr5",
+            "text": "second",
+            "type": "word",
+            "startTime": 65.24,
+            "endTime": 65.44
+        },
+        {
+            "id": "ZsZlNyp2",
+            "text": "one",
+            "type": "word",
+            "startTime": 65.44,
+            "endTime": 65.68
+        },
+        {
+            "id": "zdx5vk1P",
+            "text": "is",
+            "type": "word",
+            "startTime": 65.68,
+            "endTime": 65.84
+        },
+        {
+            "id": "8qHtCrH3",
+            "text": "as",
+            "type": "word",
+            "startTime": 65.84,
+            "endTime": 66
+        },
+        {
+            "id": "n4Gu3zAe",
+            "text": "obvious",
+            "type": "word",
+            "startTime": 66,
+            "endTime": 66.36
+        },
+        {
+            "id": "UDyHKMz6",
+            "text": "as",
+            "type": "word",
+            "startTime": 66.36,
+            "endTime": 66.52
+        },
+        {
+            "id": "KXi7uIQf",
+            "text": "it",
+            "type": "word",
+            "startTime": 66.52,
+            "endTime": 66.68
+        },
+        {
+            "id": "n5KhIOfL",
+            "text": "sounds",
+            "type": "word",
+            "startTime": 66.68,
+            "endTime": 67.16
+        },
+        {
+            "id": "nM2aqys6",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 67.16,
+            "endTime": 67.16
+        },
+        {
+            "id": "silence_bfa16abd-04b2-4b9d-af46-b8cd92230523",
+            "text": "",
+            "type": "silence",
+            "startTime": 67.16,
+            "endTime": 67.32
+        },
+        {
+            "id": "jABNxjH0",
+            "text": "there",
+            "type": "word",
+            "startTime": 67.32,
+            "endTime": 67.6
+        },
+        {
+            "id": "TDDpVD6g",
+            "text": "are",
+            "type": "word",
+            "startTime": 67.6,
+            "endTime": 67.76
+        },
+        {
+            "id": "KR8rhLkr",
+            "text": "foods",
+            "type": "word",
+            "startTime": 67.76,
+            "endTime": 68.04
+        },
+        {
+            "id": "Q6DB6mmY",
+            "text": "that",
+            "type": "word",
+            "startTime": 68.04,
+            "endTime": 68.16
+        },
+        {
+            "id": "16LhaMYb",
+            "text": "we",
+            "type": "word",
+            "startTime": 68.16,
+            "endTime": 68.32
+        },
+        {
+            "id": "VWxDRzI4",
+            "text": "might",
+            "type": "word",
+            "startTime": 68.32,
+            "endTime": 68.48
+        },
+        {
+            "id": "8RzosR3V",
+            "text": "refer",
+            "type": "word",
+            "startTime": 68.48,
+            "endTime": 68.8
+        },
+        {
+            "id": "ctK5NX94",
+            "text": "to",
+            "type": "word",
+            "startTime": 68.8,
+            "endTime": 68.96
+        },
+        {
+            "id": "rX7XQ1RH",
+            "text": "as",
+            "type": "word",
+            "startTime": 68.96,
+            "endTime": 69.16
+        },
+        {
+            "id": "kHrlYqnE",
+            "text": "satiating",
+            "type": "word",
+            "startTime": 69.16,
+            "endTime": 69.96
+        },
+        {
+            "id": "rlnDhicF",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 69.96,
+            "endTime": 69.96
+        },
+        {
+            "id": "silence_fc163c22-86ac-4b8f-8659-0a2b8210fcd3",
+            "text": "",
+            "type": "silence",
+            "startTime": 69.96,
+            "endTime": 70.04
+        },
+        {
+            "id": "HdyFoVhz",
+            "text": "So",
+            "type": "word",
+            "startTime": 70.04,
+            "endTime": 70.32
+        },
+        {
+            "id": "cPjSxHif",
+            "text": "these",
+            "type": "word",
+            "startTime": 70.32,
+            "endTime": 70.44
+        },
+        {
+            "id": "ZNgmHCWj",
+            "text": "are",
+            "type": "word",
+            "startTime": 70.44,
+            "endTime": 70.56
+        },
+        {
+            "id": "ixgCXete",
+            "text": "the",
+            "type": "word",
+            "startTime": 70.56,
+            "endTime": 70.68
+        },
+        {
+            "id": "eprpGIc2",
+            "text": "ones",
+            "type": "word",
+            "startTime": 70.68,
+            "endTime": 70.88
+        },
+        {
+            "id": "Nt1AoMVR",
+            "text": "that",
+            "type": "word",
+            "startTime": 70.88,
+            "endTime": 71.04
+        },
+        {
+            "id": "1Z53BDrx",
+            "text": "are",
+            "type": "word",
+            "startTime": 71.04,
+            "endTime": 71.2
+        },
+        {
+            "id": "TN8ZR7Vt",
+            "text": "like",
+            "type": "word",
+            "startTime": 71.2,
+            "endTime": 71.48
+        },
+        {
+            "id": "ipNgiAHi",
+            "text": "nutrient",
+            "type": "word",
+            "startTime": 71.48,
+            "endTime": 72.2
+        },
+        {
+            "id": "ssySyyhO",
+            "text": "dense",
+            "type": "word",
+            "startTime": 72.2,
+            "endTime": 72.52
+        },
+        {
+            "id": "4UWcvur7",
+            "text": "and",
+            "type": "word",
+            "startTime": 72.52,
+            "endTime": 72.84
+        },
+        {
+            "id": "DEz3uXUi",
+            "text": "fairly",
+            "type": "word",
+            "startTime": 72.84,
+            "endTime": 73.28
+        },
+        {
+            "id": "SqFbXnHj",
+            "text": "calorie",
+            "type": "word",
+            "startTime": 73.28,
+            "endTime": 73.72
+        },
+        {
+            "id": "XrfpsoC7",
+            "text": "poor",
+            "type": "word",
+            "startTime": 73.72,
+            "endTime": 74.08
+        },
+        {
+            "id": "y3tgU5ZN",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 74.08,
+            "endTime": 74.08
+        },
+        {
+            "id": "HVKD8TPE",
+            "text": "These",
+            "type": "word",
+            "startTime": 74.08,
+            "endTime": 74.32
+        },
+        {
+            "id": "nC7IhHSH",
+            "text": "are",
+            "type": "word",
+            "startTime": 74.32,
+            "endTime": 74.48
+        },
+        {
+            "id": "38XHdSDe",
+            "text": "things",
+            "type": "word",
+            "startTime": 74.48,
+            "endTime": 74.64
+        },
+        {
+            "id": "W5itJAWU",
+            "text": "that",
+            "type": "word",
+            "startTime": 74.64,
+            "endTime": 74.8
+        },
+        {
+            "id": "h2mZI44P",
+            "text": "will",
+            "type": "word",
+            "startTime": 74.8,
+            "endTime": 74.96
+        },
+        {
+            "id": "YZnH5bIh",
+            "text": "fill",
+            "type": "word",
+            "startTime": 74.96,
+            "endTime": 75.2
+        },
+        {
+            "id": "qkhfce8q",
+            "text": "you",
+            "type": "word",
+            "startTime": 75.2,
+            "endTime": 75.32
+        },
+        {
+            "id": "Z67oj3tx",
+            "text": "up",
+            "type": "word",
+            "startTime": 75.32,
+            "endTime": 75.56
+        },
+        {
+            "id": "YVXdCkUB",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 75.56,
+            "endTime": 75.56
+        },
+        {
+            "id": "silence_96e55b67-864e-4493-bdd3-eda853a822ae",
+            "text": "",
+            "type": "silence",
+            "startTime": 75.56,
+            "endTime": 75.96
+        },
+        {
+            "id": "3IfHmeoU",
+            "text": "So",
+            "type": "word",
+            "startTime": 75.96,
+            "endTime": 76.2
+        },
+        {
+            "id": "Y25qfnea",
+            "text": "you",
+            "type": "word",
+            "startTime": 76.2,
+            "endTime": 76.32
+        },
+        {
+            "id": "AOswLWKO",
+            "text": "know",
+            "type": "word",
+            "startTime": 76.32,
+            "endTime": 76.6
+        },
+        {
+            "id": "ih3ZWcPZ",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 76.6,
+            "endTime": 76.6
+        },
+        {
+            "id": "silence_6e70427c-593d-415a-bb24-a3a28fd9dfb3",
+            "text": "",
+            "type": "silence",
+            "startTime": 76.6,
+            "endTime": 76.68
+        },
+        {
+            "id": "RrGbvR6Z",
+            "text": "things",
+            "type": "word",
+            "startTime": 76.68,
+            "endTime": 76.96
+        },
+        {
+            "id": "NRRV0PCD",
+            "text": "like",
+            "type": "word",
+            "startTime": 76.96,
+            "endTime": 77.16
+        },
+        {
+            "id": "1VGhjUKW",
+            "text": "fibrous",
+            "type": "word",
+            "startTime": 77.16,
+            "endTime": 77.72
+        },
+        {
+            "id": "Vn155UZx",
+            "text": "vegetables",
+            "type": "word",
+            "startTime": 77.72,
+            "endTime": 78.4
+        },
+        {
+            "id": "3HJaQfsp",
+            "text": "or",
+            "type": "word",
+            "startTime": 78.4,
+            "endTime": 78.76
+        },
+        {
+            "id": "silence_2a28303d-ffce-4c5d-90ca-e854c776641e",
+            "text": "",
+            "type": "silence",
+            "startTime": 78.76,
+            "endTime": 78.84
+        },
+        {
+            "id": "XgIVnWdB",
+            "text": "oatmeal",
+            "type": "word",
+            "startTime": 78.84,
+            "endTime": 79.56
+        },
+        {
+            "id": "OMBYOMeN",
+            "text": "or",
+            "type": "word",
+            "startTime": 79.56,
+            "endTime": 79.8
+        },
+        {
+            "id": "Rvl1Eh5Z",
+            "text": "potatoes",
+            "type": "word",
+            "startTime": 79.8,
+            "endTime": 80.6
+        },
+        {
+            "id": "NzhgDRg9",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 80.6,
+            "endTime": 80.6
+        },
+        {
+            "id": "silence_5b880a7a-96ce-4954-b3c8-713d95c1b289",
+            "text": "",
+            "type": "silence",
+            "startTime": 80.6,
+            "endTime": 80.76
+        },
+        {
+            "id": "zHcWHOOc",
+            "text": "the",
+            "type": "word",
+            "startTime": 80.76,
+            "endTime": 81.08
+        },
+        {
+            "id": "1R8sxv5y",
+            "text": "sort",
+            "type": "word",
+            "startTime": 81.08,
+            "endTime": 81.28
+        },
+        {
+            "id": "ok0iA7Hh",
+            "text": "of",
+            "type": "word",
+            "startTime": 81.28,
+            "endTime": 81.36
+        },
+        {
+            "id": "Z1aOiKO9",
+            "text": "random",
+            "type": "word",
+            "startTime": 81.36,
+            "endTime": 81.72
+        },
+        {
+            "id": "kMWktl0T",
+            "text": "stuff",
+            "type": "word",
+            "startTime": 81.72,
+            "endTime": 82
+        },
+        {
+            "id": "NmlL6Auj",
+            "text": "that",
+            "type": "word",
+            "startTime": 82,
+            "endTime": 82.12
+        },
+        {
+            "id": "xsCkt3i7",
+            "text": "gets",
+            "type": "word",
+            "startTime": 82.12,
+            "endTime": 82.32
+        },
+        {
+            "id": "pbUtkG8Z",
+            "text": "demonized",
+            "type": "word",
+            "startTime": 82.32,
+            "endTime": 82.92
+        },
+        {
+            "id": "Tc43r8fN",
+            "text": "by",
+            "type": "word",
+            "startTime": 82.92,
+            "endTime": 83.24
+        },
+        {
+            "id": "silence_f0778e74-b7c8-4c28-ab3f-2c4fc77cec55",
+            "text": "",
+            "type": "silence",
+            "startTime": 83.24,
+            "endTime": 83.4
+        },
+        {
+            "id": "x8uYiDEY",
+            "text": "idiotic",
+            "type": "word",
+            "startTime": 83.4,
+            "endTime": 84.12
+        },
+        {
+            "id": "jF11lf7G",
+            "text": "19",
+            "type": "word",
+            "startTime": 84.12,
+            "endTime": 84.4
+        },
+        {
+            "id": "CSIsg2kz",
+            "text": "year",
+            "type": "word",
+            "startTime": 84.4,
+            "endTime": 84.64
+        },
+        {
+            "id": "aSI7WS9V",
+            "text": "old",
+            "type": "word",
+            "startTime": 84.64,
+            "endTime": 84.84
+        },
+        {
+            "id": "ZRlDAybp",
+            "text": "wellness",
+            "type": "word",
+            "startTime": 84.84,
+            "endTime": 85.28
+        },
+        {
+            "id": "1SK2kBlA",
+            "text": "influencers",
+            "type": "word",
+            "startTime": 85.28,
+            "endTime": 86.12
+        },
+        {
+            "id": "HF4emPPJ",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 86.12,
+            "endTime": 86.12
+        },
+        {
+            "id": "IuG00xFj",
+            "text": "So",
+            "type": "word",
+            "startTime": 86.12,
+            "endTime": 86.36
+        },
+        {
+            "id": "QZndYRba",
+            "text": "these",
+            "type": "word",
+            "startTime": 86.36,
+            "endTime": 86.52
+        },
+        {
+            "id": "q4MH0dMy",
+            "text": "need",
+            "type": "word",
+            "startTime": 86.52,
+            "endTime": 86.72
+        },
+        {
+            "id": "QQGpQML2",
+            "text": "to",
+            "type": "word",
+            "startTime": 86.72,
+            "endTime": 86.84
+        },
+        {
+            "id": "xlaEZapX",
+            "text": "be",
+            "type": "word",
+            "startTime": 86.84,
+            "endTime": 86.96
+        },
+        {
+            "id": "gOUULSrS",
+            "text": "your",
+            "type": "word",
+            "startTime": 86.96,
+            "endTime": 87.16
+        },
+        {
+            "id": "sOpB6vOl",
+            "text": "go",
+            "type": "word",
+            "startTime": 87.16,
+            "endTime": 87.4
+        },
+        {
+            "id": "1Qp63WTl",
+            "text": "to",
+            "type": "word",
+            "startTime": 87.4,
+            "endTime": 87.72
+        },
+        {
+            "id": "7pwi0Mym",
+            "text": "food",
+            "type": "word",
+            "startTime": 87.72,
+            "endTime": 88.08
+        },
+        {
+            "id": "GcdSNSwS",
+            "text": "types",
+            "type": "word",
+            "startTime": 88.08,
+            "endTime": 88.52
+        },
+        {
+            "id": "silence_35048727-142d-421b-816c-ebce51e1a661",
+            "text": "",
+            "type": "silence",
+            "startTime": 88.52,
+            "endTime": 88.84
+        },
+        {
+            "id": "UtqNm3pw",
+            "text": "for",
+            "type": "word",
+            "startTime": 88.84,
+            "endTime": 89.12
+        },
+        {
+            "id": "6a8hL1pK",
+            "text": "when",
+            "type": "word",
+            "startTime": 89.12,
+            "endTime": 89.28
+        },
+        {
+            "id": "WRd0ioJn",
+            "text": "you're",
+            "type": "word",
+            "startTime": 89.28,
+            "endTime": 89.52
+        },
+        {
+            "id": "n5RU2z8A",
+            "text": "actually",
+            "type": "word",
+            "startTime": 89.52,
+            "endTime": 89.76
+        },
+        {
+            "id": "ZUYNECrF",
+            "text": "genuinely",
+            "type": "word",
+            "startTime": 89.76,
+            "endTime": 90.32
+        },
+        {
+            "id": "ybNN1Cww",
+            "text": "experiencing",
+            "type": "word",
+            "startTime": 90.32,
+            "endTime": 90.8
+        },
+        {
+            "id": "2sqVPdAa",
+            "text": "hunger",
+            "type": "word",
+            "startTime": 90.8,
+            "endTime": 91.16
+        },
+        {
+            "id": "pB6FAqcy",
+            "text": "pangs",
+            "type": "word",
+            "startTime": 91.16,
+            "endTime": 91.56
+        },
+        {
+            "id": "6QEX8gcG",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 91.56,
+            "endTime": 91.56
+        },
+        {
+            "id": "0lH8Mb53",
+            "text": "Because",
+            "type": "word",
+            "startTime": 91.56,
+            "endTime": 91.88
+        },
+        {
+            "id": "X0AHPaXu",
+            "text": "the",
+            "type": "word",
+            "startTime": 91.88,
+            "endTime": 92.16
+        },
+        {
+            "id": "3HVkFHyL",
+            "text": "mistake",
+            "type": "word",
+            "startTime": 92.16,
+            "endTime": 92.52
+        },
+        {
+            "id": "Lw8Tc7bc",
+            "text": "you're",
+            "type": "word",
+            "startTime": 92.52,
+            "endTime": 92.76
+        },
+        {
+            "id": "Qmn8lFQh",
+            "text": "making",
+            "type": "word",
+            "startTime": 92.76,
+            "endTime": 92.96
+        },
+        {
+            "id": "L19fBWXg",
+            "text": "is",
+            "type": "word",
+            "startTime": 92.96,
+            "endTime": 93.24
+        },
+        {
+            "id": "hXm9oma3",
+            "text": "often",
+            "type": "word",
+            "startTime": 93.24,
+            "endTime": 93.48
+        },
+        {
+            "id": "A6d7ASHe",
+            "text": "you",
+            "type": "word",
+            "startTime": 93.48,
+            "endTime": 93.68
+        },
+        {
+            "id": "kUyk0tRR",
+            "text": "guys",
+            "type": "word",
+            "startTime": 93.68,
+            "endTime": 93.92
+        },
+        {
+            "id": "sDW2xeok",
+            "text": "are",
+            "type": "word",
+            "startTime": 93.92,
+            "endTime": 94.08
+        },
+        {
+            "id": "D5wgXfZ6",
+            "text": "reaching",
+            "type": "word",
+            "startTime": 94.08,
+            "endTime": 94.32
+        },
+        {
+            "id": "LXXHRZME",
+            "text": "for",
+            "type": "word",
+            "startTime": 94.32,
+            "endTime": 94.48
+        },
+        {
+            "id": "VZgjHp2S",
+            "text": "a",
+            "type": "word",
+            "startTime": 94.48,
+            "endTime": 94.64
+        },
+        {
+            "id": "wyrDluXN",
+            "text": "snack",
+            "type": "word",
+            "startTime": 94.64,
+            "endTime": 94.92
+        },
+        {
+            "id": "yEdbet3A",
+            "text": "food",
+            "type": "word",
+            "startTime": 94.92,
+            "endTime": 95.16
+        },
+        {
+            "id": "zCslFOet",
+            "text": "or",
+            "type": "word",
+            "startTime": 95.16,
+            "endTime": 95.36
+        },
+        {
+            "id": "3nxpkJJ2",
+            "text": "a",
+            "type": "word",
+            "startTime": 95.36,
+            "endTime": 95.48
+        },
+        {
+            "id": "RC701lRG",
+            "text": "protein",
+            "type": "word",
+            "startTime": 95.48,
+            "endTime": 95.71
+        },
+        {
+            "id": "KIATFPj0",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 95.71,
+            "endTime": 95.71
+        },
+        {
+            "id": "silence_a0c6eedd-c0f8-4076-ab0b-497770931320",
+            "text": "",
+            "type": "silence",
+            "startTime": 95.71,
+            "endTime": 95.94
+        },
+        {
+            "id": "vqC0v4An",
+            "text": "this",
+            "type": "word",
+            "startTime": 95.94,
+            "endTime": 96.1
+        },
+        {
+            "id": "VsUFJVa7",
+            "text": "thing",
+            "type": "word",
+            "startTime": 96.1,
+            "endTime": 96.34
+        },
+        {
+            "id": "98yxgEpz",
+            "text": "like",
+            "type": "word",
+            "startTime": 96.34,
+            "endTime": 96.66
+        },
+        {
+            "id": "silence_76bf8d2a-2e11-4b43-bb19-3bb6e2901d9e",
+            "text": "",
+            "type": "silence",
+            "startTime": 96.66,
+            "endTime": 96.82
+        },
+        {
+            "id": "3a5lNRUK",
+            "text": "a",
+            "type": "word",
+            "startTime": 96.82,
+            "endTime": 97.1
+        },
+        {
+            "id": "0cu3Qhwg",
+            "text": "protein",
+            "type": "word",
+            "startTime": 97.1,
+            "endTime": 97.42
+        },
+        {
+            "id": "f84VovgB",
+            "text": "bar",
+            "type": "word",
+            "startTime": 97.42,
+            "endTime": 97.62
+        },
+        {
+            "id": "mueU3rH9",
+            "text": "or",
+            "type": "word",
+            "startTime": 97.62,
+            "endTime": 97.78
+        },
+        {
+            "id": "mq8e0EpO",
+            "text": "a",
+            "type": "word",
+            "startTime": 97.78,
+            "endTime": 97.9
+        },
+        {
+            "id": "fJxGc6fI",
+            "text": "snack",
+            "type": "word",
+            "startTime": 97.9,
+            "endTime": 98.18
+        },
+        {
+            "id": "9wHGl7D7",
+            "text": "bar",
+            "type": "word",
+            "startTime": 98.18,
+            "endTime": 98.5
+        },
+        {
+            "id": "silence_8a5578fc-611d-4085-affe-61e6094e56b0",
+            "text": "",
+            "type": "silence",
+            "startTime": 98.5,
+            "endTime": 98.58
+        },
+        {
+            "id": "p8i3JNMV",
+            "text": "and",
+            "type": "word",
+            "startTime": 98.58,
+            "endTime": 98.86
+        },
+        {
+            "id": "7a7uUGQu",
+            "text": "this",
+            "type": "word",
+            "startTime": 98.86,
+            "endTime": 99.02
+        },
+        {
+            "id": "WIgZD1og",
+            "text": "won't",
+            "type": "word",
+            "startTime": 99.02,
+            "endTime": 99.22
+        },
+        {
+            "id": "O2TVd5fR",
+            "text": "leave",
+            "type": "word",
+            "startTime": 99.22,
+            "endTime": 99.38
+        },
+        {
+            "id": "XK3AHZDw",
+            "text": "you",
+            "type": "word",
+            "startTime": 99.38,
+            "endTime": 99.5
+        },
+        {
+            "id": "58APQ8wX",
+            "text": "satisfied",
+            "type": "word",
+            "startTime": 99.5,
+            "endTime": 100.02
+        },
+        {
+            "id": "kzofrdcp",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 100.02,
+            "endTime": 100.02
+        },
+        {
+            "id": "pgrF4eDI",
+            "text": "you'll",
+            "type": "word",
+            "startTime": 100.02,
+            "endTime": 100.42
+        },
+        {
+            "id": "u8eChPUT",
+            "text": "just",
+            "type": "word",
+            "startTime": 100.42,
+            "endTime": 100.58
+        },
+        {
+            "id": "vSCjaTPF",
+            "text": "end",
+            "type": "word",
+            "startTime": 100.58,
+            "endTime": 100.78
+        },
+        {
+            "id": "BWzxDlQA",
+            "text": "up",
+            "type": "word",
+            "startTime": 100.78,
+            "endTime": 100.94
+        },
+        {
+            "id": "5FowzTey",
+            "text": "wanting",
+            "type": "word",
+            "startTime": 100.94,
+            "endTime": 101.26
+        },
+        {
+            "id": "Ri1Q9mZo",
+            "text": "to",
+            "type": "word",
+            "startTime": 101.26,
+            "endTime": 101.42
+        },
+        {
+            "id": "1mDGM3jz",
+            "text": "eat",
+            "type": "word",
+            "startTime": 101.42,
+            "endTime": 101.66
+        },
+        {
+            "id": "2fCOcZ64",
+            "text": "more",
+            "type": "word",
+            "startTime": 101.66,
+            "endTime": 101.82
+        },
+        {
+            "id": "DFvjWaRS",
+            "text": "afterwards",
+            "type": "word",
+            "startTime": 101.82,
+            "endTime": 102.34
+        },
+        {
+            "id": "dTVZFkhx",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 102.34,
+            "endTime": 102.34
+        },
+        {
+            "id": "silence_ae257e71-40d1-4cd9-8e76-b57e111614c7",
+            "text": "",
+            "type": "silence",
+            "startTime": 102.34,
+            "endTime": 102.5
+        },
+        {
+            "id": "hK56Rhon",
+            "text": "And",
+            "type": "word",
+            "startTime": 102.5,
+            "endTime": 102.74
+        },
+        {
+            "id": "quqGOskr",
+            "text": "we",
+            "type": "word",
+            "startTime": 102.74,
+            "endTime": 102.86
+        },
+        {
+            "id": "KTwtH9ZB",
+            "text": "know",
+            "type": "word",
+            "startTime": 102.86,
+            "endTime": 103.02
+        },
+        {
+            "id": "6ddIEBy0",
+            "text": "what",
+            "type": "word",
+            "startTime": 103.02,
+            "endTime": 103.14
+        },
+        {
+            "id": "x1n43VgY",
+            "text": "happens",
+            "type": "word",
+            "startTime": 103.14,
+            "endTime": 103.42
+        },
+        {
+            "id": "EU53RdZ4",
+            "text": "then",
+            "type": "word",
+            "startTime": 103.42,
+            "endTime": 103.7
+        },
+        {
+            "id": "mNTmI7q5",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 103.7,
+            "endTime": 103.7
+        },
+        {
+            "id": "silence_e962524f-329e-402b-8bb3-0b6b43413152",
+            "text": "",
+            "type": "silence",
+            "startTime": 103.7,
+            "endTime": 104.82
+        },
+        {
+            "id": "jBevJWcf",
+            "text": "So",
+            "type": "word",
+            "startTime": 104.82,
+            "endTime": 105.06
+        },
+        {
+            "id": "xtD1oeb4",
+            "text": "in",
+            "type": "word",
+            "startTime": 105.06,
+            "endTime": 105.22
+        },
+        {
+            "id": "Ai7Wzxgr",
+            "text": "summary",
+            "type": "word",
+            "startTime": 105.22,
+            "endTime": 105.5
+        },
+        {
+            "id": "fga7N7NE",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 105.5,
+            "endTime": 105.5
+        },
+        {
+            "id": "pnaWgaKf",
+            "text": "a",
+            "type": "word",
+            "startTime": 105.5,
+            "endTime": 105.62
+        },
+        {
+            "id": "MUOP5Ost",
+            "text": "lot",
+            "type": "word",
+            "startTime": 105.62,
+            "endTime": 105.74
+        },
+        {
+            "id": "lsNsZWRZ",
+            "text": "of",
+            "type": "word",
+            "startTime": 105.74,
+            "endTime": 105.86
+        },
+        {
+            "id": "Nvtv7sdr",
+            "text": "this",
+            "type": "word",
+            "startTime": 105.86,
+            "endTime": 105.98
+        },
+        {
+            "id": "cebimpMl",
+            "text": "just",
+            "type": "word",
+            "startTime": 105.98,
+            "endTime": 106.14
+        },
+        {
+            "id": "s7VMpqGU",
+            "text": "comes",
+            "type": "word",
+            "startTime": 106.14,
+            "endTime": 106.3
+        },
+        {
+            "id": "w48bGJCV",
+            "text": "down",
+            "type": "word",
+            "startTime": 106.3,
+            "endTime": 106.5
+        },
+        {
+            "id": "9sFGplIa",
+            "text": "to",
+            "type": "word",
+            "startTime": 106.5,
+            "endTime": 106.7
+        },
+        {
+            "id": "SbxMf8O4",
+            "text": "being",
+            "type": "word",
+            "startTime": 106.7,
+            "endTime": 106.9
+        },
+        {
+            "id": "Q44f03Iq",
+            "text": "present",
+            "type": "word",
+            "startTime": 106.9,
+            "endTime": 107.18
+        },
+        {
+            "id": "UMWElBIQ",
+            "text": "and",
+            "type": "word",
+            "startTime": 107.18,
+            "endTime": 107.5
+        },
+        {
+            "id": "741K8z95",
+            "text": "mindful",
+            "type": "word",
+            "startTime": 107.5,
+            "endTime": 107.98
+        },
+        {
+            "id": "0lcC6S4m",
+            "text": "when",
+            "type": "word",
+            "startTime": 107.98,
+            "endTime": 108.18
+        },
+        {
+            "id": "Xgm8eFzD",
+            "text": "you're",
+            "type": "word",
+            "startTime": 108.18,
+            "endTime": 108.38
+        },
+        {
+            "id": "10wEp5NY",
+            "text": "navigating",
+            "type": "word",
+            "startTime": 108.38,
+            "endTime": 108.98
+        },
+        {
+            "id": "mTeeZCpz",
+            "text": "your",
+            "type": "word",
+            "startTime": 108.98,
+            "endTime": 109.38
+        },
+        {
+            "id": "silence_2fffc020-b838-4c3a-b285-1fcead7e1d93",
+            "text": "",
+            "type": "silence",
+            "startTime": 109.38,
+            "endTime": 109.54
+        },
+        {
+            "id": "2y99obEm",
+            "text": "sort",
+            "type": "word",
+            "startTime": 109.54,
+            "endTime": 109.82
+        },
+        {
+            "id": "P9c2rTt2",
+            "text": "of",
+            "type": "word",
+            "startTime": 109.82,
+            "endTime": 109.9
+        },
+        {
+            "id": "1TvhQg32",
+            "text": "day",
+            "type": "word",
+            "startTime": 109.9,
+            "endTime": 110.06
+        },
+        {
+            "id": "zUFSfWbO",
+            "text": "to",
+            "type": "word",
+            "startTime": 110.06,
+            "endTime": 110.22
+        },
+        {
+            "id": "qGZu57fN",
+            "text": "day",
+            "type": "word",
+            "startTime": 110.22,
+            "endTime": 110.42
+        },
+        {
+            "id": "3A3aHsDk",
+            "text": "hunger",
+            "type": "word",
+            "startTime": 110.42,
+            "endTime": 110.82
+        },
+        {
+            "id": "5XvqeZ2d",
+            "text": "signals",
+            "type": "word",
+            "startTime": 110.82,
+            "endTime": 111.38
+        },
+        {
+            "id": "q198O5fk",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 111.38,
+            "endTime": 111.38
+        },
+        {
+            "id": "silence_4c63ca40-6e6e-4df2-baf8-283cf8e0d910",
+            "text": "",
+            "type": "silence",
+            "startTime": 111.38,
+            "endTime": 111.54
+        },
+        {
+            "id": "jhuqNYRr",
+            "text": "And",
+            "type": "word",
+            "startTime": 111.54,
+            "endTime": 111.9
+        },
+        {
+            "id": "IzzROmbw",
+            "text": "like",
+            "type": "word",
+            "startTime": 111.9,
+            "endTime": 112.18
+        },
+        {
+            "id": "g6H38KRm",
+            "text": "90%",
+            "type": "word",
+            "startTime": 112.18,
+            "endTime": 112.74
+        },
+        {
+            "id": "3ZT0vDff",
+            "text": "of",
+            "type": "word",
+            "startTime": 112.74,
+            "endTime": 112.94
+        },
+        {
+            "id": "Q99CEpG2",
+            "text": "these",
+            "type": "word",
+            "startTime": 112.94,
+            "endTime": 113.18
+        },
+        {
+            "id": "cH8vNQzT",
+            "text": "things",
+            "type": "word",
+            "startTime": 113.18,
+            "endTime": 113.5
+        },
+        {
+            "id": "noYwgRJK",
+            "text": "can",
+            "type": "word",
+            "startTime": 113.5,
+            "endTime": 113.7
+        },
+        {
+            "id": "50Ox2jkL",
+            "text": "be",
+            "type": "word",
+            "startTime": 113.7,
+            "endTime": 113.82
+        },
+        {
+            "id": "qs6ncBYR",
+            "text": "overcome",
+            "type": "word",
+            "startTime": 113.82,
+            "endTime": 114.38
+        },
+        {
+            "id": "hujZQcLu",
+            "text": "with",
+            "type": "word",
+            "startTime": 114.38,
+            "endTime": 114.54
+        },
+        {
+            "id": "P1O8XcEC",
+            "text": "a",
+            "type": "word",
+            "startTime": 114.54,
+            "endTime": 114.7
+        },
+        {
+            "id": "35MToG3E",
+            "text": "little",
+            "type": "word",
+            "startTime": 114.7,
+            "endTime": 114.86
+        },
+        {
+            "id": "54uWNaOW",
+            "text": "bit",
+            "type": "word",
+            "startTime": 114.86,
+            "endTime": 114.98
+        },
+        {
+            "id": "F17yJFgv",
+            "text": "of",
+            "type": "word",
+            "startTime": 114.98,
+            "endTime": 115.1
+        },
+        {
+            "id": "2oYns1iE",
+            "text": "patience",
+            "type": "word",
+            "startTime": 115.1,
+            "endTime": 115.54
+        },
+        {
+            "id": "silence_2c757cc7-3817-4d75-b5a8-6f972b3df5e4",
+            "text": "",
+            "type": "silence",
+            "startTime": 115.54,
+            "endTime": 115.78
+        },
+        {
+            "id": "YFqrmhRN",
+            "text": "and",
+            "type": "word",
+            "startTime": 115.78,
+            "endTime": 116.1
+        },
+        {
+            "id": "VsEO9Ico",
+            "text": "a",
+            "type": "word",
+            "startTime": 116.1,
+            "endTime": 116.3
+        },
+        {
+            "id": "2LlJsF9u",
+            "text": "little",
+            "type": "word",
+            "startTime": 116.3,
+            "endTime": 116.46
+        },
+        {
+            "id": "xa6Al7Uu",
+            "text": "bit",
+            "type": "word",
+            "startTime": 116.46,
+            "endTime": 116.62
+        },
+        {
+            "id": "ZDoZvb1Y",
+            "text": "of",
+            "type": "word",
+            "startTime": 116.62,
+            "endTime": 116.78
+        },
+        {
+            "id": "JJZ7F4q3",
+            "text": "thought",
+            "type": "word",
+            "startTime": 116.78,
+            "endTime": 117.06
+        },
+        {
+            "id": "ciSSEvni",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 117.06,
+            "endTime": 117.06
+        },
+        {
+            "id": "silence_52b4e741-0d75-459f-a98d-e29802f684bc",
+            "text": "",
+            "type": "silence",
+            "startTime": 117.06,
+            "endTime": 117.62
+        },
+        {
+            "id": "AQL2yxDC",
+            "text": "So",
+            "type": "word",
+            "startTime": 117.62,
+            "endTime": 117.9
+        },
+        {
+            "id": "Izg4FdwD",
+            "text": "look",
+            "type": "word",
+            "startTime": 117.9,
+            "endTime": 118.06
+        },
+        {
+            "id": "MWy9lDAZ",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 118.06,
+            "endTime": 118.06
+        },
+        {
+            "id": "BboGJG8k",
+            "text": "if",
+            "type": "word",
+            "startTime": 118.06,
+            "endTime": 118.22
+        },
+        {
+            "id": "OH71rFpy",
+            "text": "you",
+            "type": "word",
+            "startTime": 118.22,
+            "endTime": 118.34
+        },
+        {
+            "id": "Va92RapW",
+            "text": "want",
+            "type": "word",
+            "startTime": 118.34,
+            "endTime": 118.46
+        },
+        {
+            "id": "q8v9hSvZ",
+            "text": "to",
+            "type": "word",
+            "startTime": 118.46,
+            "endTime": 118.62
+        },
+        {
+            "id": "lKr7O3a7",
+            "text": "know",
+            "type": "word",
+            "startTime": 118.62,
+            "endTime": 118.78
+        },
+        {
+            "id": "vbFQXoS0",
+            "text": "how",
+            "type": "word",
+            "startTime": 118.78,
+            "endTime": 118.94
+        },
+        {
+            "id": "JA0LfaSy",
+            "text": "to",
+            "type": "word",
+            "startTime": 118.94,
+            "endTime": 119.1
+        },
+        {
+            "id": "NJZaJIzi",
+            "text": "lose",
+            "type": "word",
+            "startTime": 119.1,
+            "endTime": 119.34
+        },
+        {
+            "id": "8ZJx3JxC",
+            "text": "fat",
+            "type": "word",
+            "startTime": 119.34,
+            "endTime": 119.7
+        },
+        {
+            "id": "5WW2R6oK",
+            "text": "consistently",
+            "type": "word",
+            "startTime": 119.7,
+            "endTime": 120.34
+        },
+        {
+            "id": "6v6U3OdR",
+            "text": "and",
+            "type": "word",
+            "startTime": 120.34,
+            "endTime": 120.62
+        },
+        {
+            "id": "JLZ1Yeww",
+            "text": "to",
+            "type": "word",
+            "startTime": 120.62,
+            "endTime": 120.78
+        },
+        {
+            "id": "qHDbtZjh",
+            "text": "stop",
+            "type": "word",
+            "startTime": 120.78,
+            "endTime": 120.98
+        },
+        {
+            "id": "XfVuC0ly",
+            "text": "going",
+            "type": "word",
+            "startTime": 120.98,
+            "endTime": 121.22
+        },
+        {
+            "id": "BtctuRxA",
+            "text": "around",
+            "type": "word",
+            "startTime": 121.22,
+            "endTime": 121.42
+        },
+        {
+            "id": "9FhA10tr",
+            "text": "in",
+            "type": "word",
+            "startTime": 121.42,
+            "endTime": 121.58
+        },
+        {
+            "id": "z2KKcChR",
+            "text": "circles",
+            "type": "word",
+            "startTime": 121.58,
+            "endTime": 121.98
+        },
+        {
+            "id": "6dz3w6oQ",
+            "text": "every",
+            "type": "word",
+            "startTime": 121.98,
+            "endTime": 122.22
+        },
+        {
+            "id": "76B8rqJK",
+            "text": "few",
+            "type": "word",
+            "startTime": 122.22,
+            "endTime": 122.46
+        },
+        {
+            "id": "Vd4Qras8",
+            "text": "weeks",
+            "type": "word",
+            "startTime": 122.46,
+            "endTime": 122.74
+        },
+        {
+            "id": "gOl18KrU",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 122.74,
+            "endTime": 122.74
+        },
+        {
+            "id": "silence_ad439b5e-3b4c-4163-8206-256d7b36c579",
+            "text": "",
+            "type": "silence",
+            "startTime": 122.74,
+            "endTime": 123.14
+        },
+        {
+            "id": "3X0jlQZS",
+            "text": "drop",
+            "type": "word",
+            "startTime": 123.14,
+            "endTime": 123.46
+        },
+        {
+            "id": "DVldBr75",
+            "text": "me",
+            "type": "word",
+            "startTime": 123.46,
+            "endTime": 123.54
+        },
+        {
+            "id": "gofdo4Wb",
+            "text": "a",
+            "type": "word",
+            "startTime": 123.54,
+            "endTime": 123.62
+        },
+        {
+            "id": "Okm4ONNl",
+            "text": "DM",
+            "type": "word",
+            "startTime": 123.62,
+            "endTime": 123.86
+        },
+        {
+            "id": "iYYKTIIz",
+            "text": "with",
+            "type": "word",
+            "startTime": 123.86,
+            "endTime": 124.06
+        },
+        {
+            "id": "o7afThXT",
+            "text": "the",
+            "type": "word",
+            "startTime": 124.06,
+            "endTime": 124.18
+        },
+        {
+            "id": "cbpQChye",
+            "text": "word",
+            "type": "word",
+            "startTime": 124.18,
+            "endTime": 124.38
+        },
+        {
+            "id": "Lk6fEGoK",
+            "text": "interested",
+            "type": "word",
+            "startTime": 124.38,
+            "endTime": 124.98
+        },
+        {
+            "id": "5Fmf3zkQ",
+            "text": ",",
+            "type": "punctuation",
+            "startTime": 124.98,
+            "endTime": 124.98
+        },
+        {
+            "id": "silence_5b87dfb5-44aa-48fc-88ba-fc97aa7a49d1",
+            "text": "",
+            "type": "silence",
+            "startTime": 124.98,
+            "endTime": 125.14
+        },
+        {
+            "id": "fmmpKnk0",
+            "text": "and",
+            "type": "word",
+            "startTime": 125.14,
+            "endTime": 125.42
+        },
+        {
+            "id": "bTqtGXEC",
+            "text": "I'll",
+            "type": "word",
+            "startTime": 125.42,
+            "endTime": 125.62
+        },
+        {
+            "id": "28rX4Mhf",
+            "text": "be",
+            "type": "word",
+            "startTime": 125.62,
+            "endTime": 125.74
+        },
+        {
+            "id": "mw4G3t6u",
+            "text": "in",
+            "type": "word",
+            "startTime": 125.74,
+            "endTime": 125.86
+        },
+        {
+            "id": "ZnMeRlJV",
+            "text": "touch",
+            "type": "word",
+            "startTime": 125.86,
+            "endTime": 126.18
+        },
+        {
+            "id": "VRs9s088",
+            "text": ".",
+            "type": "punctuation",
+            "startTime": 126.18,
+            "endTime": 126.18
+        },
+        {
+            "id": "silence_8e2db6a8-e6bc-4531-8bf2-9f1054c9bbb5",
+            "text": "",
+            "type": "silence",
+            "startTime": 126.18,
+            "endTime": 126.734512
+        }
+    ],
+    "magicClips": [],
+    "previewUrl": "https://app.submagic.co/view/251d9007-8ce4-4cc9-9bb7-5556b2221329"
+}

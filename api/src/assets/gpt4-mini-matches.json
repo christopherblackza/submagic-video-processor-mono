@@ -1,0 +1,31 @@
+{
+    "projectId": "251d9007-8ce4-4cc9-9bb7-5556b2221329",
+    "matches": [
+        {
+            "userMediaId": "bcc3d882-b606-49c1-b2af-df9934a48584",
+            "startTime": 70.04,
+            "endTime": 74.08,
+            "confidence": 0.8,
+            "reason": "The segment discusses nutrient-dense, calorie-poor foods that are satiating, which aligns well with the close-up of a nutrition plan showing protein, carbs, and macros.",
+            "matchedText": "there are foods that we might refer to as satiating"
+        },
+        {
+            "userMediaId": "daf5d010-0138-49f0-8c17-e5678b56ff25",
+            "startTime": 86.12,
+            "endTime": 91.56,
+            "confidence": 0.7,
+            "reason": "The segment emphasizes the importance of choosing the right foods when experiencing hunger pangs, which can be illustrated by a man organizing supplements and nutrition products.",
+            "matchedText": "these need to be your go to food types for when you're actually genuinely experiencing hunger pangs"
+        },
+        {
+            "userMediaId": "f1497c37-103f-4082-a7b3-bce94bdeaf8f",
+            "startTime": 91.56,
+            "endTime": 102.34,
+            "confidence": 0.75,
+            "reason": "The segment discusses the mistake of reaching for snack foods that do not satisfy hunger, which can be visualized through the stressed and frustrated man showing anger or burnout.",
+            "matchedText": "the mistake you're making is often you guys are reaching for a snack food"
+        }
+    ],
+    "totalMatches": 3,
+    "processedAt": "2025-10-17T19:25:02.960Z"
+}
