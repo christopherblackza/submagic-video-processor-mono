@@ -21,6 +21,12 @@ export const routes: Routes = [
     title: 'Submagic Video Processor'
   },
   {
+    path: 'system-prompt',
+    canActivate: [authGuard],
+    loadComponent: () => import('./components/system-prompt/system-prompt.component').then(m => m.SystemPromptComponent),
+    title: 'System Prompt'
+  },
+  {
     path: 'media-upload',
     loadComponent: () => import('./components/media-upload/media-upload.component').then(m => m.MediaUploadComponent),
     title: 'Upload Media'

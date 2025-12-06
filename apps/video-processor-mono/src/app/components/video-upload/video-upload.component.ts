@@ -57,7 +57,7 @@ export class VideoUploadComponent implements OnInit {
   private createVideoGroup(): FormGroup {
     return this.fb.group({
       title: ['', Validators.required],
-      videoUrl: [''],
+      videoUrl: ['', Validators.required],
       file: [null]
     });
   }
@@ -126,7 +126,8 @@ export class VideoUploadComponent implements OnInit {
         magicZooms: formValue.magicZooms,
         magicBrolls: formValue.magicBrolls,
         magicBrollsPercentage: formValue.magicBrollsPercentage,
-        dictionary: formValue.dictionary || undefined
+        dictionary: formValue.dictionary || undefined,
+        systemPrompt: localStorage.getItem('submagic_system_prompt') || undefined,
       };
 
       console.log("Request: ", request);

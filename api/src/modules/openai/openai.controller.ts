@@ -1,4 +1,4 @@
-import { Controller, Post, Body, Param, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Post, Body, Param, HttpCode, HttpStatus, Headers } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
 import { OpenAIService } from './openai.service';
 import { 
@@ -32,8 +32,8 @@ export class OpenAIController {
     status: 500, 
     description: 'Internal server error during analysis' 
   })
-  async analyzeMediaMatching(@Body() request: MediaMatchingRequestDto): Promise<MediaMatchingResponseDto> {
-    return this.openaiService.analyzeProjectForMediaMatching(request);
+  async analyzeMediaMatching(@Body() request: MediaMatchingRequestDto, @Headers('x-api-key') apiKey?: string): Promise<MediaMatchingResponseDto> {
+    return this.openaiService.analyzeProjectForMediaMatching(request, apiKey);
   }
 
   @Post('analyze-and-update')
@@ -54,9 +54,9 @@ export class OpenAIController {
     status: 500, 
     description: 'Internal server error during processing' 
   })
-  async analyzeAndUpdateProject(
+  async updateProject(
     @Body() request: UpdateProjectRequestDto
   ): Promise<any> {
-    return this.openaiService.analyzeAndUpdateProject(request);
+    return this.openaiService.updateProject(request);
   }
 }

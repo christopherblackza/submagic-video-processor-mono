@@ -4,12 +4,16 @@
   "license": "MIT",
   "scripts": {
     "build:api": "nx build api",
+    "start:api:watch": "nx serve api --output-style=stream",
     "start:api": "nx serve api --output-style=stream",  
+    "start:api:staging": "cross-env NODE_ENV=staging nx serve api --output-style=stream",
     "start": "node dist/apps/api/main.js",           
     "run:api": "node dist/apps/api/main.js",        
     "build:client": "npx nx build video-processor-mono --configuration production",   
     "start:client": "nx serve video-processor-mono --host 0.0.0.0 --disable-host-check --port 8000",
-    "tunnel:api": "cloudflared tunnel --url http://localhost:3000"
+    "tunnel:api": "cloudflared tunnel --url http://localhost:3000",
+    "lint:api": "nx lint api",
+    "lint:client": "nx lint video-processor-mono"
   },
   "private": true,
   "dependencies": {
@@ -38,6 +42,7 @@
     "zone.js": "~0.15.0"
   },
   "devDependencies": {
+    "cross-env": "^7.0.3",
     "@angular-devkit/build-angular": "^19.2.15",
     "@angular/cli": "^19.2.15",
     "@angular/compiler-cli": "^19.2.0",

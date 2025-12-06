@@ -72,7 +72,8 @@ export class ProjectService {
       magicZooms: request.magicZooms,
       magicBrolls: request.magicBrolls,
       magicBrollsPercentage: request.magicBrollsPercentage,
-      dictionary: request.dictionary
+      dictionary: request.dictionary,
+      systemPrompt: request.systemPrompt
     };
 
     const headers = this.buildHeaders(true);
@@ -134,11 +135,12 @@ export class ProjectService {
    * Upload multiple media files.
    */
   uploadMediaFiles(files: File[]): Observable<any> {
+     const headers = this.buildHeaders(false);
     const formData = new FormData();
     files.forEach(file => {
       formData.append('media', file, file.name);
     });
 
-    return this.http.post(`${this.apiUrl}/submagic/upload-user-media`, formData);
+    return this.http.post(`${this.apiUrl}/submagic/upload-user-media`, formData, { headers });
   }
 }

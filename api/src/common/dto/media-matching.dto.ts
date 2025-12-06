@@ -41,6 +41,14 @@ export class MediaMatchingRequestDto {
   @IsOptional()
   @IsNumber()
   confidenceThreshold?: number;
+
+  @ApiProperty({
+    description: 'Override system prompt used for analysis',
+    required: false
+  })
+  @IsOptional()
+  @IsString()
+  systemPrompt?: string;
 }
 
 export class MediaMatchDto {

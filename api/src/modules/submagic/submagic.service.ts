@@ -7,7 +7,7 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { HttpService } from "@nestjs/axios";
 import { firstValueFrom } from "rxjs";
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosResponse, AxiosError } from 'axios';
 import { Project } from "../../common/interfaces/project.interface";
 import {
   StartProjectDto,
@@ -32,6 +32,7 @@ import {
 import FormDataLib from "form-data";
 import * as fs from "fs";
 import * as path from "path";
+import * as https from "https";
 
 @Injectable()
 export class SubmagicService {
@@ -49,7 +50,7 @@ export class SubmagicService {
     private readonly configService: ConfigService,
     private readonly httpService: HttpService
   ) {
-    this.apiKey = this.configService.get<string>("SUBMAGIC_API_KEY") || "";
+
     this.publicBaseUrl =
       this.configService.get<string>("PUBLIC_BASE_URL") || "";
     this.defaultLanguage = this.configService.get<string>(
@@ -73,12 +74,7 @@ export class SubmagicService {
       60
     );
     this.subMagicApiUrl = this.configService.get<string>("SUBMAGIC_API_URL");
-    console.error("API KEY: ", this.apiKey);
 
-    if (!this.apiKey) {
-      this.logger.error("SUBMAGIC_API_KEY is required");
-      throw new Error("SUBMAGIC_API_KEY is required");
-    }
     if (!this.publicBaseUrl) {
       this.logger.error("PUBLIC_BASE_URL is required");
       throw new Error("PUBLIC_BASE_URL is required");
@@ -363,8 +359,6 @@ export class SubmagicService {
       'Content-Type': 'application/json',
     };
 
-    console.log("UPDATE HEADERS: ", headers);
-    console.log("UPDATE JSON PAYLOAD: ", JSON.stringify(payload, null, 2));
 
     try {
       return await firstValueFrom(
@@ -426,7 +420,7 @@ export class SubmagicService {
     return crypto.randomBytes(16).toString("hex");
   }
 
-  async uploadUserMedia(files: Express.Multer.File[]): Promise<
+  async uploadUserMedia(files: Express.Multer.File[], apiKeyOverride?: string): Promise<
     {
       userMediaId: string;
       referencePath: string;
@@ -437,16 +431,25 @@ export class SubmagicService {
       throw new BadRequestException("No files provided");
     }
 
-    const uploadPromises = files.map((file) => this.uploadSingleFile(file));
+    const CONCURRENCY = 5;
+    const results: {
+      userMediaId: string;
+      referencePath: string;
+      item: { userMediaId: string; description: string; tags: string[] };
+    }[] = [];
 
     try {
-      const results = await Promise.all(uploadPromises);
+      for (let i = 0; i < files.length; i += CONCURRENCY) {
+        const batch = files.slice(i, i + CONCURRENCY);
+        this.logger.log(`Uploading batch ${i / CONCURRENCY + 1} (${batch.length} files)`);
+        const batchResults = await Promise.all(
+          batch.map((file) => this.uploadSingleFileWithRetry(file, apiKeyOverride, 3))
+        );
+        results.push(...batchResults);
+      }
       return results;
     } catch (error) {
-      this.logger.error(
-        "Failed to upload one or more user media files:",
-        error
-      );
+      this.logger.error("Failed to upload one or more user media files:", error);
       if (
         error instanceof InternalServerErrorException ||
         error instanceof BadRequestException
@@ -459,7 +462,7 @@ export class SubmagicService {
     }
   }
 
-  private async uploadSingleFile(file: Express.Multer.File): Promise<{
+  private async uploadSingleFile(file: Express.Multer.File, apiKeyOverride?: string): Promise<{
     userMediaId: string;
     referencePath: string;
     item: { userMediaId: string; description: string; tags: string[] };
@@ -477,14 +480,22 @@ export class SubmagicService {
     });
 
     const headers = {
-      "x-api-key": this.apiKey,
+      "x-api-key": apiKeyOverride || this.apiKey,
       ...form.getHeaders(),
     };
 
     const url = `${this.subMagicApiUrl}/v1/user-media/upload`;
 
+    const httpsAgent = new https.Agent({ keepAlive: true });
+
     const response = await firstValueFrom(
-      this.httpService.post(url, form, { headers, maxBodyLength: Infinity })
+      this.httpService.post(url, form, {
+        headers,
+        maxBodyLength: Infinity,
+        maxContentLength: Infinity,
+        timeout: 120000,
+        httpsAgent,
+      })
     );
 
     const userMediaId = response?.data?.userMediaId;
@@ -506,6 +517,48 @@ export class SubmagicService {
     );
 
     return { userMediaId, referencePath, item };
+  }
+
+  private async uploadSingleFileWithRetry(
+    file: Express.Multer.File,
+    apiKeyOverride: string | undefined,
+    retries: number
+  ): Promise<{
+    userMediaId: string;
+    referencePath: string;
+    item: { userMediaId: string; description: string; tags: string[] };
+  }> {
+    let attempt = 0;
+    let lastError: any;
+    while (attempt <= retries) {
+      try {
+        if (attempt > 0) {
+          const delayMs = 1000 * Math.pow(2, attempt - 1);
+          await new Promise((res) => setTimeout(res, delayMs));
+          this.logger.warn(
+            `Retrying upload for ${file.originalname} (attempt ${attempt + 1}/${retries + 1})`
+          );
+        }
+        return await this.uploadSingleFile(file, apiKeyOverride);
+      } catch (err: any) {
+        lastError = err;
+        // Retry on transient network errors
+        const code = err?.code;
+        const status = err?.response?.status;
+        if (
+          code === 'ECONNRESET' ||
+          code === 'ETIMEDOUT' ||
+          status === 502 ||
+          status === 503 ||
+          status === 504
+        ) {
+          attempt++;
+          continue;
+        }
+        throw err;
+      }
+    }
+    throw lastError;
   }
 
   private filenameToDescription(originalname: string): string {
@@ -551,7 +604,7 @@ export class SubmagicService {
   }): string {
     const constantsDir = path.resolve(
       process.cwd(),
-      "api/src/common/constants"
+      "api/src/data"
     );
     const tsPath = path.join(constantsDir, "uploaded-media-items.ts");
 
