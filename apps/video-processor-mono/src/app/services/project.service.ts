@@ -53,7 +53,7 @@ export class ProjectService {
     if (request.dictionary) formData.append('dictionary', request.dictionary);
     if (request.file) formData.append('file', request.file);
 
-    return this.http.post<SingleProjectResponse>(`${this.apiUrl}/start`, formData);
+    return this.http.post<SingleProjectResponse>(`${this.apiUrl}/submagic/start`, formData);
   }
 
   /**
@@ -128,5 +128,17 @@ export class ProjectService {
   checkHealthStatus(): Observable<{ status: string }> {
     const headers = this.buildHeaders(false);
     return this.http.get<{ status: string }>(`${this.apiUrl}/health`, { headers });
+  }
+
+  /**
+   * Upload multiple media files.
+   */
+  uploadMediaFiles(files: File[]): Observable<any> {
+    const formData = new FormData();
+    files.forEach(file => {
+      formData.append('media', file, file.name);
+    });
+
+    return this.http.post(`${this.apiUrl}/submagic/upload-user-media`, formData);
   }
 }

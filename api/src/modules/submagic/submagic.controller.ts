@@ -8,6 +8,9 @@ import {
   Headers,
   BadRequestException,
   Logger,
+  UploadedFile,
+  UseInterceptors,
+  UploadedFiles,
 } from "@nestjs/common";
 import {
   ApiTags,

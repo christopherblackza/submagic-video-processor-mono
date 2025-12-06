@@ -36,7 +36,7 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document, {
+  SwaggerModule.setup('swagger', app, document, {
     swaggerOptions: {
       persistAuthorization: true,
     },
@@ -46,7 +46,7 @@ async function bootstrap() {
   await app.listen(port);
 
   logger.log(`🚀 Application is running on: http://localhost:${port}`);
-  logger.log(`📚 Swagger documentation: http://localhost:${port}/api-docs`);
+  logger.log(`📚 Swagger documentation: http://localhost:${port}/swagger`);
 }
 
 bootstrap().catch((error) => {

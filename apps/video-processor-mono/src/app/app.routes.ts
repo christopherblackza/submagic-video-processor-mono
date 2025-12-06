@@ -21,9 +21,9 @@ export const routes: Routes = [
     title: 'Submagic Video Processor'
   },
   {
-    path: '',
-    redirectTo: 'login',
-    pathMatch: 'full'
+    path: 'media-upload',
+    loadComponent: () => import('./components/media-upload/media-upload.component').then(m => m.MediaUploadComponent),
+    title: 'Upload Media'
   },
   {
     path: 'batch-success/:batchId',
