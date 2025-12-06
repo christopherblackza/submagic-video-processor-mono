@@ -106,7 +106,7 @@ export class VideoUploadComponent implements OnInit {
         videos,
         language: formValue.language,
         templateName: formValue.templateName,
-        webhookUrl: formValue.webhookUrl || undefined,
+        webhookUrl: 'https://submagic-video-processor-mono-production.up.railway.app/webhook/submagic',
         magicZooms: formValue.magicZooms,
         magicBrolls: formValue.magicBrolls,
         magicBrollsPercentage: formValue.magicBrollsPercentage,
