@@ -60,7 +60,7 @@ export class CompletionComponent implements OnInit {
     if (this.fromBatch && this.completionData?.batchId) {
       this.router.navigate(['/batch-success', this.completionData.batchId]);
     } else {
-      this.router.navigate(['/']);
+      this.router.navigate(['/upload']);
     }
   }
 

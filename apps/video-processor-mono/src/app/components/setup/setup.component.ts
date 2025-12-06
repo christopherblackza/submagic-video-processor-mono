@@ -25,8 +25,7 @@ export class SetupComponent {
 
     this.setupForm = this.fb.group({ apiKey: ['', Validators.required] });
 
-    const saved = localStorage.getItem('submagic_api_key');
-    if (saved) this.setupForm.patchValue({ apiKey: saved });
+    
     const savedTemplates = localStorage.getItem('submagic_templates');
     if (savedTemplates) this.templates = JSON.parse(savedTemplates);
   }
@@ -40,7 +39,8 @@ export class SetupComponent {
     this.error = '';
     const apiKey = this.setupForm.value.apiKey as string;
     try {
-      localStorage.setItem('submagic_api_key', apiKey);
+      await this.projectService.saveApiKey(apiKey).toPromise();
+      this.successMessage = 'API key saved';
     } catch (e: any) {
       this.error = e?.error?.message || e?.message || 'Failed to connect. Check API key.';
     } finally {
@@ -117,10 +117,6 @@ export class SetupComponent {
   }
 
   proceedToUpload() {
-  const apiKey = this.setupForm.value.apiKey as string;
-
-      localStorage.setItem('submagic_api_key', apiKey);
-
     this.router.navigate(['/upload']);
   }
 }

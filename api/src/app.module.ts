@@ -18,6 +18,7 @@ import { BatchModule } from './modules/batch/batch.module';
 import { WebhookModule } from './modules/webhook/webhook.module';
 import { ProjectModule } from './modules/project/project.module';
 import { OpenAIModule } from './modules/openai/openai.module';
+import { RedisModule } from './modules/redis/redis.module';
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -50,6 +51,7 @@ const env = process.env.NODE_ENV || 'development';
     WebhookModule,
     ProjectModule,
     OpenAIModule,
+    RedisModule,
   ],
   controllers: [AppController],
   providers: [

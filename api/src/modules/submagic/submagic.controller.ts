@@ -22,6 +22,7 @@ import {
   ApiHeader,
 } from "@nestjs/swagger";
 import { SubmagicService } from "./submagic.service";
+import { RedisService } from "../redis/redis.service";
 import { StorageService } from "../storage/storage.service";
 import {
   StartProjectDto,
@@ -41,8 +42,20 @@ export class SubmagicController {
 
   constructor(
     private readonly submagicService: SubmagicService,
-    private readonly storageService: StorageService
+    private readonly storageService: StorageService,
+    private readonly redisService: RedisService
   ) {}
+
+  @Post("save-api-key")
+  @ApiOperation({ summary: "Save Submagic API key to Redis" })
+  @ApiHeader({ name: "x-api-key", description: "Submagic API key", required: true })
+  async saveApiKey(@Headers("x-api-key") apiKey?: string) {
+    if (!apiKey || apiKey.trim() === "") {
+      throw new BadRequestException("x-api-key header is required");
+    }
+    await this.redisService.setApiKey(apiKey);
+    return { message: "API key saved" };
+  }
 
   @Post("start")
   @ApiOperation({ summary: "Start single video processing" })
@@ -103,8 +116,8 @@ export class SubmagicController {
   @UseInterceptors(FileFieldsInterceptor([{ name: "media", maxCount: 400 }]))
   @ApiHeader({
     name: "x-api-key",
-    description: "API key for authentication",
-    required: true,
+    description: "API key for authentication (optional, uses Redis if omitted)",
+    required: false,
   })
   @ApiOperation({
     summary:

@@ -33,6 +33,7 @@ import FormDataLib from "form-data";
 import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
+import { RedisService } from "../redis/redis.service";
 
 @Injectable()
 export class SubmagicService {
@@ -48,7 +49,8 @@ export class SubmagicService {
 
   constructor(
     private readonly configService: ConfigService,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
+    private readonly redisService: RedisService
   ) {
 
     this.publicBaseUrl =
@@ -178,7 +180,7 @@ export class SubmagicService {
   }
 
   async getTemplates(apiKeyOverride?: string): Promise<{ templates: string[] }> {
-    const apiKey = apiKeyOverride || this.apiKey;
+    const apiKey = apiKeyOverride || (await this.redisService.getApiKey());
     if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
       'x-api-key': apiKey,
@@ -195,7 +197,7 @@ export class SubmagicService {
   }
 
   private async callSubmagicGetAPI(projectId: string, apiKeyOverride?: string): Promise<AxiosResponse> {
-    const apiKey = apiKeyOverride || this.apiKey;
+    const apiKey = apiKeyOverride || (await this.redisService.getApiKey());
     if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
       'x-api-key': apiKey,
@@ -240,7 +242,7 @@ export class SubmagicService {
   }
 
   private async callSubmagicExportAPI(projectId: string, payload: any, apiKeyOverride?: string): Promise<any> {
-    const apiKey = apiKeyOverride || this.apiKey;
+    const apiKey = apiKeyOverride || (await this.redisService.getApiKey());
     if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
       'x-api-key': apiKey,
@@ -328,7 +330,7 @@ export class SubmagicService {
     // Remove videoFile from payload if it exists (we don't handle file uploads)
     const { videoFile, ...jsonPayload } = payload;
 
-    const apiKey = apiKeyOverride || this.apiKey;
+    const apiKey = apiKeyOverride || (await this.redisService.getApiKey());
     if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
       'x-api-key': apiKey,
@@ -352,7 +354,7 @@ export class SubmagicService {
   }
 
   private async callSubmagicUpdateAPI(projectId: string, payload: any, apiKeyOverride?: string): Promise<AxiosResponse> {
-    const apiKey = apiKeyOverride || this.apiKey;
+    const apiKey = apiKeyOverride || (await this.redisService.getApiKey());
     if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
       'x-api-key': apiKey,
@@ -480,7 +482,7 @@ export class SubmagicService {
     });
 
     const headers = {
-      "x-api-key": apiKeyOverride || this.apiKey,
+      "x-api-key": apiKeyOverride || (await this.redisService.getApiKey()),
       ...form.getHeaders(),
     };
 

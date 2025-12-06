@@ -23,12 +23,14 @@ export class ProjectService {
   constructor(private http: HttpClient) {}
 
   private buildHeaders(json: boolean = true): HttpHeaders {
-    let headers = new HttpHeaders(json ? { 'Content-Type': 'application/json' } : {});
-    const key = localStorage.getItem('submagic_api_key');
-    if (key) {
-      headers = headers.set('x-api-key', key);
-    }
-    return headers;
+    const base: Record<string, string> = {};
+    if (json) base['Content-Type'] = 'application/json';
+    return new HttpHeaders(base);
+  }
+
+  saveApiKey(apiKey: string): Observable<{ message: string }> {
+    const headers = new HttpHeaders({ 'x-api-key': apiKey });
+    return this.http.post<{ message: string }>(`${this.apiUrl}/submagic/save-api-key`, {}, { headers });
   }
 
   getTemplates(): Observable<TemplatesResponse> {
