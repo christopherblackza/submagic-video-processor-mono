@@ -3,8 +3,8 @@ import { StorageService } from "../storage/storage.service";
 import { OpenAIService } from "../openai/openai.service";
 import { WebhookDto } from "../../common/dto/webhook.dto";
 import { CompletionData } from "../../common/interfaces/project.interface";
-import { MEDIA_ITEMS } from "../../common/constants/media-items";
 import { request } from "http";
+import { MEDIA_ITEMS } from "api/src/data/uploaded-media-items";
 
 @Injectable()
 export class WebhookService {
