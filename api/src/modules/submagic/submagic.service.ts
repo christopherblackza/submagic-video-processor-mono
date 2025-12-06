@@ -90,7 +90,7 @@ export class SubmagicService {
       // this.logger.debug(`Payload: ${JSON.stringify(sanitizeHeaders(payload), null, 2)}`);
 
       const response = await this.callSubmagicAPI(payload, apiKeyOverride);
-      console.log('RESPONSE: ', response);
+
       
       // Extract the project ID from the Submagic API response
       const projectId = response.data.id;
@@ -336,9 +336,6 @@ export class SubmagicService {
       'x-api-key': apiKey,
       'Content-Type': 'application/json',
     };
-
-    console.log("HEADERS: ", headers);
-    console.log("JSON PAYLOAD: ", JSON.stringify(jsonPayload, null, 2));
 
     try {
       return await firstValueFrom(

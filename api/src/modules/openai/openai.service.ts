@@ -78,7 +78,6 @@ export class OpenAIService {
 
       // Extract meaningful text segments from the words array
       const textSegments = this.segmentWords(projectData.words);
-      console.log('TEXT SEGMENTS: ', textSegments);
       this.logger.log(`Extracted ${textSegments.length} meaningful segments`);
 
       if (textSegments.length === 0) {
@@ -266,7 +265,6 @@ export class OpenAIService {
 systemPrompt: string
 }): Promise<MediaMatchDto[]> {
 
-  this.logger.log('MEDIA ITEMS: ', library);
 
   this.logger.log(`Processing ${segments.length} segments for media matching`);
 
