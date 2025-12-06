@@ -117,7 +117,7 @@ export class SubmagicService {
     }
   }
 
-  async updateProject(projectId: string, dto: UpdateProjectDto, apiKeyOverride?: string): Promise<{ message: string; id: string; status: string }> {
+  async updateProject(projectId: string, dto: UpdateProjectDto): Promise<{ message: string; id: string; status: string }> {
     try {
       const payload = this.buildUpdateProjectPayload(dto);
 
@@ -129,7 +129,7 @@ export class SubmagicService {
         )}`
       );
 
-      const response = await this.callSubmagicUpdateAPI(projectId, payload, apiKeyOverride);
+      const response = await this.callSubmagicUpdateAPI(projectId, payload);
       console.log('UPDATE RESPONSE: ', response);
       
       this.logger.log(`Project ${projectId} updated successfully`);
@@ -350,8 +350,8 @@ export class SubmagicService {
     }
   }
 
-  private async callSubmagicUpdateAPI(projectId: string, payload: any, apiKeyOverride?: string): Promise<AxiosResponse> {
-    const apiKey = apiKeyOverride || (await this.redisService.getApiKey());
+  private async callSubmagicUpdateAPI(projectId: string, payload: any): Promise<AxiosResponse> {
+    const apiKey = await this.redisService.getApiKey();
     if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
       'x-api-key': apiKey,

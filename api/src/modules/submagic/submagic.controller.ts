@@ -191,8 +191,7 @@ export class SubmagicController {
 
     const result = await this.submagicService.updateProject(
       projectId,
-      dto,
-      apiKey
+      dto
     );
 
     this.logger.log(`Project ${projectId} updated successfully`);
