@@ -7,6 +7,11 @@ export const routes: Routes = [
     title: 'Submagic Video Processor'
   },
   {
+    path: 'media-upload',
+    loadComponent: () => import('./components/media-upload/media-upload.component').then(m => m.MediaUploadComponent),
+    title: 'Upload Media'
+  },
+  {
     path: 'batch-success/:batchId',
     loadComponent: () => import('./components/batch-success/batch-success.component').then(m => m.BatchSuccessComponent),
     title: 'Batch Processing Status'

@@ -1,0 +1,127 @@
+{
+    "projectId": "3f885785-1841-420c-bcba-7e36b3604df2",
+    "matches": [
+        {
+            "userMediaId": "fd257808-71dd-4045-bf9c-1dd7a2d14451",
+            "startTime": 42,
+            "endTime": 46,
+            "confidence": 0.98,
+            "reason": "Discusses 'food quality' — beautiful vegetables in the kitchen are a literal visual match for fresh, high-quality food.",
+            "matchedText": "food quality"
+        },
+        {
+            "userMediaId": "5e4a3411-ad86-4b86-bb4b-19fee777c6fa",
+            "startTime": 19,
+            "endTime": 22,
+            "confidence": 0.96,
+            "reason": "The speaker references 'energy balance' and 'balance' — the animation of a judgment balance scale is a literal visual metaphor for energy balance/equality.",
+            "matchedText": "energy balance"
+        },
+        {
+            "userMediaId": "bd1c00c2-fdd6-472b-b2ad-231f7f4e9e1b",
+            "startTime": 55,
+            "endTime": 57,
+            "confidence": 0.95,
+            "reason": "Narration: 'right macronutrients' — this clip is explicitly tagged 'macros nutrition', providing a literal match to macronutrients.",
+            "matchedText": "right macronutrients"
+        },
+        {
+            "userMediaId": "973b6ea3-d843-45cf-b103-57db9c9fa4d8",
+            "startTime": 83,
+            "endTime": 86,
+            "confidence": 0.94,
+            "reason": "Call to action to DM 'interested' — young guy doing greetings on a video call visually supports direct messaging, contact, and conversational outreach.",
+            "matchedText": "drop me a DM today with a word interested"
+        },
+        {
+            "userMediaId": "6f524432-5e12-49d1-b1b5-64c5397434c5",
+            "startTime": 3,
+            "endTime": 6,
+            "confidence": 0.92,
+            "reason": "Direct visual match for the explicit audience: 'discerning but motivated gay man' — footage tag shows an excited/celebrating gay man conveying motivation and pride.",
+            "matchedText": "discerning but motivated gay man"
+        },
+        {
+            "userMediaId": "762a60db-3c53-4df8-a11d-d3e308654b9f",
+            "startTime": 59,
+            "endTime": 61,
+            "confidence": 0.9,
+            "reason": "Narration: 'right micronutrients' — supplements/nutrition footage matches the concept of micronutrients and vitamins visually.",
+            "matchedText": "right micronutrients"
+        },
+        {
+            "userMediaId": "b5ea4f18-d815-4b24-adc6-d1de0d739274",
+            "startTime": 51,
+            "endTime": 53,
+            "confidence": 0.89,
+            "reason": "Line links poor food quality to appetite control — footage of a man eating a healthy salad visually ties to appetite and food choices.",
+            "matchedText": "appetite control"
+        },
+        {
+            "userMediaId": "6258cdbd-1da3-4584-8f86-9d054fe15b2e",
+            "startTime": 12,
+            "endTime": 14,
+            "confidence": 0.88,
+            "reason": "Narrative questions why we hear the same advice — this clip's 'Doubts suspicious confused' tag visually represents questioning and skepticism.",
+            "matchedText": "generic advice"
+        },
+        {
+            "userMediaId": "397efba8-c3b6-46a3-beed-560985460860",
+            "startTime": 15,
+            "endTime": 18,
+            "confidence": 0.87,
+            "reason": "Line asks why it's not simple for many men — 'man at maze lost' visually represents complexity and being lost/confused about solutions.",
+            "matchedText": "not quite as simple as this for so many men"
+        },
+        {
+            "userMediaId": "a56f8744-94b7-4746-b463-712ed3b3c4ff",
+            "startTime": 62.5,
+            "endTime": 66.5,
+            "confidence": 0.86,
+            "reason": "Talking about activities that burn calories (running/cycling) — running footage directly shows the type of cardio movement referenced.",
+            "matchedText": "burn more calories doing running or cycling or playing tennis"
+        },
+        {
+            "userMediaId": "766929d4-a698-477c-bf44-68d9b1bd5100",
+            "startTime": 74.5,
+            "endTime": 78,
+            "confidence": 0.84,
+            "reason": "Questioning why we don't just do those high-calorie activities — cyclist fat-burn footage directly represents those alternative activities.",
+            "matchedText": "why don't we do those activities for fat loss"
+        },
+        {
+            "userMediaId": "ae6d29b9-11d8-4682-917f-ba38d9319f18",
+            "startTime": 30,
+            "endTime": 32,
+            "confidence": 0.82,
+            "reason": "Statement about humans being 'more complicated and nuanced' — a thoughtful/pensive executive visually conveys nuance, reflection, and complexity.",
+            "matchedText": "complicated and nuanced"
+        },
+        {
+            "userMediaId": "25f77d5b-cdea-465a-9144-8c797c1fd1c6",
+            "startTime": 33,
+            "endTime": 36,
+            "confidence": 0.75,
+            "reason": "Metaphor comparing a body to a car needing fuel — this shot of a young muscular man entering the gym suggests 'starting' and the need for more than just fuel (action/preparation).",
+            "matchedText": "all a car needs in order to run properly is just fuel"
+        },
+        {
+            "userMediaId": "fabe823e-8bf2-4d6d-a421-8b6d9cfa6a7a",
+            "startTime": 38,
+            "endTime": 40.5,
+            "confidence": 0.74,
+            "reason": "Continuation of car metaphor — rear view of a man looking back visually supports 'it can get more complicated' (reflection/looking back at problems).",
+            "matchedText": "it can get a bit more complicated than that"
+        },
+        {
+            "userMediaId": "a5f6fda9-80bf-42cd-b63e-36ea000fd0f1",
+            "startTime": 80.5,
+            "endTime": 81.5,
+            "confidence": 0.72,
+            "reason": "Short line emphasising complexity — a frustrated man visually conveys the exasperation and complexity mentioned.",
+            "matchedText": "it's a bit more complex than that"
+        }
+    ],
+    "totalMatches": 15,
+    "processedAt": "2025-11-05T06:14:31.063Z"
+}
