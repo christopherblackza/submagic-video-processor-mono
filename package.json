@@ -3,7 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-   "start:api": "nx serve api --output-style=stream",
+    "build:api": "nx build api",
+    "start:api": "nx serve api --output-style=stream",
+    "run:api": "node dist/apps/api/main.js",
     "start:client": "nx serve video-processor-mono --host 0.0.0.0 --disable-host-check --port 8000",
     "tunnel:api": "cloudflared tunnel --url http://localhost:3000"
   },
