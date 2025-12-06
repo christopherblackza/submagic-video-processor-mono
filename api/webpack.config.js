@@ -16,7 +16,11 @@ module.exports = {
       tsConfig: './tsconfig.app.json',
       assets: [
         './src/assets',
-        { input: '.', glob: '.env*', output: '.' } 
+        ...(
+          process.env.NODE_ENV !== 'production'
+            ? [{ input: '.', glob: '.env*', output: '.' }]
+            : []
+        )
       ],
       optimization: false,
       outputHashing: 'none',

@@ -12,8 +12,7 @@ async function bootstrap() {
     dotenvConfig({ path: join(process.cwd(), 'api', '.env.staging'), override: true });
     dotenvConfig({ path: join(process.cwd(), '.env.staging'), override: true });
   } else if (env === 'production') {
-    // In production (Railway), environment variables are injected by the platform
-    // so we skip loading .env files.
+      console.log("SKIPPING ENV LOAD")
   } else {
     dotenvConfig({ path: join(process.cwd(), 'api', '.env'), override: true });
     dotenvConfig({ path: join(process.cwd(), '.env'), override: true });
