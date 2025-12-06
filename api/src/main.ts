@@ -58,7 +58,6 @@ async function bootstrap() {
   console.log('PORT:', port)
   await app.listen(port);
 
-  console.log("PUBLIC_BASE_URL: ", process.env.PUBLIC_BASE_URL);
 
   logger.log(`🚀 Application is running on: http://localhost:${port}`);
   logger.log(`📚 Swagger documentation: http://localhost:${port}/swagger`);

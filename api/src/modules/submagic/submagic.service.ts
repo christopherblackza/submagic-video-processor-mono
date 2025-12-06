@@ -91,7 +91,6 @@ export class SubmagicService {
 
       const response = await this.callSubmagicAPI(payload, apiKeyOverride);
 
-      
       // Extract the project ID from the Submagic API response
       const projectId = response.data.id;
 
@@ -440,7 +439,7 @@ export class SubmagicService {
     try {
       for (let i = 0; i < files.length; i += CONCURRENCY) {
         const batch = files.slice(i, i + CONCURRENCY);
-        this.logger.log(`Uploading batch ${i / CONCURRENCY + 1} (${batch.length} files)`);
+        // this.logger.log(`Uploading batch ${i / CONCURRENCY + 1} (${batch.length} files)`);
         const batchResults = await Promise.all(
           batch.map((file) => this.uploadSingleFileWithRetry(file, apiKeyOverride, 3))
         );
@@ -511,9 +510,9 @@ export class SubmagicService {
 
     const referencePath = this.saveUploadedMediaReference(item);
 
-    this.logger.log(
-      `Uploaded user media ${userMediaId} and persisted reference to ${referencePath}`
-    );
+    // this.logger.log(
+    //   `Uploaded user media ${userMediaId} and persisted reference to ${referencePath}`
+    // );
 
     return { userMediaId, referencePath, item };
   }
