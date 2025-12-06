@@ -28,16 +28,19 @@ export const routes: Routes = [
   },
   {
     path: 'media-upload',
+     canActivate: [authGuard],
     loadComponent: () => import('./components/media-upload/media-upload.component').then(m => m.MediaUploadComponent),
     title: 'Upload Media'
   },
   {
     path: 'batch-success/:batchId',
+     canActivate: [authGuard],
     loadComponent: () => import('./components/batch-success/batch-success.component').then(m => m.BatchSuccessComponent),
     title: 'Batch Processing Status'
   },
   {
     path: 'completion/:projectId',
+     canActivate: [authGuard],
     loadComponent: () => import('./components/completion/completion.component').then(m => m.CompletionComponent),
     title: 'Project Results'
   },

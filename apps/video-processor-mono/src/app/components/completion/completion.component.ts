@@ -65,7 +65,7 @@ export class CompletionComponent implements OnInit {
   }
 
   goHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/upload']);
   }
 
   downloadVideo() {

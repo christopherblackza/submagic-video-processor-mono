@@ -49,7 +49,7 @@ export class SubmagicController {
   @Get("load-api-key")
   @ApiOperation({ summary: "Load Submagic API key from Redis" })
   async loadApiKey() {
-    const apiKey = await this.redisService.getApiKey();
+    const apiKey = await this.redisService.getSubmagicApiKey();
     if (!apiKey || apiKey.trim() === "") {
       throw new BadRequestException("Submagic API key not found in Redis");
     }
@@ -63,7 +63,7 @@ export class SubmagicController {
     if (!apiKey || apiKey.trim() === "") {
       throw new BadRequestException("x-api-key header is required");
     }
-    await this.redisService.setApiKey(apiKey);
+    await this.redisService.setSubmagicApiKey(apiKey);
     return { message: "API key saved" };
   }
 

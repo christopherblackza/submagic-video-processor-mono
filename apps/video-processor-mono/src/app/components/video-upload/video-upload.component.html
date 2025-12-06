@@ -1,6 +1,7 @@
 <div class="upload-container">
   <div class="header">
     <h1>Submagic Video Processor</h1>
+    <div class="version">v{{ version }}</div>
     <div class="header-buttons">
 <button type="button" class="add-video-btn" routerLink="/setup">
         Settings
@@ -80,22 +81,6 @@
         </div>
       </div>
 
-      <div class="form-row" *ngIf="uploadForm.get('magicBrolls')?.value">
-        <div class="form-group">
-          <label for="magicBrollsPercentage">Magic B-rolls Percentage</label>
-          <input 
-            type="number" 
-            id="magicBrollsPercentage" 
-            formControlName="magicBrollsPercentage" 
-            class="form-control"
-            min="0" 
-            max="100"
-          >
-          <div class="error-message" *ngIf="isFieldInvalid('magicBrollsPercentage')">
-            {{ getFieldError('magicBrollsPercentage') }}
-          </div>
-        </div>
-      </div>
 
       <div class="form-row">
         <div class="form-group">

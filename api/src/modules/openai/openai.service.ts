@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import { SubmagicService } from '../submagic/submagic.service';
@@ -28,23 +28,22 @@ type LibraryItem = { userMediaId: string; description: string; tags?: string[] }
 @Injectable()
 export class OpenAIService {
   private readonly logger = new Logger(OpenAIService.name);
-  private readonly openai: OpenAI;
+
 
   constructor(
     private readonly configService: ConfigService,
     private readonly submagicService: SubmagicService,
     private readonly redisService: RedisService,
   ) {
-    const apiKey = this.configService.get<string>('OPEN_API_KEY') || '';
-
-    if (!apiKey) {
-      throw new Error('OpenAI API key is required');
-    }
-
-    this.openai = new OpenAI({
-      apiKey,
-    });
+ 
   }
+
+  private createOpenAIClient(apiKey?: string): OpenAI {
+  const key = apiKey || this.configService.get<string>('OPEN_API_KEY');
+  if (!key) throw new Error('OpenAI API key is required');
+
+  return new OpenAI({ apiKey: key });
+}
 
 
   async analyzeProjectForMediaMatching(
@@ -82,7 +81,7 @@ export class OpenAIService {
       }
 
       const mediaItems = await this.redisService.getMediaItems();
-      console.log('MEDIA ITEMS GOT', mediaItems)
+      console.log('Using ', mediaItems.length, ' media items from Redis');
       if (!mediaItems || mediaItems.length === 0) {
         this.logger.warn(`No media items found in Redis for project ${request.projectId}`);
         return {
@@ -105,7 +104,7 @@ export class OpenAIService {
       const finalMatches = this.deduplicateMatches(matches);
       this.logger.log(`Found ${finalMatches.length} matches`);
 
-      this.logger.debug(`Final matches: ${JSON.stringify(finalMatches)}`);
+      // this.logger.debug(`Final matches: ${JSON.stringify(finalMatches)}`);
 
       return {
         projectId: request.projectId,
@@ -135,7 +134,7 @@ export class OpenAIService {
         request.matches,
       );
 
-      this.logger.log(
+      this.logger.debug(
         `Successfully updated project ${request.projectId} with ${request.matches.length} matches`,
       );
 
@@ -180,9 +179,6 @@ export class OpenAIService {
         updateData,
       );
 
-      this.logger.log(
-        `Successfully updated project ${projectId} with media matches`,
-      );
       return result;
     } catch (error) {
       // console.error('ERROR', error)
@@ -288,7 +284,7 @@ systemPrompt: string
   //   }));
 
   const segmentsToProcess = segments;
-  this.logger.debug('SEGMENTS TO PROCESS: ', segmentsToProcess);
+  // this.logger.debug('SEGMENTS TO PROCESS: ', segmentsToProcess);
 
   this.logger.log(`Using ${segmentsToProcess.length} segments for OpenAI analysis`);
 
@@ -302,12 +298,12 @@ Rules:
 - Each placement must be <= 4.0 seconds long and lie within the segment window.
 - Use literal, visual cues (actions/objects/moods). Include the trigger text in matchedText.
 - Consider both the description AND tags when matching — tags represent key themes and concepts.
-- Match based on semantic relevance, emotions, actions, and thematic alignment.
-Library (ID: Description | Tags):
-${library.map(item => {
-  const tags = item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'no tags';
-  return `${item.userMediaId}: ${item.description} | Tags: ${tags}`;
-}).join('\n')}`;
+- Match based on semantic relevance, emotions, actions, and thematic alignment.`;
+
+  const libraryText = `Library (ID: Description | Tags):\n${library.map(item => {
+    const tags = item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'no tags';
+    return `${item.userMediaId}: ${item.description} | Tags: ${tags}`;
+  }).join('\n')}`;
 
   const user = {
      note: "Respond ONLY in proper JSON — do not include any text before or after the JSON object. Ensure at least one early placement between 2.5s–6.0s.",
@@ -319,12 +315,21 @@ ${library.map(item => {
   };
 
   try {
-    const completion = await this.openai.chat.completions.create({
+    const apiKey = await this.redisService.getOpenAiApiKey();
+    if (!apiKey || apiKey.trim() === "") {
+      throw new BadRequestException("OpenAI API key not found in Redis");
+    }
+    const openaiClient = this.createOpenAIClient(apiKey);
+
+    const baseSystem = systemPrompt?.trim() ? systemPrompt : defaultSystem;
+    const systemContent = `${baseSystem}\n${libraryText}`;
+
+    const completion = await openaiClient.chat.completions.create({
       model: 'gpt-5-mini',
       temperature: 1, // more deterministic
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: systemPrompt?.trim() ? systemPrompt : defaultSystem },
+        { role: 'system', content: systemContent },
         { role: 'user', content: JSON.stringify(user) }
       ]
     });
@@ -334,7 +339,7 @@ ${library.map(item => {
 
     const parsed = JSON.parse(responseContent || '{}');
     let matches: MediaMatchDto[] = Array.isArray(parsed.matches) ? parsed.matches : [];
-    this.logger.log("MATCHES ", matches)
+    this.logger.log("MATCHES BEFORE FILTER ", matches.length)
 
     // ---- HARD GUARD-RAILS (post-process) ----
     const used = new Set<string>();
@@ -379,9 +384,6 @@ ${library.map(item => {
     }));
 
    
-
-    this.logger.debug('MATCHES BEFORE RE-ANCHORING: ', matches);
-
     // Re-anchor matches to actual text occurrence with pre-roll
     // if (words && words.length > 0) {
     //   matches = matches.map(match => {
@@ -425,9 +427,8 @@ ${library.map(item => {
     //   });
     // }
 
-     this.logger.log("MATCHES FILTERED ", matches.length)
 
-    this.logger.log(`Returning ${matches.length} validated matches`);
+    this.logger.debug(`Returning ${matches.length} validated matches`);
     return matches;
 
   } catch (error: any) {

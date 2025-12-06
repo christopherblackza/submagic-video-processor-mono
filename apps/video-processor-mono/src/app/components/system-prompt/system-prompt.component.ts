@@ -16,10 +16,26 @@ export class SystemPromptComponent {
   saved = false;
 
   constructor(private fb: FormBuilder, private router: Router) {
+
+    const defaultPrompt = `You are matching narration segments to b-roll footage.
+Return ONLY: {"matches":[{userMediaId,startTime,endTime,confidence,reason,matchedText}]}
+
+Rules:
+- Place the FIRST engagement match in the 2.5s–6.0s window (mandatory).
+- Never place media before 2.5s.
+- Use each userMediaId at most once (one media per segment).
+- Each placement must be <= 4.0 seconds long and lie within the segment window.
+- Use literal, visual cues (actions/objects/moods). Include the trigger text in matchedText.
+- Consider both the description AND tags when matching — tags represent key themes and concepts.
+- Match based on semantic relevance, emotions, actions, and thematic alignment`;
+
+
+
     const existing = localStorage.getItem('submagic_system_prompt') || '';
     this.promptForm = this.fb.group({
-      systemPrompt: [existing]
+      systemPrompt: [defaultPrompt ? defaultPrompt : existing]
     });
+
   }
 
   save() {

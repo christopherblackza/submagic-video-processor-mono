@@ -139,6 +139,6 @@ export class BatchSuccessComponent implements OnInit, OnDestroy {
   }
 
   goHome() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/upload']);
   }
 }

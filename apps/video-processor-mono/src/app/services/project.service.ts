@@ -37,6 +37,15 @@ export class ProjectService {
     return this.http.post<{ message: string }>(`${this.apiUrl}/submagic/save-api-key`, {}, { headers });
   }
 
+  loadOpenAiApiKey(): Observable<any> {
+    return this.http.get<string>(`${this.apiUrl}/openai/load-api-key`);
+  }
+
+  saveOpenAiApiKey(openAiApiKey: string): Observable<{ message: string }> {
+    const headers = new HttpHeaders({ 'x-api-key': openAiApiKey });
+    return this.http.post<{ message: string }>(`${this.apiUrl}/openai/save-api-key`, {}, { headers });
+  }
+
   getTemplates(): Observable<TemplatesResponse> {
     const headers = this.buildHeaders(false);
     return this.http.get<TemplatesResponse>(`${this.apiUrl}/submagic/templates`, { headers });

@@ -24,6 +24,10 @@ export class MediaMatchResultDto {
   @ApiProperty({ description: 'Matched text from the video' })
   @IsString()
   matchedText: string;
+
+  @ApiProperty({ description: 'Description of the matched media item' })
+  @IsString()
+  description: string;
 }
 
 export class MediaMatchingResponseDto {

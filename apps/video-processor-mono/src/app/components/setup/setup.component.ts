@@ -23,7 +23,7 @@ export class SetupComponent {
 
   constructor(private fb: FormBuilder, private projectService: ProjectService, private router: Router) {
 
-    this.setupForm = this.fb.group({ apiKey: ['', Validators.required] });
+    this.setupForm = this.fb.group({ apiKey: ['', Validators.required], openAiApiKey: ['', Validators.required] });
 
     this.loadApiKey();
     const savedTemplates = localStorage.getItem('submagic_templates');
@@ -121,6 +121,11 @@ export class SetupComponent {
       console.log('resp', resp);
 
       this.setupForm.patchValue({ apiKey: resp.apiKey });
+
+      const openAiApiKeyResp = await this.projectService.loadOpenAiApiKey().toPromise();
+      console.log('openAiApiKeyResp', openAiApiKeyResp);
+
+      this.setupForm.patchValue({ openAiApiKey: openAiApiKeyResp.apiKey });
   }
 
   async proceedToUpload() {
@@ -131,8 +136,11 @@ export class SetupComponent {
     this.connecting = true;
     this.error = '';
     const apiKey = this.setupForm.value.apiKey as string;
+    const openAiApiKey = this.setupForm.value.openAiApiKey as string;
+
     try {
       await this.projectService.saveApiKey(apiKey).toPromise();
+      await this.projectService.saveOpenAiApiKey(openAiApiKey).toPromise();
       this.router.navigate(['/upload']);
     } catch (e: any) {
       this.error = e?.error?.message || e?.message || 'Failed to save API key.';

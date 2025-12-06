@@ -82,6 +82,11 @@ export class MediaMatchDto {
   @ApiProperty({ description: 'Matched text segment' })
   @IsString()
   matchedText: string;
+
+  @ApiProperty({ description: 'Description of the matched media item' })
+  @IsString()
+  description: string;
+  
 }
 
 export class MediaMatchingResponseDto {

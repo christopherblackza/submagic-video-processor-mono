@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } fr
 import { Router, RouterModule } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
 import { BatchStartRequest, VideoInput } from '../../models/project.model';
+import pkg from '../../../../../../package.json';
 
 @Component({
   selector: 'app-video-upload',
@@ -16,8 +17,39 @@ export class VideoUploadComponent implements OnInit {
   uploadForm!: FormGroup;
   isSubmitting = false;
   errorMessage = '';
-  templates: string[] = [];
-
+  version = (pkg as any).version as string;
+  templates: string[] = [
+    "Ali",
+    "Beast",
+    "Dan",
+    "Dan 2",
+    "Daniel",
+    "David",
+    "Devin",
+    "Ella",
+    "Gstaad",
+    "Hormozi 1",
+    "Hormozi 2",
+    "Hormozi 3",
+    "Hormozi 4",
+    "Hormozi 5",
+    "Iman",
+    "Jason",
+    "Karl",
+    "Leila",
+    "Leon",
+    "Luke",
+    "Malta",
+    "Maya",
+    "Nema",
+    "Noah",
+    "Sara",
+    "seth",
+    "Tayo",
+    "Tracy",
+    "Umi",
+    "William"
+  ];
   constructor(
     private fb: FormBuilder,
     private projectService: ProjectService,
@@ -26,13 +58,7 @@ export class VideoUploadComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
-    const savedTemplates = localStorage.getItem('submagic_templates');
-    if (savedTemplates) {
-      this.templates = JSON.parse(savedTemplates);
-      if (this.templates.length) {
-        this.uploadForm.patchValue({ templateName: this.templates[0] });
-      }
-    }
+
   }
 
   private initializeForm() {
@@ -41,7 +67,7 @@ export class VideoUploadComponent implements OnInit {
       language: ['en', Validators.required],
       templateName: ['Hormozi 2', Validators.required],
       webhookUrl: [''],
-      magicZooms: [true],
+      magicZooms: [false],
       magicBrolls: [true],
       magicBrollsPercentage: [60, [Validators.min(0), Validators.max(100)]],
       dictionary: [''],
