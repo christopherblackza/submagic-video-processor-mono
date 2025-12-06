@@ -105,6 +105,8 @@ export class OpenAIService {
       const finalMatches = this.deduplicateMatches(matches);
       this.logger.log(`Found ${finalMatches.length} matches`);
 
+      this.logger.debug(`Final matches: ${JSON.stringify(finalMatches)}`);
+
       return {
         projectId: request.projectId,
         matches: matches,

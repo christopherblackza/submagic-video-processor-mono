@@ -4,16 +4,6 @@
   "sourceRoot": "api/src",
   "projectType": "application",
   "tags": [],
-  "namedInputs": {
-    "sources": [
-      "{projectRoot}/src/**",
-      "{projectRoot}/tsconfig.json",
-      "{projectRoot}/tsconfig.app.json",
-      "{projectRoot}/webpack.config.js",
-      "!{projectRoot}/data/**",
-      "!{projectRoot}/nest-cli.json"
-    ]
-  },
   "targets": {
     "build": {
       "executor": "nx:run-commands",
@@ -22,7 +12,6 @@
         "args": ["--node-env=production"],
         "cwd": "api"
       },
-      "inputs": ["sources"],
       "configurations": {
         "development": {
           "args": ["--node-env=development"]
@@ -63,7 +52,6 @@
         "buildTarget": "api:build",
         "runBuildTargetDependencies": false
       },
-      "inputs": ["sources"],
       "configurations": {
         "development": {
           "buildTarget": "api:build:development"

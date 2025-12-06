@@ -116,7 +116,21 @@ export class SetupComponent {
     if (input) input.value = '';
   }
 
-  proceedToUpload() {
-    this.router.navigate(['/upload']);
+  async proceedToUpload() {
+    if (this.setupForm.invalid) {
+      this.setupForm.markAllAsTouched();
+      return;
+    }
+    this.connecting = true;
+    this.error = '';
+    const apiKey = this.setupForm.value.apiKey as string;
+    try {
+      await this.projectService.saveApiKey(apiKey).toPromise();
+      this.router.navigate(['/upload']);
+    } catch (e: any) {
+      this.error = e?.error?.message || e?.message || 'Failed to save API key.';
+    } finally {
+      this.connecting = false;
+    }
   }
 }
