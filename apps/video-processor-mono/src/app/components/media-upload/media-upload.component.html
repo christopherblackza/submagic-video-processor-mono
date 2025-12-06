@@ -1,0 +1,59 @@
+<div class="upload-container">
+  <div class="header">
+    <h1>Upload Your Media</h1>
+    <p>Select multiple files to upload to your media library.</p>
+  </div>
+
+  <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="upload-form">
+    <div class="files-section">
+      <h2>Files</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="file-input">Select Files</label>
+          <input 
+            type="file" 
+            id="file-input"
+            class="form-control file-input"
+            multiple
+            (change)="onFileSelected($event)"
+            formControlName="files"
+          >
+          <div class="error-message" *ngIf="isFieldInvalid()">
+            At least one file is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="selected-files" *ngIf="selectedFiles.length > 0">
+        <h3>Selected Files:</h3>
+        <ul>
+          <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
+        </ul>
+      </div>
+
+    </div>
+
+    <!-- Error Message -->
+    <div class="error-message global-error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message global-success" *ngIf="successMessage">
+      {{ successMessage }}
+    </div>
+
+    <!-- Submit Button -->
+    <div class="submit-section">
+      <button 
+        type="submit" 
+        class="submit-btn"
+        [disabled]="isSubmitting || uploadForm.invalid"
+      >
+        <span *ngIf="!isSubmitting">Upload Files</span>
+        <span *ngIf="isSubmitting">Uploading...</span>
+      </button>
+    </div>
+  </form>
+</div>

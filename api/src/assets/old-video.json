@@ -1,0 +1,119 @@
+{
+    "projectId": "7b0ac5b9-114c-497a-8757-ddaa40239878",
+    "matches": [
+        {
+            "userMediaId": "0da2ae64-0630-4ebe-aacf-910ea6599663",
+            "startTime": 34,
+            "endTime": 36.5,
+            "confidence": 0.9,
+            "reason": "Bathroom scale / weight loss visual matches the narration distinction 'weight loss and fat loss are not the same thing'.",
+            "matchedText": "weight loss and fat loss are not the same thing"
+        },
+        {
+            "userMediaId": "cb16377c-285d-4bfb-9f5e-4d3a58a2b782",
+            "startTime": 50,
+            "endTime": 53,
+            "confidence": 0.89,
+            "reason": "Doctor doing research in a lab fits 'new study from the University of Virginia' and conveys scientific/academic authority for the 40% claim.",
+            "matchedText": "new study from the University of Virginia"
+        },
+        {
+            "userMediaId": "6f524432-5e12-49d1-b1b5-64c5397434c5",
+            "startTime": 3,
+            "endTime": 6,
+            "confidence": 0.88,
+            "reason": "Visual of an excited/celebrating gay man matches the narration addressing an 'image conscious gay man' and the social/image context.",
+            "matchedText": "image conscious gay man"
+        },
+        {
+            "userMediaId": "db8015d8-93dc-4e15-a00e-5034aa2ace16",
+            "startTime": 42,
+            "endTime": 45,
+            "confidence": 0.87,
+            "reason": "Close-up of a shirtless muscular man measuring (waist/tape) visually supports 'can really chew through your muscle' — measuring muscle/size loss cue.",
+            "matchedText": "chew through your muscle"
+        },
+        {
+            "userMediaId": "1e39984d-6130-416e-ba3b-791f64a09220",
+            "startTime": 26.5,
+            "endTime": 29,
+            "confidence": 0.86,
+            "reason": "Syringe imagery directly represents friends 'taking Ozempic' — literal drug usage visual.",
+            "matchedText": "friends are taking Ozempic"
+        },
+        {
+            "userMediaId": "7529209f-abcd-47c8-b87e-14097239e1c5",
+            "startTime": 92,
+            "endTime": 95,
+            "confidence": 0.85,
+            "reason": "Man on scales measuring weight visually contrasts 'lighter' (scale) vs 'look better' (implied physique) — supports the 'lighter or look better' choice.",
+            "matchedText": "do you want to be lighter or do you want to look better"
+        },
+        {
+            "userMediaId": "fabe823e-8bf2-4d6d-a421-8b6d9cfa6a7a",
+            "startTime": 62.5,
+            "endTime": 65,
+            "confidence": 0.84,
+            "reason": "Rear view of a muscular shirtless man emphasizes physique cues like 'chest full' and 'shoulders pop' — demonstrates the muscle aesthetics mentioned.",
+            "matchedText": "muscle is thing that makes your body look great it makes your chest look full it makes your shoulders pop"
+        },
+        {
+            "userMediaId": "77cef58d-2436-4db1-817d-452cdc963838",
+            "startTime": 13.5,
+            "endTime": 15.5,
+            "confidence": 0.82,
+            "reason": "Doctor holding syringe/stethoscope gives a medical context to 'not about me bashing Ozempic use' — frames the drug discussion as clinical, not accusatory.",
+            "matchedText": "not about me bashing Ozempic use"
+        },
+        {
+            "userMediaId": "7ac00f54-68c3-46eb-9e1e-c16a2eb95dd7",
+            "startTime": 99,
+            "endTime": 102,
+            "confidence": 0.82,
+            "reason": "Close-up of a mobile phone (distracted/DM cue) matches the call-to-action 'drop me a DM with the word interested' — literal device for DMs.",
+            "matchedText": "drop me a DM with the word interested"
+        },
+        {
+            "userMediaId": "b21860a9-ee92-46c3-ba92-88407a3ca490",
+            "startTime": 17,
+            "endTime": 20,
+            "confidence": 0.8,
+            "reason": "Close-up of an athlete showing a pill aligns with 'taken quite a few supplements' and the speaker's bodybuilder/supplement history.",
+            "matchedText": "taken quite a few supplements"
+        },
+        {
+            "userMediaId": "ed5b44fe-0663-49a3-8ee4-96686b387818",
+            "startTime": 75.5,
+            "endTime": 78.5,
+            "confidence": 0.78,
+            "reason": "Waking-up nightmare imagery underscores the alarming outcome 'smaller softer version of yourself that dies sooner' — evokes fear/negative consequence.",
+            "matchedText": "smaller softer version of yourself that dies sooner"
+        },
+        {
+            "userMediaId": "a5f6fda9-80bf-42cd-b63e-36ea000fd0f1",
+            "startTime": 81,
+            "endTime": 84,
+            "confidence": 0.76,
+            "reason": "Frustrated man visual matches the rhetorical point 'not the kind of effect that we're investing in' — shows dissatisfaction/discord with that outcome.",
+            "matchedText": "not the kind of effect that we're investing in"
+        },
+        {
+            "userMediaId": "ae6d29b9-11d8-4682-917f-ba38d9319f18",
+            "startTime": 70,
+            "endTime": 73,
+            "confidence": 0.75,
+            "reason": "Thoughtful/pensive man (gym executive style) conveys concern and health-focus for the claim 'losing lean mass can increase your risk of having cardiovascular disease'.",
+            "matchedText": "increase your risk of having cardiovascular disease"
+        },
+        {
+            "userMediaId": "397efba8-c3b6-46a3-beed-560985460860",
+            "startTime": 86.5,
+            "endTime": 90,
+            "confidence": 0.74,
+            "reason": "Man in a maze/looking lost depicts the rhetorical question 'Why would you look for a solution that makes yourself weaker' — illustrates confusion/poor choices.",
+            "matchedText": "Why would you actually look for a solution that makes yourself end up weaker"
+        }
+    ],
+    "totalMatches": 14,
+    "processedAt": "2025-11-05T06:26:08.506Z"
+}
