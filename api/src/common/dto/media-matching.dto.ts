@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsArray, IsNumber, IsOptional, ValidateNested } from 'class-validator';
+import { IsString, IsArray, IsNumber, IsOptional, ValidateNested, IsBoolean } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class MediaItemDto {
@@ -15,6 +15,13 @@ export class MediaItemDto {
   @IsOptional()
   @IsArray()
   tags?: string[];
+
+  // used boolean
+  @ApiProperty({ description: 'Whether the media item has been used in a match' })
+  @IsOptional()
+  @IsBoolean()
+  used?: boolean;
+  
 
 }
 

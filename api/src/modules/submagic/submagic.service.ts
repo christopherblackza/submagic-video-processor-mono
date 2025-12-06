@@ -445,6 +445,17 @@ export class SubmagicService {
         );
         results.push(...batchResults);
       }
+      const existing = (await this.redisService.getMediaItems()) ?? [];
+      const combinedMap: Map<string, { userMediaId: string; description: string; tags: string[] }> = new Map();
+      const normalizedExisting = existing.map((e) => ({
+        userMediaId: e.userMediaId,
+        description: e.description,
+        tags: e.tags ?? this.generateTagsFromDescription(e.description),
+      }));
+      for (const item of normalizedExisting) combinedMap.set(item.userMediaId, item);
+      for (const res of results) combinedMap.set(res.item.userMediaId, res.item);
+      const combined = Array.from(combinedMap.values());
+      await this.redisService.saveMediaItems(combined);
       return results;
     } catch (error) {
       this.logger.error("Failed to upload one or more user media files:", error);
@@ -507,13 +518,7 @@ export class SubmagicService {
     const tags = this.generateTagsFromDescription(description);
 
     const item = { userMediaId, description, tags };
-
-    const referencePath = this.saveUploadedMediaReference(item);
-
-    // this.logger.log(
-    //   `Uploaded user media ${userMediaId} and persisted reference to ${referencePath}`
-    // );
-
+    const referencePath = 'redis:mediaItems';
     return { userMediaId, referencePath, item };
   }
 

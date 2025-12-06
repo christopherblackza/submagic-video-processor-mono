@@ -2,38 +2,7 @@ import { IsString, IsArray, ValidateNested, IsOptional, IsNumber } from 'class-v
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class MediaItemDto {
-  @ApiProperty({ description: 'Unique identifier for the media item' })
-  @IsString()
-  userMediaId: string;
 
-  @ApiProperty({ description: 'Description of the media content' })
-  @IsString()
-  description: string;
-}
-
-export class MediaMatchingDto {
-  @ApiProperty({ description: 'Project ID to analyze' })
-  @IsString()
-  projectId: string;
-
-  @ApiProperty({ 
-    description: 'Array of available media items',
-    type: [MediaItemDto]
-  })
-  @IsArray()
-  @ValidateNested({ each: true })
-  @Type(() => MediaItemDto)
-  mediaItems: MediaItemDto[];
-
-  @ApiProperty({ 
-    description: 'Optional context or instructions for matching',
-    required: false 
-  })
-  @IsOptional()
-  @IsString()
-  context?: string;
-}
 
 export class MediaMatchResultDto {
   @ApiProperty({ description: 'Media item ID' })

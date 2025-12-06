@@ -9,16 +9,7 @@ import {
   MediaItemDto,
   UpdateProjectRequestDto,
 } from '../../common/dto/media-matching.dto';
-import { match } from 'assert';
-import { MEDIA_ITEMS } from 'api/src/data/uploaded-media-items';
-
-// Local interface definition
-// interface TextSegment {
-//   text: string;
-//   startTime: number;
-//   endTime: number;
-//   words: WordSegment[];
-// }
+import { RedisService } from '../redis/redis.service';
 
 interface WordSegment {
   id: string;
@@ -42,6 +33,7 @@ export class OpenAIService {
   constructor(
     private readonly configService: ConfigService,
     private readonly submagicService: SubmagicService,
+    private readonly redisService: RedisService,
   ) {
     const apiKey = this.configService.get<string>('OPEN_API_KEY') || '';
 
@@ -89,10 +81,21 @@ export class OpenAIService {
           processedAt: new Date().toISOString(),
         };
       }
+
+      const mediaItems = await this.redisService.getMediaItems();
+      if (!mediaItems || mediaItems.length === 0) {
+        this.logger.warn(`No media items found in Redis for project ${request.projectId}`);
+        return {
+          projectId: request.projectId,
+          matches: [],
+          totalMatches: 0,
+          processedAt: new Date().toISOString(),
+        };
+      }
       
       const matches = await this.findMediaMatches({ 
         segments: textSegments, 
-        library: request.mediaItems ?? MEDIA_ITEMS,
+        library: request.mediaItems ?? mediaItems,
         words: projectData.words,
         systemPrompt: request.systemPrompt
       });

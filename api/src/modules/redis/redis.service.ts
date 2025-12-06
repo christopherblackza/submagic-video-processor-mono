@@ -1,5 +1,6 @@
 import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { MediaItemDto } from '../../common/dto/media-matching.dto';
 import { createClient, RedisClientType } from 'redis';
 
 @Injectable()
@@ -32,6 +33,18 @@ export class RedisService implements OnModuleDestroy {
     if (!apiKey || !apiKey.trim()) return;
     if (!this.client) throw new Error('Redis client is not connected');
     await this.client.set(this.apiKeyKey, apiKey.trim());
+  }
+
+  async saveMediaItems(mediaItems: MediaItemDto[]): Promise<void> {
+    if (!this.client) throw new Error('Redis client is not connected');
+    await this.client.set('mediaItems', JSON.stringify(mediaItems));
+  }
+
+  async getMediaItems(): Promise<MediaItemDto[] | undefined> {
+    if (!this.client) throw new Error('Redis client is not connected');
+    const val = (await this.client.get('mediaItems')) as string | null;
+    if (typeof val === 'string' && val.trim() !== '') return JSON.parse(val);
+    return undefined;
   }
 
   async getApiKey(): Promise<string | undefined> {
