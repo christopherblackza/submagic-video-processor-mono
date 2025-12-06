@@ -37,25 +37,20 @@ export class SubmagicService {
     this.defaultMagicZooms = this.configService.get<boolean>('DEFAULT_MAGIC_ZOOMS', true);
     this.defaultMagicBrolls = this.configService.get<boolean>('DEFAULT_MAGIC_BROLLS', true);
     this.defaultMagicBrollsPercentage = this.configService.get<number>('DEFAULT_MAGIC_BROLLS_PERCENTAGE', 60);
-    console.error('API KEY: ', this.apiKey);
-
-    if (!this.apiKey) {
-      this.logger.error('SUBMAGIC_API_KEY is required');
-      throw new Error('SUBMAGIC_API_KEY is required');
-    }
+    // Allow overriding API key via request header; config key serves as fallback
     if (!this.publicBaseUrl) {
       this.logger.error('PUBLIC_BASE_URL is required');
       throw new Error('PUBLIC_BASE_URL is required');
     }
   }
 
-  async startProject(dto: StartProjectDto): Promise<{ projectId: string }> {
+  async startProject(dto: StartProjectDto, apiKeyOverride?: string): Promise<{ projectId: string }> {
     try {
       const payload = this.buildProjectPayload(dto);
       
       // this.logger.debug(`Payload: ${JSON.stringify(sanitizeHeaders(payload), null, 2)}`);
 
-      const response = await this.callSubmagicAPI(payload);
+      const response = await this.callSubmagicAPI(payload, apiKeyOverride);
       console.log('RESPONSE: ', response);
       
       // Extract the project ID from the Submagic API response
@@ -80,13 +75,13 @@ export class SubmagicService {
     }
   }
 
-  async updateProject(projectId: string, dto: UpdateProjectDto): Promise<{ message: string; id: string; status: string }> {
+  async updateProject(projectId: string, dto: UpdateProjectDto, apiKeyOverride?: string): Promise<{ message: string; id: string; status: string }> {
     try {
       const payload = this.buildUpdateProjectPayload(dto);
       
       this.logger.debug(`Update payload for project ${projectId}: ${JSON.stringify(payload, null, 2)}`);
 
-      const response = await this.callSubmagicUpdateAPI(projectId, payload);
+      const response = await this.callSubmagicUpdateAPI(projectId, payload, apiKeyOverride);
       console.log('UPDATE RESPONSE: ', response);
       
       this.logger.log(`Project ${projectId} updated successfully`);
@@ -104,14 +99,14 @@ export class SubmagicService {
     }
   }
 
-  async exportProject(projectId: string, exportData: ExportProjectDto): Promise<any> {
+  async exportProject(projectId: string, exportData: ExportProjectDto, apiKeyOverride?: string): Promise<any> {
     try {
       this.logger.log(`Exporting project: ${projectId}`);
       
       const payload = this.buildExportProjectPayload(exportData);
       // this.logger.log(`Export payload: ${JSON.stringify(payload, null, 2)}`);
       
-      const response = await this.callSubmagicExportAPI(projectId, payload);
+      const response = await this.callSubmagicExportAPI(projectId, payload, apiKeyOverride);
       this.logger.log(`Export response: ${JSON.stringify(response.data, null, 2)}`);
       
       return response.data;
@@ -121,11 +116,11 @@ export class SubmagicService {
     }
   }
 
-  async getProject(projectId: string): Promise<any> {
+  async getProject(projectId: string, apiKeyOverride?: string): Promise<any> {
     try {
       this.logger.log(`Getting project details: ${projectId}`);
       
-      const response = await this.callSubmagicGetAPI(projectId);
+      const response = await this.callSubmagicGetAPI(projectId, apiKeyOverride);
       this.logger.log(`Project details retrieved for: ${projectId}`);
       
       return response.data;
@@ -135,9 +130,28 @@ export class SubmagicService {
     }
   }
 
-  private async callSubmagicGetAPI(projectId: string): Promise<AxiosResponse> {
+  async getTemplates(apiKeyOverride?: string): Promise<{ templates: string[] }> {
+    const apiKey = apiKeyOverride || this.apiKey;
+    if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
-      'x-api-key': this.apiKey,
+      'x-api-key': apiKey,
+      'Content-Type': 'application/json',
+    };
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get('https://api.submagic.co/v1/templates', { headers })
+      );
+      return response.data;
+    } catch (error) {
+      this.handleSubmagicApiError(error);
+    }
+  }
+
+  private async callSubmagicGetAPI(projectId: string, apiKeyOverride?: string): Promise<AxiosResponse> {
+    const apiKey = apiKeyOverride || this.apiKey;
+    if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
+    const headers = {
+      'x-api-key': apiKey,
       'Content-Type': 'application/json',
     };
 
@@ -175,9 +189,11 @@ export class SubmagicService {
     return payload;
   }
 
-  private async callSubmagicExportAPI(projectId: string, payload: any): Promise<any> {
+  private async callSubmagicExportAPI(projectId: string, payload: any, apiKeyOverride?: string): Promise<any> {
+    const apiKey = apiKeyOverride || this.apiKey;
+    if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
-      'x-api-key': this.apiKey,
+      'x-api-key': apiKey,
       'Content-Type': 'application/json',
     };
 
@@ -249,12 +265,14 @@ export class SubmagicService {
     return payload;
   }
 
-  private async callSubmagicAPI(payload: any): Promise<AxiosResponse> {
+  private async callSubmagicAPI(payload: any, apiKeyOverride?: string): Promise<AxiosResponse> {
     // Remove videoFile from payload if it exists (we don't handle file uploads)
     const { videoFile, ...jsonPayload } = payload;
 
+    const apiKey = apiKeyOverride || this.apiKey;
+    if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
-      'x-api-key': this.apiKey,
+      'x-api-key': apiKey,
       'Content-Type': 'application/json',
     };
 
@@ -270,9 +288,11 @@ export class SubmagicService {
     }
   }
 
-  private async callSubmagicUpdateAPI(projectId: string, payload: any): Promise<AxiosResponse> {
+  private async callSubmagicUpdateAPI(projectId: string, payload: any, apiKeyOverride?: string): Promise<AxiosResponse> {
+    const apiKey = apiKeyOverride || this.apiKey;
+    if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
-      'x-api-key': this.apiKey,
+      'x-api-key': apiKey,
       'Content-Type': 'application/json',
     };
 

@@ -1,0 +1,23 @@
+<div class="setup-container">
+  <h1>Connect Submagic</h1>
+  <form [formGroup]="setupForm" (ngSubmit)="onConnect()" class="setup-form">
+    <div class="form-group">
+      <label for="apiKey">Submagic API Key</label>
+      <input id="apiKey" type="password" formControlName="apiKey" class="form-control" placeholder="sk-..." />
+    </div>
+    <div class="error" *ngIf="error">{{ error }}</div>
+    <button type="submit" class="submit-btn" [disabled]="connecting || setupForm.invalid">
+      <span *ngIf="!connecting">Connect</span>
+      <span *ngIf="connecting">Connecting...</span>
+    </button>
+  </form>
+
+  <div class="templates" *ngIf="templates.length">
+    <h2>Templates</h2>
+    <ul>
+      <li *ngFor="let t of templates">{{ t }}</li>
+    </ul>
+    <button type="button" class="proceed-btn" (click)="proceedToUpload()">Continue to Upload</button>
+  </div>
+</div>
+

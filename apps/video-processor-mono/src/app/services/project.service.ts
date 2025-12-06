@@ -11,6 +11,8 @@ import {
   SingleProjectRequest,
   SingleProjectResponse
 } from '../models/project.model';
+ 
+export interface TemplatesResponse { templates: string[] }
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +21,20 @@ export class ProjectService {
   private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
+
+  private buildHeaders(json: boolean = true): HttpHeaders {
+    let headers = new HttpHeaders(json ? { 'Content-Type': 'application/json' } : {});
+    const key = localStorage.getItem('submagic_api_key');
+    if (key) {
+      headers = headers.set('x-api-key', key);
+    }
+    return headers;
+  }
+
+  getTemplates(): Observable<TemplatesResponse> {
+    const headers = this.buildHeaders(false);
+    return this.http.get<TemplatesResponse>(`${this.apiUrl}/submagic/templates`, { headers });
+  }
 
   /**
    * Start processing a single video
@@ -59,9 +75,7 @@ export class ProjectService {
       dictionary: request.dictionary
     };
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+    const headers = this.buildHeaders(true);
 
     return this.http.post<BatchStartResponse>(`${this.apiUrl}/batch-start`, jsonPayload, { headers });
   }
@@ -70,42 +84,49 @@ export class ProjectService {
    * Get project details by ID
    */
   getProject(projectId: string): Observable<Project> {
-    return this.http.get<Project>(`${this.apiUrl}/project/${projectId}`);
+    const headers = this.buildHeaders(false);
+    return this.http.get<Project>(`${this.apiUrl}/project/${projectId}`, { headers });
   }
 
   /**
    * Get batch details by ID
    */
   getBatch(batchId: string): Observable<Batch> {
-    return this.http.get<Batch>(`${this.apiUrl}/batch-success/${batchId}`);
+    const headers = this.buildHeaders(false);
+    return this.http.get<Batch>(`${this.apiUrl}/batch-success/${batchId}`, { headers });
   }
 
   // Get batch details
   getBatchDetails(batchId: string): Observable<Batch> {
-    return this.http.get<Batch>(`${this.apiUrl}/batch-success/${batchId}`);
+    const headers = this.buildHeaders(false);
+    return this.http.get<Batch>(`${this.apiUrl}/batch-success/${batchId}`, { headers });
   }
 
   /**
    * Get completion data for a project
    */
   getCompletion(projectId: string): Observable<CompletionData> {
-    return this.http.get<CompletionData>(`${this.apiUrl}/completion/${projectId}`);
+    const headers = this.buildHeaders(false);
+    return this.http.get<CompletionData>(`${this.apiUrl}/completion/${projectId}`, { headers });
   }
 
   // Get completion details
   getCompletionDetails(projectId: string): Observable<CompletionData> {
-    return this.http.get<CompletionData>(`${this.apiUrl}/completion/${projectId}`);
+    const headers = this.buildHeaders(false);
+    return this.http.get<CompletionData>(`${this.apiUrl}/completion/${projectId}`, { headers });
   }
 
   /**
    * Check health status of the API
    */
   checkHealth(): Observable<{ ok: boolean }> {
-    return this.http.get<{ ok: boolean }>(`${this.apiUrl}/health`);
+    const headers = this.buildHeaders(false);
+    return this.http.get<{ ok: boolean }>(`${this.apiUrl}/health`, { headers });
   }
 
   // Health check
   checkHealthStatus(): Observable<{ status: string }> {
-    return this.http.get<{ status: string }>(`${this.apiUrl}/health`);
+    const headers = this.buildHeaders(false);
+    return this.http.get<{ status: string }>(`${this.apiUrl}/health`, { headers });
   }
 }

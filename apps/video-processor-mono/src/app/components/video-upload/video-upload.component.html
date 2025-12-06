@@ -10,6 +10,7 @@
 
       
       <div class="form-row">
+       
         <div class="form-group">
           <label for="language">Language</label>
           <select id="language" formControlName="language" class="form-control">
@@ -28,12 +29,17 @@
         <div class="form-group">
           <label for="templateName">Template</label>
           <select id="templateName" formControlName="templateName" class="form-control">
-            <option value="Hormozi 2">Hormozi 2</option>
-            <option value="MrBeast">MrBeast</option>
-            <option value="Ali Abdaal">Ali Abdaal</option>
+            <ng-container *ngIf="templates?.length; else fallbackTemplates">
+              <option *ngFor="let t of templates" [value]="t">{{ t }}</option>
+            </ng-container>
+            <ng-template #fallbackTemplates>
+              <option value="Hormozi 2">Hormozi 2</option>
+              <option value="MrBeast">MrBeast</option>
+              <option value="Ali Abdaal">Ali Abdaal</option>
               <option value="Dan">Dan</option>
-            <option value="Nema">Nema</option>
-            <option value="Default">Default</option>
+              <option value="Nema">Nema</option>
+              <option value="Default">Default</option>
+            </ng-template>
           </select>
           <div class="error-message" *ngIf="isFieldInvalid('templateName')">
             {{ getFieldError('templateName') }}
