@@ -9,8 +9,8 @@ import {
   MediaItemDto,
   UpdateProjectRequestDto,
 } from '../../common/dto/media-matching.dto';
-import { MEDIA_ITEMS } from 'api/src/common/constants/media-items';
 import { match } from 'assert';
+import { MEDIA_ITEMS } from 'api/src/data/uploaded-media-items';
 
 // Local interface definition
 // interface TextSegment {
