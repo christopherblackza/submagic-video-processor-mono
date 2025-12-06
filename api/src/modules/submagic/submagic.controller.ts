@@ -46,6 +46,16 @@ export class SubmagicController {
     private readonly redisService: RedisService
   ) {}
 
+  @Get("load-api-key")
+  @ApiOperation({ summary: "Load Submagic API key from Redis" })
+  async loadApiKey() {
+    const apiKey = await this.redisService.getApiKey();
+    if (!apiKey || apiKey.trim() === "") {
+      throw new BadRequestException("Submagic API key not found in Redis");
+    }
+    return { apiKey };
+  }
+
   @Post("save-api-key")
   @ApiOperation({ summary: "Save Submagic API key to Redis" })
   @ApiHeader({ name: "x-api-key", description: "Submagic API key", required: true })
@@ -239,12 +249,11 @@ export class SubmagicController {
   @ApiResponse({ status: 404, description: "Project not found" })
   @ApiResponse({ status: 401, description: "Unauthorized - Invalid API key" })
   async getProject(
-    @Param("projectId") projectId: string,
-    @Headers("x-api-key") apiKey?: string
+    @Param("projectId") projectId: string
   ) {
     this.logger.log(`Getting project details for ${projectId}`);
 
-    const result = await this.submagicService.getProject(projectId, apiKey);
+    const result = await this.submagicService.getProject(projectId);
 
     this.logger.log(`Project details retrieved for ${projectId}`);
     return result;

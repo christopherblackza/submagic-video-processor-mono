@@ -164,11 +164,11 @@ export class SubmagicService {
     }
   }
 
-  async getProject(projectId: string, apiKeyOverride?: string): Promise<any> {
+  async getProject(projectId: string): Promise<any> {
     try {
       this.logger.log(`Getting project details: ${projectId}`);
       
-      const response = await this.callSubmagicGetAPI(projectId, apiKeyOverride);
+      const response = await this.callSubmagicGetAPI(projectId);
       this.logger.log(`Project details retrieved for: ${projectId}`);
 
       return response.data;
@@ -195,8 +195,9 @@ export class SubmagicService {
     }
   }
 
-  private async callSubmagicGetAPI(projectId: string, apiKeyOverride?: string): Promise<AxiosResponse> {
-    const apiKey = apiKeyOverride || (await this.redisService.getApiKey());
+  private async callSubmagicGetAPI(projectId: string): Promise<AxiosResponse> {
+    const apiKey = await this.redisService.getApiKey();
+    console.log('API KEY GOT: ', apiKey);
     if (!apiKey) throw new UnauthorizedException('Submagic API key is required');
     const headers = {
       'x-api-key': apiKey,
@@ -455,6 +456,7 @@ export class SubmagicService {
       for (const item of normalizedExisting) combinedMap.set(item.userMediaId, item);
       for (const res of results) combinedMap.set(res.item.userMediaId, res.item);
       const combined = Array.from(combinedMap.values());
+      console.log('Saved Media Items', combined.length);
       await this.redisService.saveMediaItems(combined);
       return results;
     } catch (error) {

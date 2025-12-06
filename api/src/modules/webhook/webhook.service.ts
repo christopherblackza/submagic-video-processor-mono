@@ -3,8 +3,7 @@ import { StorageService } from "../storage/storage.service";
 import { OpenAIService } from "../openai/openai.service";
 import { WebhookDto } from "../../common/dto/webhook.dto";
 import { CompletionData } from "../../common/interfaces/project.interface";
-import { request } from "http";
-import { MEDIA_ITEMS } from "api/src/data/uploaded-media-items";
+import { RedisService } from "../redis/redis.service";
 
 @Injectable()
 export class WebhookService {
@@ -12,7 +11,8 @@ export class WebhookService {
 
   constructor(
     private readonly storageService: StorageService,
-    private readonly openaiService: OpenAIService
+    private readonly openaiService: OpenAIService,
+    private redisService: RedisService
   ) {}
 
   async processWebhook(payload: WebhookDto): Promise<void> {
@@ -54,11 +54,18 @@ export class WebhookService {
             `Starting OpenAI media matching for project ${projectId}`
           );
 
+         const mediaItems = await this.redisService.getMediaItems();
+         this.logger.debug(`Using ${mediaItems.length} media items`);
+          if (!mediaItems || mediaItems.length === 0) {
+            this.logger.warn(`No media items found in Redis for project ${projectId}`);
+          
+          }
+
           // Call analyze-media-matching endpoint
           const analysisResult =
             await this.openaiService.analyzeProjectForMediaMatching({
               projectId,
-              mediaItems: MEDIA_ITEMS,
+              mediaItems: mediaItems,
               confidenceThreshold: 0.7,
             });
 

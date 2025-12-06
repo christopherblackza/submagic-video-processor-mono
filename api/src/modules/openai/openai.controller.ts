@@ -32,8 +32,8 @@ export class OpenAIController {
     status: 500, 
     description: 'Internal server error during analysis' 
   })
-  async analyzeMediaMatching(@Body() request: MediaMatchingRequestDto, @Headers('x-api-key') apiKey?: string): Promise<MediaMatchingResponseDto> {
-    return this.openaiService.analyzeProjectForMediaMatching(request, apiKey);
+  async analyzeMediaMatching(@Body() request: MediaMatchingRequestDto): Promise<MediaMatchingResponseDto> {
+    return this.openaiService.analyzeProjectForMediaMatching(request);
   }
 
   @Post('analyze-and-update')

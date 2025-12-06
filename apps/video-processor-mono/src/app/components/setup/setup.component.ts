@@ -25,7 +25,7 @@ export class SetupComponent {
 
     this.setupForm = this.fb.group({ apiKey: ['', Validators.required] });
 
-    
+    this.loadApiKey();
     const savedTemplates = localStorage.getItem('submagic_templates');
     if (savedTemplates) this.templates = JSON.parse(savedTemplates);
   }
@@ -114,6 +114,13 @@ export class SetupComponent {
     this.selectedFiles = [];
     const input = document.getElementById('file-input') as HTMLInputElement | null;
     if (input) input.value = '';
+  }
+
+  async loadApiKey() {
+      const resp = await this.projectService.loadApiKey().toPromise();
+      console.log('resp', resp);
+
+      this.setupForm.patchValue({ apiKey: resp.apiKey });
   }
 
   async proceedToUpload() {

@@ -28,6 +28,10 @@ export class ProjectService {
     return new HttpHeaders(base);
   }
 
+  loadApiKey(): Observable<any> {
+    return this.http.get<string>(`${this.apiUrl}/submagic/load-api-key`);
+  }
+
   saveApiKey(apiKey: string): Observable<{ message: string }> {
     const headers = new HttpHeaders({ 'x-api-key': apiKey });
     return this.http.post<{ message: string }>(`${this.apiUrl}/submagic/save-api-key`, {}, { headers });

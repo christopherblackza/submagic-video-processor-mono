@@ -48,14 +48,13 @@ export class OpenAIService {
 
 
   async analyzeProjectForMediaMatching(
-    request: MediaMatchingRequestDto,
-    apiKeyOverride?: string,
+    request: MediaMatchingRequestDto
   ): Promise<MediaMatchingResponseDto> {
     try {
       this.logger.log(`Starting media matching analysis for project: ${request.projectId}`);
       
       // Get project data from Submagic
-      const projectData = await this.getProjectData(request.projectId, apiKeyOverride);
+      const projectData = await this.getProjectData(request.projectId);
       this.logger.log(`Retrieved project data with ${projectData?.words?.length || 0} words`);
 
       if (!projectData || !projectData.words || projectData.words.length === 0) {
@@ -83,6 +82,7 @@ export class OpenAIService {
       }
 
       const mediaItems = await this.redisService.getMediaItems();
+      console.log('MEDIA ITEMS GOT', mediaItems)
       if (!mediaItems || mediaItems.length === 0) {
         this.logger.warn(`No media items found in Redis for project ${request.projectId}`);
         return {
@@ -196,9 +196,9 @@ export class OpenAIService {
     }
   }
 
-  private async getProjectData(projectId: string, apiKeyOverride?: string): Promise<any> {
+  private async getProjectData(projectId: string): Promise<any> {
     try {
-      return await this.submagicService.getProject(projectId, apiKeyOverride);
+      return await this.submagicService.getProject(projectId);
     } catch (error) {
       this.logger.error(`Error fetching project data: ${error.message}`);
       throw error;
