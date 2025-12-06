@@ -72,6 +72,7 @@ export interface BatchStartRequest {
   magicBrolls?: boolean;
   magicBrollsPercentage?: number;
   dictionary?: string;
+  systemPrompt?: string;
 }
 
 export interface BatchStartResponse {

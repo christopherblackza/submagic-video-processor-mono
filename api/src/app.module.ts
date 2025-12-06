@@ -19,12 +19,15 @@ import { WebhookModule } from './modules/webhook/webhook.module';
 import { ProjectModule } from './modules/project/project.module';
 import { OpenAIModule } from './modules/openai/openai.module';
 
+const env = process.env.NODE_ENV || 'development';
+
+
 @Module({
   imports: [
     // Configuration
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: ['.env.local', '.env'],
+      ignoreEnvFile: env === 'production',
     }),
     
     // Rate limiting

@@ -21,7 +21,7 @@ export class BatchService {
     private readonly storageService: StorageService,
   ) {}
 
-  async startBatch(dto: BatchStartDto): Promise<{ batchId: string; projectIds: string[] }> {
+  async startBatch(dto: BatchStartDto, apiKeyOverride?: string): Promise<{ batchId: string; projectIds: string[] }> {
     const batchId = this.generateBatchId();
     const projectIds: string[] = [];
     const batchProjects: BatchProject[] = [];
@@ -54,7 +54,7 @@ export class BatchService {
           dictionary: dto.dictionary,
         };
 
-        const projectResult = await this.submagicService.startProject(projectDto);
+        const projectResult = await this.submagicService.startProject(projectDto, apiKeyOverride);
         projectIds.push(projectResult.projectId);
 
         // Create project record

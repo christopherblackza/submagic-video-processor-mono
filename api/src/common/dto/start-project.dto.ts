@@ -219,4 +219,9 @@ export class BatchStartDto {
   })
   @IsOptional()
   dictionary?: string | string[];
+
+  @ApiPropertyOptional({ description: 'System prompt to guide AI media matching' })
+  @IsOptional()
+  @IsString()
+  systemPrompt?: string;
 }

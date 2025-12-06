@@ -1,10 +1,30 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
+import { apiKeyGuard } from './guards/api-key.guard';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'login',
+    loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent),
+    title: 'Login'
+  },
+  {
+    path: 'setup',
+    canActivate: [authGuard],
+    loadComponent: () => import('./components/setup/setup.component').then(m => m.SetupComponent),
+    title: 'Setup'
+  },
+  {
+    path: 'upload',
+    canActivate: [authGuard, apiKeyGuard],
     loadComponent: () => import('./components/video-upload/video-upload.component').then(m => m.VideoUploadComponent),
     title: 'Submagic Video Processor'
+  },
+  {
+    path: 'system-prompt',
+    canActivate: [authGuard],
+    loadComponent: () => import('./components/system-prompt/system-prompt.component').then(m => m.SystemPromptComponent),
+    title: 'System Prompt'
   },
   {
     path: 'media-upload',
@@ -23,7 +43,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'login',
     pathMatch: 'full'
   }
 ];

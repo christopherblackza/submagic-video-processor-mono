@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Body,
+  Headers,
   BadRequestException,
   Logger,
   UploadedFile,
@@ -18,6 +19,7 @@ import {
   ApiConsumes,
   ApiBody,
   ApiParam,
+  ApiHeader,
 } from "@nestjs/swagger";
 import { SubmagicService } from "./submagic.service";
 import { StorageService } from "../storage/storage.service";
@@ -27,9 +29,12 @@ import {
   ExportProjectDto,
 } from "../../common/dto/start-project.dto";
 import { Project } from "../../common/interfaces/project.interface";
-import { FilesInterceptor } from "@nestjs/platform-express";
+import {
+  FilesInterceptor,
+  FileFieldsInterceptor,
+} from "@nestjs/platform-express";
 
-@ApiTags("submagic")
+@ApiTags("Submagic")
 @Controller("submagic")
 export class SubmagicController {
   private readonly logger = new Logger(SubmagicController.name);
@@ -45,7 +50,10 @@ export class SubmagicController {
   @ApiResponse({ status: 400, description: "Bad request" })
   @ApiConsumes("application/json")
   @ApiBody({ type: StartProjectDto })
-  async startProject(@Body() dto: StartProjectDto) {
+  async startProject(
+    @Body() dto: StartProjectDto,
+    @Headers("x-api-key") apiKey?: string
+  ) {
     this.logger.log("Starting single video project");
 
     if (!dto.videoUrl) {
@@ -54,7 +62,7 @@ export class SubmagicController {
       );
     }
 
-    const result = await this.submagicService.startProject(dto);
+    const result = await this.submagicService.startProject(dto, apiKey);
 
     // Store project in memory
     const project: Project = {
@@ -91,92 +99,13 @@ export class SubmagicController {
     );
   }
 
-  @Patch("update/:projectId")
-  @ApiOperation({
-    summary: "Update an existing project with new settings or B-roll items",
-  })
-  @ApiParam({
-    name: "projectId",
-    description: "The unique identifier (UUID) of the project to update",
-  })
-  @ApiResponse({ status: 200, description: "Project updated successfully" })
-  @ApiResponse({ status: 400, description: "Bad request" })
-  @ApiResponse({ status: 404, description: "Project not found" })
-  @ApiConsumes("application/json")
-  @ApiBody({ type: UpdateProjectDto })
-  async updateProject(
-    @Param("projectId") projectId: string,
-    @Body() dto: UpdateProjectDto
-  ) {
-    this.logger.log(`Updating project ${projectId}`);
-
-    // Validate that the project exists in our storage
-    const existingProject = this.storageService.getProject(projectId);
-    if (!existingProject) {
-      throw new BadRequestException(`Project ${projectId} not found`);
-    }
-
-    const result = await this.submagicService.updateProject(projectId, dto);
-
-    this.logger.log(`Project ${projectId} updated successfully`);
-    return result;
-  }
-
-  @Post("export/:projectId")
-  @ApiOperation({ summary: "Export a Submagic project" })
-  @ApiParam({
-    name: "projectId",
-    description: "The unique identifier (UUID) of the project to export",
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Project export started successfully",
-  })
-  @ApiResponse({ status: 400, description: "Bad request" })
-  @ApiResponse({ status: 404, description: "Project not found" })
-  @ApiConsumes("application/json")
-  // @ApiBody({ type: ExportProjectDto })
-  async exportProject(
-    @Param("projectId") projectId: string,
-    @Body() dto: ExportProjectDto
-  ) {
-    this.logger.log(`Exporting project ${projectId}`);
-
-    // Validate that the project exists in our storage
-    // const existingProject = this.storageService.getProject(projectId);
-    // if (!existingProject) {
-    //   throw new BadRequestException(`Project ${projectId} not found`);
-    // }
-
-    const result = await this.submagicService.exportProject(projectId, dto);
-
-    this.logger.log(`Project ${projectId} export started successfully`);
-    return result;
-  }
-
-  @Get("project/:projectId")
-  @ApiOperation({ summary: "Get project details from Submagic API" })
-  @ApiParam({
-    name: "projectId",
-    description: "The unique identifier (UUID) of the project to retrieve",
-  })
-  @ApiResponse({
-    status: 200,
-    description: "Project details retrieved successfully",
-  })
-  @ApiResponse({ status: 404, description: "Project not found" })
-  @ApiResponse({ status: 401, description: "Unauthorized - Invalid API key" })
-  async getProject(@Param("projectId") projectId: string) {
-    this.logger.log(`Getting project details for ${projectId}`);
-
-    const result = await this.submagicService.getProject(projectId);
-
-    this.logger.log(`Project details retrieved for ${projectId}`);
-    return result;
-  }
-
   @Post("upload-user-media")
-  @UseInterceptors(FilesInterceptor("media", 20))
+  @UseInterceptors(FileFieldsInterceptor([{ name: "media", maxCount: 400 }]))
+  @ApiHeader({
+    name: "x-api-key",
+    description: "API key for authentication",
+    required: true,
+  })
   @ApiOperation({
     summary:
       "Upload multiple user media files to Submagic and persist references",
@@ -198,12 +127,122 @@ export class SubmagicController {
     status: 200,
     description: "User media uploaded and references saved",
   })
-  async uploadUserMedia(@UploadedFiles() files: Array<Express.Multer.File>) {
-    if (!files || files.length === 0) {
+  async uploadUserMedia(
+    @UploadedFiles() files: { media?: Array<Express.Multer.File> },
+    @Headers("x-api-key") apiKey?: string
+  ) {
+    const mediaFiles = files?.media || [];
+    if (!mediaFiles || mediaFiles.length === 0) {
       throw new BadRequestException(
         'At least one file is required in the "media" field'
       );
     }
-    return this.submagicService.uploadUserMedia(files);
+    return this.submagicService.uploadUserMedia(mediaFiles, apiKey);
+  }
+
+  @Patch("update/:projectId")
+  @ApiOperation({
+    summary: "Update an existing project with new settings or B-roll items",
+  })
+  @ApiParam({
+    name: "projectId",
+    description: "The unique identifier (UUID) of the project to update",
+  })
+  @ApiResponse({ status: 200, description: "Project updated successfully" })
+  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiResponse({ status: 404, description: "Project not found" })
+  @ApiConsumes("application/json")
+  @ApiBody({ type: UpdateProjectDto })
+  async updateProject(
+    @Param("projectId") projectId: string,
+    @Body() dto: UpdateProjectDto,
+    @Headers("x-api-key") apiKey?: string
+  ) {
+    this.logger.log(`Updating project ${projectId}`);
+
+    // Validate that the project exists in our storage
+    const existingProject = this.storageService.getProject(projectId);
+    if (!existingProject) {
+      throw new BadRequestException(`Project ${projectId} not found`);
+    }
+
+    const result = await this.submagicService.updateProject(
+      projectId,
+      dto,
+      apiKey
+    );
+
+    this.logger.log(`Project ${projectId} updated successfully`);
+    return result;
+  }
+
+  @Post("export/:projectId")
+  @ApiOperation({ summary: "Export a Submagic project" })
+  @ApiParam({
+    name: "projectId",
+    description: "The unique identifier (UUID) of the project to export",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Project export started successfully",
+  })
+  @ApiResponse({ status: 400, description: "Bad request" })
+  @ApiResponse({ status: 404, description: "Project not found" })
+  @ApiConsumes("application/json")
+  // @ApiBody({ type: ExportProjectDto })
+  async exportProject(
+    @Param("projectId") projectId: string,
+    @Body() dto: ExportProjectDto,
+    @Headers("x-api-key") apiKey?: string
+  ) {
+    this.logger.log(`Exporting project ${projectId}`);
+
+    // Validate that the project exists in our storage
+    // const existingProject = this.storageService.getProject(projectId);
+    // if (!existingProject) {
+    //   throw new BadRequestException(`Project ${projectId} not found`);
+    // }
+
+    const result = await this.submagicService.exportProject(
+      projectId,
+      dto,
+      apiKey
+    );
+
+    this.logger.log(`Project ${projectId} export started successfully`);
+    return result;
+  }
+
+  @Get("project/:projectId")
+  @ApiOperation({ summary: "Get project details from Submagic API" })
+  @ApiParam({
+    name: "projectId",
+    description: "The unique identifier (UUID) of the project to retrieve",
+  })
+  @ApiResponse({
+    status: 200,
+    description: "Project details retrieved successfully",
+  })
+  @ApiResponse({ status: 404, description: "Project not found" })
+  @ApiResponse({ status: 401, description: "Unauthorized - Invalid API key" })
+  async getProject(
+    @Param("projectId") projectId: string,
+    @Headers("x-api-key") apiKey?: string
+  ) {
+    this.logger.log(`Getting project details for ${projectId}`);
+
+    const result = await this.submagicService.getProject(projectId, apiKey);
+
+    this.logger.log(`Project details retrieved for ${projectId}`);
+    return result;
+  }
+
+  @Get("templates")
+  @ApiOperation({ summary: "List available Submagic templates" })
+  @ApiResponse({ status: 200, description: "Templates retrieved" })
+  async getTemplates(@Headers("x-api-key") apiKey?: string) {
+    this.logger.log("Getting templates");
+    const result = await this.submagicService.getTemplates(apiKey);
+    return result;
   }
 }

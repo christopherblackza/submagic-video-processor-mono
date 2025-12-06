@@ -3,8 +3,18 @@ import { ValidationPipe, Logger } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
+import { config as dotenvConfig } from 'dotenv';
+import { join } from 'path';
 
 async function bootstrap() {
+  const env = process.env.NODE_ENV || 'development';
+  if (env === 'staging') {
+    dotenvConfig({ path: join(process.cwd(), 'api', '.env.staging'), override: true });
+    dotenvConfig({ path: join(process.cwd(), '.env.staging'), override: true });
+  } else {
+    dotenvConfig({ path: join(process.cwd(), 'api', '.env'), override: true });
+    dotenvConfig({ path: join(process.cwd(), '.env'), override: true });
+  }
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const logger = new Logger('Bootstrap');
@@ -43,7 +53,10 @@ async function bootstrap() {
   });
 
   const port = configService.get<number>('PORT', 3000);
+  console.log('PORT:', port)
   await app.listen(port);
+
+  console.log("PUBLIC_BASE_URL: ", process.env.PUBLIC_BASE_URL);
 
   logger.log(`🚀 Application is running on: http://localhost:${port}`);
   logger.log(`📚 Swagger documentation: http://localhost:${port}/swagger`);

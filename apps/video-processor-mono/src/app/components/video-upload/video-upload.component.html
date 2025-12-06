@@ -1,9 +1,17 @@
 <div class="upload-container">
   <div class="header">
     <h1>Submagic Video Processor</h1>
-    <p>Upload your videos and let AI create amazing content</p>
-    <a routerLink="/media-upload">Go to Media Upload</a>
-  </div>  <a routerLink="/media-upload">Go to Media Upload</a>
+    <div class="header-buttons">
+<button type="button" class="add-video-btn" routerLink="/setup">
+        Settings
+      </button>
+      <button type="button" class="add-video-btn" routerLink="/system-prompt">
+        Prompt
+      </button>
+    </div>
+
+
+  </div>  
 
 
   <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="upload-form">
@@ -12,6 +20,7 @@
 
       
       <div class="form-row">
+       
         <div class="form-group">
           <label for="language">Language</label>
           <select id="language" formControlName="language" class="form-control">
@@ -30,12 +39,17 @@
         <div class="form-group">
           <label for="templateName">Template</label>
           <select id="templateName" formControlName="templateName" class="form-control">
-            <option value="Hormozi 2">Hormozi 2</option>
-            <option value="MrBeast">MrBeast</option>
-            <option value="Ali Abdaal">Ali Abdaal</option>
+            <ng-container *ngIf="templates?.length; else fallbackTemplates">
+              <option *ngFor="let t of templates" [value]="t">{{ t }}</option>
+            </ng-container>
+            <ng-template #fallbackTemplates>
+              <option value="Hormozi 2">Hormozi 2</option>
+              <option value="MrBeast">MrBeast</option>
+              <option value="Ali Abdaal">Ali Abdaal</option>
               <option value="Dan">Dan</option>
-            <option value="Nema">Nema</option>
-            <option value="Default">Default</option>
+              <option value="Nema">Nema</option>
+              <option value="Default">Default</option>
+            </ng-template>
           </select>
           <div class="error-message" *ngIf="isFieldInvalid('templateName')">
             {{ getFieldError('templateName') }}
@@ -43,7 +57,7 @@
         </div>
       </div>
 
-      <div class="form-row">
+      <!-- <div class="form-row">
         <div class="form-group">
           <label for="webhookUrl">Webhook URL (Optional)</label>
           <input 
@@ -54,7 +68,7 @@
             placeholder="https://your-webhook-url.com/callback"
           >
         </div>
-      </div>
+      </div> -->
 
       <div class="form-row">
         <div class="checkbox-group">
@@ -137,7 +151,7 @@
 
           <div class="form-row">
             <div class="form-group">
-              <label [for]="'videoUrl-' + i">Video URL (Optional)</label>
+              <label [for]="'videoUrl-' + i">Video URL</label>
               <input 
                 type="url" 
                 [id]="'videoUrl-' + i"
@@ -145,10 +159,14 @@
                 class="form-control"
                 placeholder="https://drive.google.com/... or direct video URL"
               >
+                <div class="error-message" *ngIf="isFieldInvalid('videoUrl', i)">
+                {{ getFieldError('videoUrl', i) }}
+              </div>
             </div>
+            
           </div>
 
-          <div class="form-row">
+          <!-- <div class="form-row">
             <div class="form-group">
               <label [for]="'file-' + i">Or Upload File</label>
               <input 
@@ -162,7 +180,7 @@
                 Supported formats: MP4, MOV, AVI, MKV (Max 500MB)
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
       </div>
 

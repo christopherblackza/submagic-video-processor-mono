@@ -57,12 +57,13 @@ export class OpenAIService {
 
   async analyzeProjectForMediaMatching(
     request: MediaMatchingRequestDto,
+    apiKeyOverride?: string,
   ): Promise<MediaMatchingResponseDto> {
     try {
       this.logger.log(`Starting media matching analysis for project: ${request.projectId}`);
       
       // Get project data from Submagic
-      const projectData = await this.getProjectData(request.projectId);
+      const projectData = await this.getProjectData(request.projectId, apiKeyOverride);
       this.logger.log(`Retrieved project data with ${projectData?.words?.length || 0} words`);
 
       if (!projectData || !projectData.words || projectData.words.length === 0) {
@@ -93,7 +94,8 @@ export class OpenAIService {
       const matches = await this.findMediaMatches({ 
         segments: textSegments, 
         library: request.mediaItems ?? MEDIA_ITEMS,
-        words: projectData.words 
+        words: projectData.words,
+        systemPrompt: request.systemPrompt
       });
 
 
@@ -115,7 +117,7 @@ export class OpenAIService {
     }
   }
 
-  async analyzeAndUpdateProject(
+  async updateProject(
     request: UpdateProjectRequestDto,
   ): Promise<any> {
     try {
@@ -190,9 +192,9 @@ export class OpenAIService {
     }
   }
 
-  private async getProjectData(projectId: string): Promise<any> {
+  private async getProjectData(projectId: string, apiKeyOverride?: string): Promise<any> {
     try {
-      return await this.submagicService.getProject(projectId);
+      return await this.submagicService.getProject(projectId, apiKeyOverride);
     } catch (error) {
       this.logger.error(`Error fetching project data: ${error.message}`);
       throw error;
@@ -255,11 +257,13 @@ export class OpenAIService {
   async findMediaMatches({
   segments,
   library,
-  words
+  words,
+  systemPrompt
 }: {
   segments: TextSegment[];
   library: LibraryItem[];
   words?: WordSeg[];
+systemPrompt: string
 }): Promise<MediaMatchDto[]> {
 
   this.logger.log('MEDIA ITEMS: ', library);
@@ -285,7 +289,7 @@ export class OpenAIService {
 
   this.logger.log(`Using ${segmentsToProcess.length} segments for OpenAI analysis`);
 
-  const system = `You are matching narration segments to b-roll footage.
+  const defaultSystem = `You are matching narration segments to b-roll footage.
 Return ONLY: {"matches":[{userMediaId,startTime,endTime,confidence,reason,matchedText}]}
 
 Rules:
@@ -317,7 +321,7 @@ ${library.map(item => {
       temperature: 1, // more deterministic
       response_format: { type: 'json_object' },
       messages: [
-        { role: 'system', content: system },
+        { role: 'system', content: systemPrompt?.trim() ? systemPrompt : defaultSystem },
         { role: 'user', content: JSON.stringify(user) }
       ]
     });

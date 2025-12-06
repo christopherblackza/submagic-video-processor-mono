@@ -16,6 +16,7 @@ export class VideoUploadComponent implements OnInit {
   uploadForm!: FormGroup;
   isSubmitting = false;
   errorMessage = '';
+  templates: string[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -25,10 +26,18 @@ export class VideoUploadComponent implements OnInit {
 
   ngOnInit() {
     this.initializeForm();
+    const savedTemplates = localStorage.getItem('submagic_templates');
+    if (savedTemplates) {
+      this.templates = JSON.parse(savedTemplates);
+      if (this.templates.length) {
+        this.uploadForm.patchValue({ templateName: this.templates[0] });
+      }
+    }
   }
 
   private initializeForm() {
     this.uploadForm = this.fb.group({
+      apiKey: ['', Validators.required],
       language: ['en', Validators.required],
       templateName: ['Hormozi 2', Validators.required],
       webhookUrl: [''],
@@ -38,12 +47,17 @@ export class VideoUploadComponent implements OnInit {
       dictionary: [''],
       videos: this.fb.array([this.createVideoGroup()])
     });
+
+    const savedKey = localStorage.getItem('submagic_api_key');
+    if (savedKey) {
+      this.uploadForm.patchValue({ apiKey: savedKey });
+    }
   }
 
   private createVideoGroup(): FormGroup {
     return this.fb.group({
       title: ['', Validators.required],
-      videoUrl: [''],
+      videoUrl: ['', Validators.required],
       file: [null]
     });
   }
@@ -89,6 +103,8 @@ export class VideoUploadComponent implements OnInit {
     try {
       const formValue = this.uploadForm.value;
       
+      localStorage.setItem('submagic_api_key', formValue.apiKey);
+
       // Prepare videos array
       const videos: VideoInput[] = formValue.videos.map((video: any) => ({
         title: video.title,
@@ -106,11 +122,12 @@ export class VideoUploadComponent implements OnInit {
         videos,
         language: formValue.language,
         templateName: formValue.templateName,
-        webhookUrl: formValue.webhookUrl || undefined,
+        webhookUrl: 'https://submagic-video-processor-mono-production.up.railway.app/webhook/submagic',
         magicZooms: formValue.magicZooms,
         magicBrolls: formValue.magicBrolls,
         magicBrollsPercentage: formValue.magicBrollsPercentage,
-        dictionary: formValue.dictionary || undefined
+        dictionary: formValue.dictionary || undefined,
+        systemPrompt: localStorage.getItem('submagic_system_prompt') || undefined,
       };
 
       console.log("Request: ", request);

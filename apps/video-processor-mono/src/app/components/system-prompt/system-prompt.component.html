@@ -1,0 +1,29 @@
+<div class="prompt-container">
+  <div class="header">
+    <h1>System Prompt</h1>
+    <p>Configure the AI system prompt used for media matching.</p>
+  </div>
+
+  <form [formGroup]="promptForm" (ngSubmit)="save()" class="prompt-form">
+    <div class="form-group">
+      <label for="systemPrompt">Prompt</label>
+      <textarea
+        id="systemPrompt"
+        formControlName="systemPrompt"
+        rows="10"
+        class="form-control"
+        placeholder="Enter your system prompt"
+      ></textarea>
+    </div>
+
+    <div class="actions">
+      <button type="submit" class="save-btn" [disabled]="saving">Save</button>
+      <button type="button" class="back-btn" (click)="goToUpload()">Back to Upload</button>
+    </div>
+
+    <div class="success" *ngIf="saved">
+      Prompt saved to local storage.
+    </div>
+  </form>
+</div>
+
