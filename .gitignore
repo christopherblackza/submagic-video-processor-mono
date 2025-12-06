@@ -1,7 +1,8 @@
 node_modules
-/dist
+
 /.nx
 
 api/.env
 /.angular
 api/.env.staging
+/dist
