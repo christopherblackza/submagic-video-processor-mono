@@ -63,7 +63,6 @@ export class VideoUploadComponent implements OnInit {
 
   private initializeForm() {
     this.uploadForm = this.fb.group({
-      apiKey: ['', Validators.required],
       language: ['en', Validators.required],
       templateName: ['Hormozi 2', Validators.required],
       webhookUrl: [''],
