@@ -1,7 +1,7 @@
 {
   "build": {
     "builder": "railpack",
-    "buildCommand": "npm run build",
+    "buildCommand": "build:api",
     "startCommand": "node dist/api/main.js",
     "source": "api"
   }
