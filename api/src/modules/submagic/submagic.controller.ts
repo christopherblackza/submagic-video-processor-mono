@@ -227,8 +227,7 @@ export class SubmagicController {
 
     const result = await this.submagicService.exportProject(
       projectId,
-      dto,
-      apiKey
+      dto
     );
 
     this.logger.log(`Project ${projectId} export started successfully`);

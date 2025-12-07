@@ -2,8 +2,10 @@ import { Injectable, Logger } from "@nestjs/common";
 import { StorageService } from "../storage/storage.service";
 import { OpenAIService } from "../openai/openai.service";
 import { WebhookDto } from "../../common/dto/webhook.dto";
+import { ExportProjectDto } from "../../common/dto/start-project.dto";
 import { CompletionData } from "../../common/interfaces/project.interface";
 import { RedisService } from "../redis/redis.service";
+import { SubmagicService } from "../submagic/submagic.service";
 
 @Injectable()
 export class WebhookService {
@@ -12,7 +14,8 @@ export class WebhookService {
   constructor(
     private readonly storageService: StorageService,
     private readonly openaiService: OpenAIService,
-    private redisService: RedisService
+    private redisService: RedisService,
+    private subMagicService: SubmagicService
   ) {}
 
   async processWebhook(payload: WebhookDto): Promise<void> {
@@ -83,6 +86,18 @@ export class WebhookService {
             });
 
             this.logger.log(`Successfully updated project ${projectId} with media matches:`, updateResult);
+
+            // Export Project 
+            const exportResult = await this.subMagicService.exportProject(
+              projectId,
+              {
+                fps: 60,
+                width: 2160,
+                height: 3840
+              }
+            );
+
+            this.logger.log(`Successfully exported project ${projectId}:`, exportResult);
           } else {
             this.logger.log(`No media matches found for project ${projectId}`);
           }

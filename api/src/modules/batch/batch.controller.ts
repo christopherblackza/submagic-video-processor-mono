@@ -36,8 +36,7 @@ export class BatchController {
   @ApiResponse({ status: 200, description: 'Batch started successfully' })
   @ApiResponse({ status: 400, description: 'Bad request' })
   async startBatch(
-    @Body() dto: BatchStartDto,
-    @Headers('x-api-key') apiKey?: string,
+    @Body() dto: BatchStartDto
   ) {
     this.logger.log('Starting batch processing');
 
@@ -59,7 +58,7 @@ export class BatchController {
       throw new BadRequestException('Each video must have a video URL');
     }
 
-    const result = await this.batchService.startBatch(dto, apiKey);
+    const result = await this.batchService.startBatch(dto);
     
     this.logger.log(`Batch ${result.batchId} started with ${result.projectIds.length} projects`);
     return result;
