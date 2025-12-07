@@ -126,16 +126,16 @@ export class SubmagicService {
     try {
       const payload = this.buildUpdateProjectPayload(dto);
 
-      this.logger.debug(
-        `Update payload for project ${projectId}: ${JSON.stringify(
-          payload,
-          null,
-          2
-        )}`
-      );
+      // this.logger.debug(
+      //   `Update payload for project ${projectId}: ${JSON.stringify(
+      //     payload,
+      //     null,
+      //     2
+      //   )}`
+      // );
 
       const response = await this.callSubmagicUpdateAPI(projectId, payload);
-      console.log("UPDATE RESPONSE: ", response);
+      // console.log("UPDATE RESPONSE: ", response);
 
       this.logger.log(`Project ${projectId} updated successfully`);
       return response.data;
