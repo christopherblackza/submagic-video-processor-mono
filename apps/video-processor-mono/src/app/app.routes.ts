@@ -16,7 +16,7 @@ export const routes: Routes = [
   },
   {
     path: 'upload',
-    canActivate: [authGuard, apiKeyGuard],
+    canActivate: [authGuard],
     loadComponent: () => import('./components/video-upload/video-upload.component').then(m => m.VideoUploadComponent),
     title: 'Submagic Video Processor'
   },
