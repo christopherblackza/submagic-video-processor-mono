@@ -96,7 +96,7 @@ export class ProjectController {
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async exportProject(
     @Param('projectId') projectId: string,
-    @Body() exportProjectDto: any
+    @Body() exportProjectDto: ExportProjectDto
   ) {
     this.logger.log(`Exporting project: ${projectId}`);
     

@@ -83,8 +83,7 @@ export class SubmagicService {
   }
 
   async startProject(
-    dto: StartProjectDto,
-    apiKeyOverride?: string
+    dto: StartProjectDto
   ): Promise<{ projectId: string }> {
     try {
       const payload = this.buildProjectPayload(dto);
@@ -448,8 +447,7 @@ export class SubmagicService {
   }
 
   async uploadUserMedia(
-    files: Express.Multer.File[],
-    apiKeyOverride?: string
+    files: Express.Multer.File[]
   ): Promise<
     {
       userMediaId: string;
@@ -474,7 +472,7 @@ export class SubmagicService {
         // this.logger.log(`Uploading batch ${i / CONCURRENCY + 1} (${batch.length} files)`);
         const batchResults = await Promise.all(
           batch.map((file) =>
-            this.uploadSingleFileWithRetry(file, apiKeyOverride, 3)
+            this.uploadSingleFileWithRetry(file, 3)
           )
         );
         results.push(...batchResults);
@@ -515,8 +513,7 @@ export class SubmagicService {
   }
 
   private async uploadSingleFile(
-    file: Express.Multer.File,
-    apiKeyOverride?: string
+    file: Express.Multer.File
   ): Promise<{
     userMediaId: string;
     referencePath: string;
@@ -572,7 +569,6 @@ export class SubmagicService {
 
   private async uploadSingleFileWithRetry(
     file: Express.Multer.File,
-    apiKeyOverride: string | undefined,
     retries: number
   ): Promise<{
     userMediaId: string;
@@ -592,7 +588,7 @@ export class SubmagicService {
             })`
           );
         }
-        return await this.uploadSingleFile(file, apiKeyOverride);
+        return await this.uploadSingleFile(file);
       } catch (err: any) {
         lastError = err;
         // Retry on transient network errors

@@ -80,6 +80,17 @@ export class WebhookService {
 
           // If matches were found, call analyze-and-update endpoint
           if (analysisResult.matches.length > 0) {
+  //  const exportResult = await this.subMagicService.exportProject(
+  //             projectId,
+  //             {
+  //               fps: 60,
+  //               width: 2160,
+  //               height: 3840
+  //             }
+  //           );
+
+  //           this.logger.log(`Successfully exported project ${projectId}:`, exportResult);
+
             const updateResult = await this.openaiService.updateProject({
               projectId,
               matches,
@@ -88,16 +99,7 @@ export class WebhookService {
             this.logger.log(`Successfully updated project ${projectId} with media matches:`, updateResult);
 
             // Export Project 
-            const exportResult = await this.subMagicService.exportProject(
-              projectId,
-              {
-                fps: 60,
-                width: 2160,
-                height: 3840
-              }
-            );
-
-            this.logger.log(`Successfully exported project ${projectId}:`, exportResult);
+         
           } else {
             this.logger.log(`No media matches found for project ${projectId}`);
           }

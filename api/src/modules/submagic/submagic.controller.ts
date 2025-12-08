@@ -85,7 +85,7 @@ export class SubmagicController {
       );
     }
 
-    const result = await this.submagicService.startProject(dto, apiKey);
+    const result = await this.submagicService.startProject(dto);
 
     // Store project in memory
     const project: Project = {
@@ -151,8 +151,7 @@ export class SubmagicController {
     description: "User media uploaded and references saved",
   })
   async uploadUserMedia(
-    @UploadedFiles() files: { media?: Array<Express.Multer.File> },
-    @Headers("x-api-key") apiKey?: string
+    @UploadedFiles() files: { media?: Array<Express.Multer.File> }
   ) {
     const mediaFiles = files?.media || [];
     if (!mediaFiles || mediaFiles.length === 0) {
@@ -160,7 +159,7 @@ export class SubmagicController {
         'At least one file is required in the "media" field'
       );
     }
-    return this.submagicService.uploadUserMedia(mediaFiles, apiKey);
+    return this.submagicService.uploadUserMedia(mediaFiles);
   }
 
   @Patch("update/:projectId")
