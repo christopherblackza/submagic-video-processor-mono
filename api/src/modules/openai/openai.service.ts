@@ -1,15 +1,25 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import OpenAI from 'openai';
-import { SubmagicService } from '../submagic/submagic.service';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  UnauthorizedException,
+  OnModuleInit,
+} from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import OpenAI from "openai";
+import { SubmagicService } from "../submagic/submagic.service";
+import { SupabaseService } from "../supabase/supabase.service";
 import {
   MediaMatchingRequestDto,
   MediaMatchingResponseDto,
   MediaMatchDto,
   MediaItemDto,
   UpdateProjectRequestDto,
-} from '../../common/dto/media-matching.dto';
-import { RedisService } from '../redis/redis.service';
+} from "../../common/dto/media-matching.dto";
+import { RedisService } from "../redis/redis.service";
+import { ApiKeysService } from "../api-keys/api-keys.service";
+import { UsageService } from "../usage/usage.service";
 
 interface WordSegment {
   id: string;
@@ -19,44 +29,79 @@ interface WordSegment {
   type: string;
 }
 
-type WordSeg = { id: string; text: string; type: 'word'|'silence'|'punctuation'; startTime: number; endTime: number };
+type WordSeg = {
+  id: string;
+  text: string;
+  type: "word" | "silence" | "punctuation";
+  startTime: number;
+  endTime: number;
+};
 type TextSegment = { startTime: number; endTime: number; text: string };
 
-type LibraryItem = { userMediaId: string; description: string; tags?: string[] };
-
+type LibraryItem = {
+  userMediaId: string;
+  description: string;
+  tags?: string[];
+};
 
 @Injectable()
-export class OpenAIService {
+export class OpenAIService implements OnModuleInit {
   private readonly logger = new Logger(OpenAIService.name);
-
 
   constructor(
     private readonly configService: ConfigService,
     private readonly submagicService: SubmagicService,
     private readonly redisService: RedisService,
-  ) {
- 
+    private readonly apiKeysService: ApiKeysService,
+    private readonly usageService: UsageService,
+    private readonly supabaseService: SupabaseService,
+  ) {}
+
+  onModuleInit() {
+    // Realtime subscription moved to client-side
   }
 
-  private createOpenAIClient(apiKey?: string): OpenAI {
-  const key = apiKey || this.configService.get<string>('OPEN_API_KEY');
-  if (!key) throw new Error('OpenAI API key is required');
+  // private setupRealtimeSubscription... (removed)
 
-  return new OpenAI({ apiKey: key });
-}
+  // processPostUploadWorkflow removed as logic is now handled via updateProject (triggered by client)
 
+  private createOpenAIClient(apiKey: string): OpenAI {
+    return new OpenAI({ apiKey });
+  }
 
   async analyzeProjectForMediaMatching(
-    request: MediaMatchingRequestDto
+    request: MediaMatchingRequestDto,
+    userId: string,
+    token?: string,
   ): Promise<MediaMatchingResponseDto> {
+    let jobId: string | undefined;
     try {
-      this.logger.log(`Starting media matching analysis for project: ${request.projectId}`);
-      
-      // Get project data from Submagic
-      const projectData = await this.getProjectData(request.projectId);
-      this.logger.log(`Retrieved project data with ${projectData?.words?.length || 0} words`);
+      this.logger.log(
+        `Starting media matching analysis for project: ${request.projectId}`,
+      );
 
-      if (!projectData || !projectData.words || projectData.words.length === 0) {
+      // Track usage
+      jobId = await this.usageService.trackJobStart(
+        userId,
+        "media_matching_analysis",
+        {
+          projectId: request.projectId,
+          ...request,
+        },
+        token,
+      );
+
+      // Get project data from Submagic
+      const projectData = await this.getProjectData(request.projectId, userId);
+      this.logger.log(
+        `Retrieved project data with ${projectData?.words?.length || 0} words`,
+      );
+
+      if (
+        !projectData ||
+        !projectData.words ||
+        projectData.words.length === 0
+      ) {
         this.logger.warn(`No words found in project ${request.projectId}`);
         return {
           projectId: request.projectId,
@@ -71,7 +116,9 @@ export class OpenAIService {
       this.logger.log(`Extracted ${textSegments.length} meaningful segments`);
 
       if (textSegments.length === 0) {
-        this.logger.warn(`No meaningful segments extracted from project ${request.projectId}`);
+        this.logger.warn(
+          `No meaningful segments extracted from project ${request.projectId}`,
+        );
         return {
           projectId: request.projectId,
           matches: [],
@@ -80,10 +127,17 @@ export class OpenAIService {
         };
       }
 
-      const mediaItems = await this.redisService.getMediaItems();
-      console.log('Using ', mediaItems.length, ' media items from Redis');
+      // Media items are already sorted by usage count (unused first) from RedisService
+      const mediaItems = await this.redisService.getMediaItems(userId);
+      console.log(
+        "Using ",
+        mediaItems.length,
+        " media items from Redis (sorted by usage)",
+      );
       if (!mediaItems || mediaItems.length === 0) {
-        this.logger.warn(`No media items found in Redis for project ${request.projectId}`);
+        this.logger.warn(
+          `No media items found in Redis for project ${request.projectId}`,
+        );
         return {
           projectId: request.projectId,
           matches: [],
@@ -91,52 +145,147 @@ export class OpenAIService {
           processedAt: new Date().toISOString(),
         };
       }
-      
-      const matches = await this.findMediaMatches({ 
-        segments: textSegments, 
+
+      const apiKey = await this.apiKeysService.getDecryptedKey(
+        userId,
+        "openai",
+      );
+      if (!apiKey) {
+        throw new UnauthorizedException("OpenAI API key is required");
+      }
+
+      const matches = await this.findMediaMatches({
+        segments: textSegments,
         library: request.mediaItems ?? mediaItems,
         words: projectData.words,
-        systemPrompt: request.systemPrompt
+        systemPrompt: request.systemPrompt,
+        apiKey,
       });
 
-
-      // // Deduplicate and sort matches
+      // Deduplicate and sort matches
       const finalMatches = this.deduplicateMatches(matches);
       this.logger.log(`Found ${finalMatches.length} matches`);
 
+      // Record usage for the final selected matches
+      const usedMediaIds = finalMatches.map((m) => m.userMediaId);
+      if (usedMediaIds.length > 0) {
+        await this.redisService.recordMediaUsage(
+          request.projectId,
+          usedMediaIds,
+        );
+      }
+
       // this.logger.debug(`Final matches: ${JSON.stringify(finalMatches)}`);
+
+      if (jobId) {
+        await this.usageService.updateJobStatus(jobId, "completed", token);
+      }
 
       return {
         projectId: request.projectId,
-        matches: matches,
-        totalMatches: matches.length,
+        matches: finalMatches,
+        totalMatches: finalMatches.length,
         processedAt: new Date().toISOString(),
       };
     } catch (error) {
-      this.logger.error(`Error analyzing project for media matching: ${error.message}`);
+      if (jobId) {
+        await this.usageService.updateJobStatus(
+          jobId,
+          "failed",
+          token,
+          error.message,
+        );
+      }
+      this.logger.error(
+        `Error analyzing project for media matching: ${error.message}`,
+      );
       throw new InternalServerErrorException(
-        'Failed to analyze project for media matching',
+        "Failed to analyze project for media matching",
       );
     }
   }
 
   async updateProject(
     request: UpdateProjectRequestDto,
+    userId: string,
+    token?: string,
   ): Promise<any> {
+    let jobId: string | undefined;
     try {
+      // If matches are not provided, run analysis first
+      if (!request.matches || request.matches.length === 0) {
+        this.logger.log(
+          `No matches provided for project ${request.projectId}, running analysis...`,
+        );
+        const analysisResult = await this.analyzeProjectForMediaMatching(
+          { projectId: request.projectId },
+          userId,
+          token,
+        );
+        request.matches = analysisResult.matches;
+
+        if (!request.matches || request.matches.length === 0) {
+          this.logger.log(
+            `Analysis returned no matches for project ${request.projectId}`,
+          );
+          return {
+            projectId: request.projectId,
+            matchesApplied: 0,
+            message: "No suitable media matches found",
+            processedAt: new Date().toISOString(),
+          };
+        }
+      }
+
       this.logger.log(
         `Starting update for project ${request.projectId} with ${request.matches.length} media matches`,
+      );
+
+      // Track usage
+      jobId = await this.usageService.trackJobStart(
+        userId,
+        "media_matching_update",
+        {
+          projectId: request.projectId,
+          matchesCount: request.matches.length,
+        },
+        token,
       );
 
       // Directly update the project with the provided matches
       const updateResult = await this.updateProjectWithMatches(
         request.projectId,
         request.matches,
+        userId,
       );
 
       this.logger.debug(
         `Successfully updated project ${request.projectId} with ${request.matches.length} matches`,
       );
+
+      if (jobId) {
+        await this.usageService.updateJobStatus(jobId, "completed", token);
+      }
+
+      // Update metadata in Supabase to mark as completed
+      const client = this.supabaseService.getServiceRoleClient();
+      const { data: project } = await client
+        .from("projects")
+        .select("metadata")
+        .eq("id", request.projectId)
+        .single();
+      const metadata = project?.metadata || {};
+
+      await client
+        .from("projects")
+        .update({
+          metadata: {
+            ...metadata,
+            mediaMatchingStatus: "completed",
+            lastAnalysisAt: new Date().toISOString(),
+          },
+        })
+        .eq("id", request.projectId);
 
       return {
         projectId: request.projectId,
@@ -145,12 +294,20 @@ export class OpenAIService {
         processedAt: new Date().toISOString(),
       };
     } catch (error) {
+      if (jobId) {
+        await this.usageService.updateJobStatus(
+          jobId,
+          "failed",
+          token,
+          error.message,
+        );
+      }
       this.logger.error(
         `Error updating project: ${error.message}`,
         error.stack,
       );
       throw new InternalServerErrorException(
-        'Failed to update project with media matches',
+        "Failed to update project with media matches",
       );
     }
   }
@@ -158,6 +315,7 @@ export class OpenAIService {
   async updateProjectWithMatches(
     projectId: string,
     matches: MediaMatchDto[],
+    userId: string,
   ): Promise<any> {
     try {
       this.logger.log(
@@ -177,6 +335,7 @@ export class OpenAIService {
       const result = await this.submagicService.updateProject(
         projectId,
         updateData,
+        userId,
       );
 
       return result;
@@ -187,108 +346,118 @@ export class OpenAIService {
       //   error.stack,
       // );
       throw new InternalServerErrorException(
-        'Failed to update project with media matches',
+        "Failed to update project with media matches",
       );
     }
   }
 
-  private async getProjectData(projectId: string): Promise<any> {
+  private async getProjectData(
+    projectId: string,
+    userId: string,
+  ): Promise<any> {
     try {
-      return await this.submagicService.getProject(projectId);
+      return await this.submagicService.getProject(projectId, userId);
     } catch (error) {
       this.logger.error(`Error fetching project data: ${error.message}`);
       throw error;
     }
   }
 
-  
+  segmentWords(
+    words: WordSeg[],
+    opts?: {
+      maxGap?: number; // split when silence exceeds this (seconds)
+      minWords?: number; // discard tiny fragments
+      maxDuration?: number; // force a cut if a segment runs too long
+    },
+  ): TextSegment[] {
+    const maxGap = opts?.maxGap ?? 0.6;
+    const minWords = opts?.minWords ?? 6;
+    const maxDuration = opts?.maxDuration ?? 12;
 
-  segmentWords(words: WordSeg[], opts?: {
-  maxGap?: number;          // split when silence exceeds this (seconds)
-  minWords?: number;        // discard tiny fragments
-  maxDuration?: number;     // force a cut if a segment runs too long
-}) : TextSegment[] {
-  const maxGap = opts?.maxGap ?? 0.6;
-  const minWords = opts?.minWords ?? 6;
-  const maxDuration = opts?.maxDuration ?? 12;
+    const segs: TextSegment[] = [];
+    let buf: WordSeg[] = [];
 
-  const segs: TextSegment[] = [];
-  let buf: WordSeg[] = [];
+    const flush = () => {
+      const wordsOnly = buf.filter((w) => w.type === "word");
+      if (wordsOnly.length >= minWords) {
+        segs.push({
+          startTime: wordsOnly[0].startTime,
+          endTime: wordsOnly[wordsOnly.length - 1].endTime,
+          text: wordsOnly.map((w) => w.text).join(" "),
+        });
+      }
+      buf = [];
+    };
 
-  const flush = () => {
-    const wordsOnly = buf.filter(w => w.type === 'word');
-    if (wordsOnly.length >= minWords) {
-      segs.push({
-        startTime: wordsOnly[0].startTime,
-        endTime: wordsOnly[wordsOnly.length - 1].endTime,
-        text: wordsOnly.map(w => w.text).join(' ')
-      });
-    }
-    buf = [];
-  };
+    for (let i = 0; i < words.length; i++) {
+      const w = words[i];
 
-  for (let i = 0; i < words.length; i++) {
-    const w = words[i];
-
-    if (w.type === 'silence') {
-      const gap = w.endTime - w.startTime;
-      if (gap >= maxGap) {
-        flush();
+      if (w.type === "silence") {
+        const gap = w.endTime - w.startTime;
+        if (gap >= maxGap) {
+          flush();
+          continue;
+        }
+        // short pauses just continue
         continue;
       }
-      // short pauses just continue
-      continue;
+
+      buf.push(w);
+
+      // cut on sentence-like punctuation or overlong segments
+      const isSentenceEnd = w.type === "punctuation" && /[.!?]/.test(w.text);
+      const duration = buf.length
+        ? buf[buf.length - 1].endTime - buf[0].startTime
+        : 0;
+
+      if (isSentenceEnd || duration >= maxDuration) {
+        flush();
+      }
     }
-
-    buf.push(w);
-
-    // cut on sentence-like punctuation or overlong segments
-    const isSentenceEnd = (w.type === 'punctuation' && /[.!?]/.test(w.text));
-    const duration = buf.length ? (buf[buf.length - 1].endTime - buf[0].startTime) : 0;
-
-    if (isSentenceEnd || duration >= maxDuration) {
-      flush();
-    }
+    flush();
+    return segs;
   }
-  flush();
-  return segs;
-}
 
   async findMediaMatches({
-  segments,
-  library,
-  words,
-  systemPrompt
-}: {
-  segments: TextSegment[];
-  library: LibraryItem[];
-  words?: WordSeg[];
-systemPrompt: string
-}): Promise<MediaMatchDto[]> {
+    segments,
+    library,
+    words,
+    systemPrompt,
+    apiKey,
+  }: {
+    segments: TextSegment[];
+    library: LibraryItem[];
+    words?: WordSeg[];
+    systemPrompt: string;
+    apiKey: string;
+  }): Promise<MediaMatchDto[]> {
+    this.logger.log(
+      `Processing ${segments.length} segments for media matching`,
+    );
 
+    // Only consider segments that end after 5s (we can't place media before that)
+    const MIN_START = 2.5;
+    const MAX_CLIP = 5.0;
+    const PRE_ROLL = 2.0; // start this many seconds before the spoken phrase
 
-  this.logger.log(`Processing ${segments.length} segments for media matching`);
+    // Trim to first 20 meaningful segments that occur after 5s
+    // const afterFive = segments
+    //   .filter(s => s.startTime > MIN_START)
+    //   .map(s => ({
+    //     ...s,
+    //     // if a segment crosses the 5s boundary, shift its usable start
+    //     startTime: Math.max(s.startTime, MIN_START)
+    //   }));
 
-  // Only consider segments that end after 5s (we can't place media before that)
-  const MIN_START = 2.5;
-  const MAX_CLIP = 5.0;
-  const PRE_ROLL = 2.0;  // start this many seconds before the spoken phrase
+    const segmentsToProcess = segments;
+    // this.logger.debug('SEGMENTS TO PROCESS: ', segmentsToProcess);
 
-  // Trim to first 20 meaningful segments that occur after 5s
-  // const afterFive = segments
-  //   .filter(s => s.startTime > MIN_START)
-  //   .map(s => ({
-  //     ...s,
-  //     // if a segment crosses the 5s boundary, shift its usable start
-  //     startTime: Math.max(s.startTime, MIN_START)
-  //   }));
+    this.logger.log(
+      `Using ${segmentsToProcess.length} segments for OpenAI analysis`,
+    );
 
-  const segmentsToProcess = segments;
-  // this.logger.debug('SEGMENTS TO PROCESS: ', segmentsToProcess);
-
-  this.logger.log(`Using ${segmentsToProcess.length} segments for OpenAI analysis`);
-
-  const defaultSystem = `You are matching narration segments to b-roll footage.
+    const defaultSystem = `You are matching narration segments to b-roll footage.
 Return ONLY: {"matches":[{userMediaId,startTime,endTime,confidence,reason,matchedText}]}
 
 Rules:
@@ -298,162 +467,166 @@ Rules:
 - Each placement must be <= 4.0 seconds long and lie within the segment window.
 - Use literal, visual cues (actions/objects/moods). Include the trigger text in matchedText.
 - Consider both the description AND tags when matching — tags represent key themes and concepts.
-- Match based on semantic relevance, emotions, actions, and thematic alignment.`;
+- Match based on semantic relevance, emotions, actions, and thematic alignment.
+- The Library is sorted by usage priority (unused items first). Prefer items listed earlier in the library if they are semantically relevant.`;
 
-  const libraryText = `Library (ID: Description | Tags):\n${library.map(item => {
-    const tags = item.tags && item.tags.length > 0 ? item.tags.join(', ') : 'no tags';
-    return `${item.userMediaId}: ${item.description} | Tags: ${tags}`;
-  }).join('\n')}`;
-
-  const user = {
-     note: "Respond ONLY in proper JSON — do not include any text before or after the JSON object. Ensure at least one early placement between 2.5s–6.0s.",
-    segments: segmentsToProcess.map(seg => ({
-      text: seg.text,
-      startTime: seg.startTime,
-      endTime: seg.endTime
-    }))
-  };
-
-  try {
-    const apiKey = await this.redisService.getOpenAiApiKey();
-    if (!apiKey || apiKey.trim() === "") {
-      throw new BadRequestException("OpenAI API key not found in Redis");
-    }
-    const openaiClient = this.createOpenAIClient(apiKey);
-
-    const baseSystem = systemPrompt?.trim() ? systemPrompt : defaultSystem;
-    const systemContent = `${baseSystem}\n${libraryText}`;
-
-    const completion = await openaiClient.chat.completions.create({
-      model: 'gpt-5-mini',
-      temperature: 1, // more deterministic
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: systemContent },
-        { role: 'user', content: JSON.stringify(user) }
-      ]
-    });
-
-    const responseContent = completion.choices[0].message.content;
-    this.logger.log(`OpenAI response: ${responseContent}`);
-
-    const parsed = JSON.parse(responseContent || '{}');
-    let matches: MediaMatchDto[] = Array.isArray(parsed.matches) ? parsed.matches : [];
-    this.logger.log("MATCHES BEFORE FILTER ", matches.length)
-
-    // ---- HARD GUARD-RAILS (post-process) ----
-    const used = new Set<string>();
-
-    matches = matches
-      // keep only valid schema
-      .filter(m => m && typeof m.userMediaId === 'string')
-      // enforce min start time
-      .map(m => ({
-        ...m,
-        startTime: Math.max(m.startTime ?? MIN_START, MIN_START)
-      }))
-      // enforce <= 4s duration and stay within segment windows if present
-      // .map(m => {
-      //   const duration = Math.max(0, (m.endTime ?? m.startTime) - m.startTime);
-      //   let endTime = m.endTime ?? (m.startTime + Math.min(MAX_CLIP, duration || MAX_CLIP));
-      //   if (endTime - m.startTime > MAX_CLIP) endTime = m.startTime + MAX_CLIP;
-      //   return { ...m, endTime };
-      // })
-      // enforce confidence with exception for first engagement window (2.5–6.0s)
-      // .filter(m => {
-      //   const conf = m.confidence ?? 0;
-      //   const inEarlyWindow = m.startTime >= MIN_START && m.startTime <= 6.0;
-      //   return conf >= (inEarlyWindow ? 0.5 : 0.65);
-      // })
-      // de-duplicate by userMediaId (keep highest confidence)
-      .sort((a, b) => (b.confidence ?? 0) - (a.confidence ?? 0))
-      .filter(m => {
-        const key = m.userMediaId;
-        if (used.has(m.userMediaId)) return false;
-        used.add(m.userMediaId);
-        return true;
+    const libraryText = `Library (ID: Description | Tags):\n${library
+      .map((item) => {
+        const tags =
+          item.tags && item.tags.length > 0 ? item.tags.join(", ") : "no tags";
+        return `${item.userMediaId}: ${item.description} | Tags: ${tags}`;
       })
-      // sort by time for downstream editors
-      .sort((a, b) => a.startTime - b.startTime);
+      .join("\n")}`;
 
-    // final safety: clip any negative or NaN
-    matches = matches.map(m => ({
-      ...m,
-      startTime: Math.max(0, Number.isFinite(m.startTime) ? m.startTime : MIN_START),
-      endTime: Math.max(0, Number.isFinite(m.endTime) ? m.endTime : m.startTime + MAX_CLIP)
-    }));
+    const user = {
+      note: "Respond ONLY in proper JSON — do not include any text before or after the JSON object. Ensure at least one early placement between 2.5s–6.0s.",
+      segments: segmentsToProcess.map((seg) => ({
+        text: seg.text,
+        startTime: seg.startTime,
+        endTime: seg.endTime,
+      })),
+    };
 
-   
-    // Re-anchor matches to actual text occurrence with pre-roll
-    // if (words && words.length > 0) {
-    //   matches = matches.map(match => {
-    //     if (!match.matchedText) {
-    //       return match; // Skip if no matched text
-    //     }
+    try {
+      const openaiClient = this.createOpenAIClient(apiKey);
 
-    //     // Find the segment that contains this match
-    //     const containingSegment = segments.find(segment => 
-    //       match.startTime >= segment.startTime && match.startTime <= segment.endTime
-    //     );
+      const baseSystem = systemPrompt?.trim() ? systemPrompt : defaultSystem;
+      const systemContent = `${baseSystem}\n${libraryText}`;
 
-    //     if (!containingSegment) {
-    //       return match; // Skip if no containing segment found
-    //     }
+      const completion = await openaiClient.chat.completions.create({
+        model: "gpt-5-mini",
+        temperature: 1, // more deterministic
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: systemContent },
+          { role: "user", content: JSON.stringify(user) },
+        ],
+      });
 
-    //     // Find when the matched text actually occurs
-    //     // const textOccurrenceTime = this.findTextOccurrenceTime(
-    //     //   match.matchedText,
-    //     //   words,
-    //     //   containingSegment.startTime,
-    //     //   containingSegment.endTime
-    //     // );
+      const responseContent = completion.choices[0].message.content;
+      this.logger.log(`OpenAI response: ${responseContent}`);
 
-    //     // if (textOccurrenceTime !== null) {
-    //     //   // Re-anchor with pre-roll, but don't go below 0
-    //     //   const newStartTime = Math.max(0, textOccurrenceTime - PRE_ROLL);
-    //     //   const duration = match.endTime - match.startTime;
-    //     //   const newEndTime = newStartTime + duration;
+      const parsed = JSON.parse(responseContent || "{}");
+      let matches: MediaMatchDto[] = Array.isArray(parsed.matches)
+        ? parsed.matches
+        : [];
+      this.logger.log("MATCHES BEFORE FILTER ", matches.length);
 
-    //     //   this.logger.log(`Re-anchored match "${match.matchedText}": ${match.startTime}s -> ${newStartTime}s (text at ${textOccurrenceTime}s, PRE_ROLL: ${PRE_ROLL}s)`);
+      // ---- HARD GUARD-RAILS (post-process) ----
+      const used = new Set<string>();
 
-    //     //   return {
-    //     //     ...match,
-    //     //     startTime: newStartTime,
-    //     //     endTime: newEndTime
-    //     //   };
-    //     // }
+      matches = matches
+        // keep only valid schema
+        .filter((m) => m && typeof m.userMediaId === "string")
+        // enforce min start time
+        .map((m) => ({
+          ...m,
+          startTime: Math.max(m.startTime ?? MIN_START, MIN_START),
+        }))
+        // enforce <= 4s duration and stay within segment windows if present
+        // .map(m => {
+        //   const duration = Math.max(0, (m.endTime ?? m.startTime) - m.startTime);
+        //   let endTime = m.endTime ?? (m.startTime + Math.min(MAX_CLIP, duration || MAX_CLIP));
+        //   if (endTime - m.startTime > MAX_CLIP) endTime = m.startTime + MAX_CLIP;
+        //   return { ...m, endTime };
+        // })
+        // enforce confidence with exception for first engagement window (2.5–6.0s)
+        // .filter(m => {
+        //   const conf = m.confidence ?? 0;
+        //   const inEarlyWindow = m.startTime >= MIN_START && m.startTime <= 6.0;
+        //   return conf >= (inEarlyWindow ? 0.5 : 0.65);
+        // })
+        // de-duplicate by userMediaId (keep highest confidence)
+        .sort((a, b) => (b.confidence ?? 0) - (a.confidence ?? 0))
+        .filter((m) => {
+          const key = m.userMediaId;
+          if (used.has(m.userMediaId)) return false;
+          used.add(m.userMediaId);
+          return true;
+        })
+        // sort by time for downstream editors
+        .sort((a, b) => a.startTime - b.startTime);
 
-    //     return match; // Keep original timing if text not found
-    //   });
-    // }
+      // final safety: clip any negative or NaN
+      matches = matches.map((m) => ({
+        ...m,
+        startTime: Math.max(
+          0,
+          Number.isFinite(m.startTime) ? m.startTime : MIN_START,
+        ),
+        endTime: Math.max(
+          0,
+          Number.isFinite(m.endTime) ? m.endTime : m.startTime + MAX_CLIP,
+        ),
+      }));
 
+      // Re-anchor matches to actual text occurrence with pre-roll
+      // if (words && words.length > 0) {
+      //   matches = matches.map(match => {
+      //     if (!match.matchedText) {
+      //       return match; // Skip if no matched text
+      //     }
 
-    this.logger.debug(`Returning ${matches.length} validated matches`);
-    return matches;
+      //     // Find the segment that contains this match
+      //     const containingSegment = segments.find(segment =>
+      //       match.startTime >= segment.startTime && match.startTime <= segment.endTime
+      //     );
 
-  } catch (error: any) {
-    this.logger.error(`Error in findMediaMatchesNew: ${error.message}`);
-    throw error;
+      //     if (!containingSegment) {
+      //       return match; // Skip if no containing segment found
+      //     }
+
+      //     // Find when the matched text actually occurs
+      //     // const textOccurrenceTime = this.findTextOccurrenceTime(
+      //     //   match.matchedText,
+      //     //   words,
+      //     //   containingSegment.startTime,
+      //     //   containingSegment.endTime
+      //     // );
+
+      //     // if (textOccurrenceTime !== null) {
+      //     //   // Re-anchor with pre-roll, but don't go below 0
+      //     //   const newStartTime = Math.max(0, textOccurrenceTime - PRE_ROLL);
+      //     //   const duration = match.endTime - match.startTime;
+      //     //   const newEndTime = newStartTime + duration;
+
+      //     //   this.logger.log(`Re-anchored match "${match.matchedText}": ${match.startTime}s -> ${newStartTime}s (text at ${textOccurrenceTime}s, PRE_ROLL: ${PRE_ROLL}s)`);
+
+      //     //   return {
+      //     //     ...match,
+      //     //     startTime: newStartTime,
+      //     //     endTime: newEndTime
+      //     //   };
+      //     // }
+
+      //     return match; // Keep original timing if text not found
+      //   });
+      // }
+
+      this.logger.debug(`Returning ${matches.length} validated matches`);
+      return matches;
+    } catch (error: any) {
+      this.logger.error(`Error in findMediaMatchesNew: ${error.message}`);
+      throw error;
+    }
   }
-}
-
 
   private deduplicateMatches(matches: MediaMatchDto[]): MediaMatchDto[] {
     // Sort by confidence (highest first)
     const sortedMatches = matches.sort((a, b) => b.confidence - a.confidence);
     const deduplicated: MediaMatchDto[] = [];
-    
+
     for (const match of sortedMatches) {
       // Check for overlaps with existing matches
-      const overlappingMatch = deduplicated.find(existing => 
+      const overlappingMatch = deduplicated.find((existing) =>
         this.timeRangesOverlap(
           existing.startTime,
           existing.endTime,
           match.startTime,
           match.endTime,
-        )
+        ),
       );
-      
+
       if (!overlappingMatch) {
         // No overlap, add the match
         deduplicated.push(match);
@@ -467,7 +640,7 @@ Rules:
         // Otherwise, keep the existing match (it has higher confidence)
       }
     }
-    
+
     // Sort by start time for final output
     return deduplicated.sort((a, b) => a.startTime - b.startTime);
   }
@@ -493,7 +666,7 @@ Rules:
     matchedText: string,
     words: WordSeg[],
     segmentStartTime: number,
-    segmentEndTime: number
+    segmentEndTime: number,
   ): number | null {
     if (!matchedText || !words || words.length === 0) {
       return null;
@@ -501,12 +674,13 @@ Rules:
 
     // Normalize the matched text for comparison
     const normalizedMatchedText = matchedText.toLowerCase().trim();
-    
+
     // Get words within the segment time range
-    const segmentWords = words.filter(word => 
-      word.type === 'word' && 
-      word.startTime >= segmentStartTime && 
-      word.endTime <= segmentEndTime
+    const segmentWords = words.filter(
+      (word) =>
+        word.type === "word" &&
+        word.startTime >= segmentStartTime &&
+        word.endTime <= segmentEndTime,
     );
 
     if (segmentWords.length === 0) {
@@ -514,9 +688,9 @@ Rules:
     }
 
     // Try to find exact phrase match first
-    const segmentText = segmentWords.map(w => w.text.toLowerCase()).join(' ');
+    const segmentText = segmentWords.map((w) => w.text.toLowerCase()).join(" ");
     const matchIndex = segmentText.indexOf(normalizedMatchedText);
-    
+
     if (matchIndex !== -1) {
       // Find which word corresponds to the start of the matched text
       let currentIndex = 0;
@@ -532,12 +706,12 @@ Rules:
     // If exact phrase not found, try to find key words from the matched text
     const keywords = normalizedMatchedText
       .split(/\s+/)
-      .filter(word => word.length > 2) // Filter out short words
+      .filter((word) => word.length > 2) // Filter out short words
       .slice(0, 3); // Take first 3 keywords
 
     for (const keyword of keywords) {
-      const foundWord = segmentWords.find(word => 
-        word.text.toLowerCase().includes(keyword)
+      const foundWord = segmentWords.find((word) =>
+        word.text.toLowerCase().includes(keyword),
       );
       if (foundWord) {
         return foundWord.startTime;

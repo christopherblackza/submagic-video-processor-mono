@@ -11,6 +11,8 @@ import {
   UploadedFile,
   UseInterceptors,
   UploadedFiles,
+  UseGuards,
+  Request,
 } from "@nestjs/common";
 import {
   ApiTags,
@@ -20,10 +22,9 @@ import {
   ApiBody,
   ApiParam,
   ApiHeader,
+  ApiBearerAuth,
 } from "@nestjs/swagger";
 import { SubmagicService } from "./submagic.service";
-import { RedisService } from "../redis/redis.service";
-import { StorageService } from "../storage/storage.service";
 import {
   StartProjectDto,
   UpdateProjectDto,
@@ -34,38 +35,20 @@ import {
   FilesInterceptor,
   FileFieldsInterceptor,
 } from "@nestjs/platform-express";
+import { SupabaseAuthGuard } from "../../common/guards/supabase-auth.guard";
+import { ProjectService } from "../project/project.service";
 
 @ApiTags("Submagic")
+@ApiBearerAuth()
 @Controller("submagic")
+@UseGuards(SupabaseAuthGuard)
 export class SubmagicController {
   private readonly logger = new Logger(SubmagicController.name);
 
   constructor(
     private readonly submagicService: SubmagicService,
-    private readonly storageService: StorageService,
-    private readonly redisService: RedisService
+    private readonly projectService: ProjectService,
   ) {}
-
-  @Get("load-api-key")
-  @ApiOperation({ summary: "Load Submagic API key from Redis" })
-  async loadApiKey() {
-    const apiKey = await this.redisService.getSubmagicApiKey();
-    if (!apiKey || apiKey.trim() === "") {
-      throw new BadRequestException("Submagic API key not found in Redis");
-    }
-    return { apiKey };
-  }
-
-  @Post("save-api-key")
-  @ApiOperation({ summary: "Save Submagic API key to Redis" })
-  @ApiHeader({ name: "x-api-key", description: "Submagic API key", required: true })
-  async saveApiKey(@Headers("x-api-key") apiKey?: string) {
-    if (!apiKey || apiKey.trim() === "") {
-      throw new BadRequestException("x-api-key header is required");
-    }
-    await this.redisService.setSubmagicApiKey(apiKey);
-    return { message: "API key saved" };
-  }
 
   @Post("start")
   @ApiOperation({ summary: "Start single video processing" })
@@ -74,10 +57,12 @@ export class SubmagicController {
   @ApiConsumes("application/json")
   @ApiBody({ type: StartProjectDto })
   async startProject(
+    @Request() req,
     @Body() dto: StartProjectDto,
-    @Headers("x-api-key") apiKey?: string
   ) {
     this.logger.log("Starting single video project");
+    const userId = req.user.id;
+    const token = req.token;
 
     if (!dto.videoUrl) {
       throw new BadRequestException(
@@ -85,11 +70,12 @@ export class SubmagicController {
       );
     }
 
-    const result = await this.submagicService.startProject(dto);
+    const result = await this.submagicService.startProject(dto, userId, token);
 
     // Store project in memory
     const project: Project = {
       id: result.projectId,
+      userId: userId,
       title: dto.title,
       originalTitle: dto.title,
       language: dto.language,
@@ -104,7 +90,7 @@ export class SubmagicController {
       createdAt: new Date().toISOString(),
     };
 
-    this.storageService.saveProject(project);
+    this.projectService.saveProject(project);
 
     this.logger.log(`Project ${result.projectId} started and stored`);
     return result;
@@ -124,11 +110,6 @@ export class SubmagicController {
 
   @Post("upload-user-media")
   @UseInterceptors(FileFieldsInterceptor([{ name: "media", maxCount: 400 }]))
-  @ApiHeader({
-    name: "x-api-key",
-    description: "API key for authentication (optional, uses Redis if omitted)",
-    required: false,
-  })
   @ApiOperation({
     summary:
       "Upload multiple user media files to Submagic and persist references",
@@ -151,15 +132,17 @@ export class SubmagicController {
     description: "User media uploaded and references saved",
   })
   async uploadUserMedia(
+    @Request() req,
     @UploadedFiles() files: { media?: Array<Express.Multer.File> }
   ) {
+    const userId = req.user.id;
     const mediaFiles = files?.media || [];
     if (!mediaFiles || mediaFiles.length === 0) {
       throw new BadRequestException(
         'At least one file is required in the "media" field'
       );
     }
-    return this.submagicService.uploadUserMedia(mediaFiles);
+    return this.submagicService.uploadUserMedia(mediaFiles, userId);
   }
 
   @Patch("update/:projectId")
@@ -176,21 +159,23 @@ export class SubmagicController {
   @ApiConsumes("application/json")
   @ApiBody({ type: UpdateProjectDto })
   async updateProject(
+    @Request() req,
     @Param("projectId") projectId: string,
     @Body() dto: UpdateProjectDto,
-    @Headers("x-api-key") apiKey?: string
   ) {
+    const userId = req.user.id;
     this.logger.log(`Updating project ${projectId}`);
 
     // Validate that the project exists in our storage
-    const existingProject = this.storageService.getProject(projectId);
+    const existingProject = this.projectService.getProject(projectId);
     if (!existingProject) {
       throw new BadRequestException(`Project ${projectId} not found`);
     }
 
     const result = await this.submagicService.updateProject(
       projectId,
-      dto
+      dto,
+      userId
     );
 
     this.logger.log(`Project ${projectId} updated successfully`);
@@ -212,24 +197,29 @@ export class SubmagicController {
   @ApiConsumes("application/json")
   // @ApiBody({ type: ExportProjectDto })
   async exportProject(
+    @Request() req,
     @Param("projectId") projectId: string,
     @Body() dto: ExportProjectDto,
-    @Headers("x-api-key") apiKey?: string
   ) {
+    const userId = req.user.id;
+    const token = req.token;
+    
     this.logger.log(`Exporting project ${projectId}`);
 
     // Validate that the project exists in our storage
-    // const existingProject = this.storageService.getProject(projectId);
-    // if (!existingProject) {
-    //   throw new BadRequestException(`Project ${projectId} not found`);
-    // }
+    const existingProject = this.projectService.getProject(projectId);
+    if (!existingProject) {
+      throw new BadRequestException(`Project ${projectId} not found`);
+    }
 
     const result = await this.submagicService.exportProject(
       projectId,
-      dto
+      dto,
+      userId,
+      token
     );
 
-    this.logger.log(`Project ${projectId} export started successfully`);
+    this.logger.log(`Project ${projectId} export started`);
     return result;
   }
 
@@ -246,11 +236,13 @@ export class SubmagicController {
   @ApiResponse({ status: 404, description: "Project not found" })
   @ApiResponse({ status: 401, description: "Unauthorized - Invalid API key" })
   async getProject(
+    @Request() req,
     @Param("projectId") projectId: string
   ) {
+    const userId = req.user.sub;
     this.logger.log(`Getting project details for ${projectId}`);
 
-    const result = await this.submagicService.getProject(projectId);
+    const result = await this.submagicService.getProject(projectId, userId);
 
     this.logger.log(`Project details retrieved for ${projectId}`);
     return result;
@@ -259,9 +251,10 @@ export class SubmagicController {
   @Get("templates")
   @ApiOperation({ summary: "List available Submagic templates" })
   @ApiResponse({ status: 200, description: "Templates retrieved" })
-  async getTemplates(@Headers("x-api-key") apiKey?: string) {
+  async getTemplates(@Request() req) {
+    const userId = req.user.sub;
     this.logger.log("Getting templates");
-    const result = await this.submagicService.getTemplates(apiKey);
+    const result = await this.submagicService.getTemplates(userId);
     return result;
   }
 }

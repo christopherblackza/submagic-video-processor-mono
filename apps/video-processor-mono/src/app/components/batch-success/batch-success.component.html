@@ -1,39 +1,39 @@
-<div class="batch-container">
+<div class="batch-container" role="main" aria-label="Batch Processing Status">
   <div class="header">
     <h1>Batch Processing Status</h1>
-    <p *ngIf="batch">Batch ID: {{ batchId }}</p>
+    <p *ngIf="batch" aria-label="Batch ID">Batch ID: {{ batchId }}</p>
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" class="loading-state">
-    <div class="spinner"></div>
+  <div *ngIf="loading" class="loading-state" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
     <p>Loading batch information...</p>
   </div>
 
   <!-- Error State -->
-  <div *ngIf="error && !loading" class="error-state">
-    <div class="error-icon">⚠️</div>
+  <div *ngIf="error && !loading" class="error-state" role="alert">
+    <div class="error-icon" aria-hidden="true">⚠️</div>
     <h2>Error</h2>
     <p>{{ error }}</p>
-    <button class="retry-btn" (click)="refreshBatch()">Try Again</button>
-    <button class="home-btn" (click)="goHome()">Go Home</button>
+    <button class="retry-btn" (click)="refreshBatch()" aria-label="Retry loading batch">Try Again</button>
+    <button class="home-btn" (click)="goHome()" aria-label="Return to upload page">Go Home</button>
   </div>
 
   <!-- Batch Content -->
   <div *ngIf="batch && !loading" class="batch-content">
     <!-- Progress Overview -->
-    <div class="progress-section">
+    <div class="progress-section" aria-label="Overall Progress">
       <h2>Overall Progress</h2>
-      <div class="progress-bar">
+      <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="getProgressPercentage()" aria-valuemin="0" aria-valuemax="100">
         <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
       </div>
-      <div class="progress-text">
+      <div class="progress-text" aria-live="polite">
         {{ getCompletedCount() }} of {{ getTotalCount() }} videos completed ({{ getProgressPercentage() }}%)
       </div>
     </div>
 
     <!-- Batch Info -->
-    <div class="batch-info">
+    <div class="batch-info" role="region" aria-label="Batch Details">
       <div class="info-item">
         <strong>Created:</strong> {{ batch.createdAt | date:'medium' }}
       </div>
@@ -54,20 +54,21 @@
     <!-- Projects List -->
     <div class="projects-section">
       <h2>Videos</h2>
-      <div class="projects-list">
+      <div class="projects-list" role="list">
         <div 
-          *ngFor="let project of batch.projects" 
+          *ngFor="let project of batch.projects; trackBy: trackByProject" 
           class="project-item"
-          [class]="getStatusClass(project.status)"
+          [class]="getStatusClass(project)"
+          role="listitem"
         >
           <div class="project-header">
             <div class="project-title">
-              <span class="status-icon">{{ getStatusIcon(project.status) }}</span>
-              <h3>{{ project.title }}</h3>
+              <span class="status-icon" aria-hidden="true">{{ getStatusIcon(project) }}</span>
+              <h3>{{ project.title }}</h3> id: {{ project.id }}
             </div>
             <div class="project-status">
-              <span class="status-badge" [class]="getStatusClass(project.status)">
-                {{ project.status | titlecase }}
+              <span class="status-badge" [class]="getStatusClass(project)">
+                {{ getStatusLabel(project) | titlecase }}
               </span>
             </div>
           </div>
@@ -75,6 +76,9 @@
           <div class="project-details">
             <div class="detail-item">
               <strong>Created:</strong> {{ project.createdAt | date:'short' }}
+            </div>
+            <div class="detail-item" *ngIf="project.duration">
+              <strong>Duration:</strong> {{ project.duration }}s
             </div>
             <div class="detail-item" *ngIf="project.error">
               <strong>Error:</strong> {{ project.error }}
@@ -86,22 +90,43 @@
               *ngIf="project.status === 'completed'" 
               class="view-btn"
               (click)="viewProject(project)"
+              [attr.aria-label]="'View results for ' + project.title"
             >
               View Results
             </button>
             <button 
-              *ngIf="project.status === 'processing'" 
+              *ngIf="project.status === 'completed' && project.downloadUrl" 
+              class="download-btn"
+              (click)="downloadProject(project, $event)"
+              [attr.aria-label]="'Download ' + project.title"
+            >
+              Download
+            </button>
+            <button 
+              *ngIf="project.status === 'processing' || project.mediaMatchingStatus === 'in_progress'" 
               class="processing-btn" 
               disabled
+              aria-disabled="true"
             >
-              Processing...
+              {{ getStatusLabel(project) }}
             </button>
             <button 
               *ngIf="project.status === 'failed' || project.status === 'error'" 
               class="retry-btn"
               (click)="refreshBatch()"
+              [attr.aria-label]="'Retry ' + project.title"
             >
               Retry
+            </button>
+
+            <button 
+              class="update-btn"
+              (click)="updateProject(project)"
+              [disabled]="updatingProjectIds.has(project.id)"
+              [class.updating]="updatingProjectIds.has(project.id)"
+              [attr.aria-label]="'Update ' + project.title"
+            >
+              {{ updatingProjectIds.has(project.id) ? 'Updating...' : 'Update' }}
             </button>
           </div>
         </div>
@@ -110,17 +135,24 @@
 
     <!-- Actions -->
     <div class="actions-section">
-      <button class="refresh-btn" (click)="refreshBatch()">
-        🔄 Refresh Status
+      <button class="refresh-btn" (click)="refreshBatch()" aria-label="Refresh batch status">
+        <span aria-hidden="true">🔄</span> Refresh Status
       </button>
-      <button class="home-btn" (click)="goHome()">
-        🏠 Process More Videos
+      <button class="home-btn" (click)="goHome()" aria-label="Process more videos">
+        <span aria-hidden="true">🏠</span> Process More Videos
       </button>
     </div>
+  </div>
+</div>
 
-    <!-- Auto-refresh Notice -->
-    <div class="auto-refresh-notice" *ngIf="hasIncompleteProjects()">
-      <p>🔄 This page automatically refreshes every 5 seconds while videos are processing.</p>
+<!-- Toast Notifications -->
+<div class="toast-container" *ngIf="successMessage">
+  <div class="toast success">
+    <span class="icon">✓</span>
+    <div class="toast-content">
+      <div class="toast-title">Success</div>
+      <div class="toast-message">{{ successMessage }}</div>
     </div>
+    <button class="toast-close" (click)="successMessage = ''">✕</button>
   </div>
 </div>

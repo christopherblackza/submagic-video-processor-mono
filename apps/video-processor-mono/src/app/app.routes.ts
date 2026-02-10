@@ -9,15 +9,15 @@ export const routes: Routes = [
     title: 'Login'
   },
   {
-    path: 'setup',
+    path: 'account',
     canActivate: [authGuard],
-    loadComponent: () => import('./components/setup/setup.component').then(m => m.SetupComponent),
-    title: 'Setup'
+    loadComponent: () => import('./components/acount/account.component').then(m => m.AccountComponent),
+    title: 'Account'
   },
   {
-    path: 'upload',
+    path: 'dashboard',
     canActivate: [authGuard],
-    loadComponent: () => import('./components/video-upload/video-upload.component').then(m => m.VideoUploadComponent),
+    loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
     title: 'Submagic Video Processor'
   },
   {

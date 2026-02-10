@@ -16,11 +16,10 @@ export class MediaItemDto {
   @IsArray()
   tags?: string[];
 
-  // used boolean
-  @ApiProperty({ description: 'Whether the media item has been used in a match' })
+  @ApiProperty({ description: 'Number of times the media item has been used in projects' })
   @IsOptional()
-  @IsBoolean()
-  used?: boolean;
+  @IsNumber()
+  usageCount?: number;
   
 
 }
@@ -38,7 +37,7 @@ export class MediaMatchingRequestDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MediaItemDto)
-  mediaItems: MediaItemDto[];
+  mediaItems?: MediaItemDto[];
 
   @ApiProperty({ 
     description: 'Confidence threshold for matches (0-1)',
@@ -119,10 +118,12 @@ export class UpdateProjectRequestDto {
 
   @ApiProperty({ 
     description: 'Array of media matches to apply',
-    type: [MediaMatchDto]
+    type: [MediaMatchDto],
+    required: false
   })
+  @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => MediaMatchDto)
-  matches: MediaMatchDto[];
+  matches?: MediaMatchDto[];
 }

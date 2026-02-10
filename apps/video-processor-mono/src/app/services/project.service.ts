@@ -9,7 +9,9 @@ import {
   BatchStartRequest, 
   BatchStartResponse,
   SingleProjectRequest,
-  SingleProjectResponse
+  SingleProjectResponse,
+  BatchStatusResponse,
+  UserMediaItem
 } from '../models/project.model';
  
 export interface TemplatesResponse { templates: string[] }
@@ -88,12 +90,13 @@ export class ProjectService {
       magicBrolls: request.magicBrolls,
       magicBrollsPercentage: request.magicBrollsPercentage,
       dictionary: request.dictionary,
-      systemPrompt: request.systemPrompt
+      systemPrompt: request.systemPrompt,
+      hookTitle: request.hookTitle,
     };
 
     const headers = this.buildHeaders(true);
 
-    return this.http.post<BatchStartResponse>(`${this.apiUrl}/batch-start`, jsonPayload, { headers });
+    return this.http.post<BatchStartResponse>(`${this.apiUrl}/batch/start`, jsonPayload, { headers });
   }
 
   /**
@@ -107,15 +110,20 @@ export class ProjectService {
   /**
    * Get batch details by ID
    */
-  getBatch(batchId: string): Observable<Batch> {
+  getBatch(batchId: string): Observable<BatchStatusResponse> {
     const headers = this.buildHeaders(false);
-    return this.http.get<Batch>(`${this.apiUrl}/batch-success/${batchId}`, { headers });
+    return this.http.get<BatchStatusResponse>(`${this.apiUrl}/batch/${batchId}`, { headers });
   }
 
   // Get batch details
   getBatchDetails(batchId: string): Observable<Batch> {
-    const headers = this.buildHeaders(false);
-    return this.http.get<Batch>(`${this.apiUrl}/batch-success/${batchId}`, { headers });
+    const headers = this.buildHeaders(true);
+    return this.http.get<Batch>(`${this.apiUrl}/batch/${batchId}`, { headers });
+  }
+
+  analyzeAndUpdateProject(projectId: string): Observable<any> {
+    const headers = this.buildHeaders(true);
+    return this.http.post<any>(`${this.apiUrl}/openai/analyze-and-update`, { projectId }, { headers });
   }
 
   /**
@@ -150,12 +158,17 @@ export class ProjectService {
    * Upload multiple media files.
    */
   uploadMediaFiles(files: File[]): Observable<any> {
-     const headers = this.buildHeaders(false);
+     const headers = this.buildHeaders(false); // Do not set content-type for FormData
     const formData = new FormData();
     files.forEach(file => {
       formData.append('media', file, file.name);
     });
 
-    return this.http.post(`${this.apiUrl}/submagic/upload-user-media`, formData, { headers });
+    return this.http.post(`${this.apiUrl}/submagic/upload-user-media`, formData);
+  }
+
+  getUserMediaItems(): Observable<UserMediaItem[]> {
+    const headers = this.buildHeaders(false);
+    return this.http.get<UserMediaItem[]>(`${this.apiUrl}/user-media`, { headers });
   }
 }

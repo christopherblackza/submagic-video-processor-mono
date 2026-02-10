@@ -9,5 +9,6 @@
     "emitDecoratorMetadata": true,
     "target": "es2021"
   },
-  "include": ["src/**/*.ts", "data/uploaded-media-items.ts"]
+  "include": ["src/**/*.ts", "data/uploaded-media-items.ts"],
+  "exclude": ["src/**/*.spec.ts", "test/**/*", "**/*.spec.ts"]
 }

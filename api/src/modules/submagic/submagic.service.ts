@@ -7,6 +7,8 @@ import {
 import { ConfigService } from "@nestjs/config";
 import { HttpService } from "@nestjs/axios";
 import { firstValueFrom } from "rxjs";
+import { Express } from "express";
+import "multer";
 import { AxiosResponse, AxiosError } from "axios";
 import { Project } from "../../common/interfaces/project.interface";
 import {
@@ -33,12 +35,13 @@ import FormDataLib from "form-data";
 import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
+import { ApiKeysService } from "../api-keys/api-keys.service";
 import { RedisService } from "../redis/redis.service";
+import { UsageService } from "../usage/usage.service";
 
 @Injectable()
 export class SubmagicService {
   private readonly logger = new Logger(SubmagicService.name);
-  private readonly apiKey: string;
   private readonly subMagicApiUrl: string;
   private readonly publicBaseUrl: string;
   private readonly defaultLanguage: string;
@@ -50,7 +53,9 @@ export class SubmagicService {
   constructor(
     private readonly configService: ConfigService,
     private readonly httpService: HttpService,
-    private readonly redisService: RedisService
+    private readonly apiKeysService: ApiKeysService,
+    private readonly redisService: RedisService,
+    private readonly usageService: UsageService
   ) {
     this.publicBaseUrl =
       this.configService.get<string>("PUBLIC_BASE_URL") || "";
@@ -82,15 +87,24 @@ export class SubmagicService {
     }
   }
 
+  private async getApiKey(userId: string): Promise<string> {
+    const key = await this.apiKeysService.getDecryptedKey(userId, 'submagic');
+    if (!key) {
+      throw new UnauthorizedException("Submagic API key is required. Please add it in settings.");
+    }
+    return key;
+  }
+
   async startProject(
-    dto: StartProjectDto
+    dto: StartProjectDto,
+    userId: string,
+    token?: string
   ): Promise<{ projectId: string }> {
     try {
       const payload = this.buildProjectPayload(dto);
+      console.error('PAYLOAD BUILT: ', payload);
 
-      // this.logger.debug(`Payload: ${JSON.stringify(sanitizeHeaders(payload), null, 2)}`);
-
-      const response = await this.callSubmagicAPI(payload);
+      const response = await this.createProject(payload, userId);
 
       // Extract the project ID from the Submagic API response
       const projectId = response.data.id;
@@ -100,6 +114,12 @@ export class SubmagicService {
           "Submagic API did not return a project ID"
         );
       }
+      
+      // Track usage
+      // await this.usageService.trackJobStart(userId, 'video_processing', { 
+      //   projectId, 
+      //   ...dto 
+      // }, token);
 
       this.logger.log(`Project ${projectId} started successfully`);
       return { projectId };
@@ -120,52 +140,63 @@ export class SubmagicService {
 
   async updateProject(
     projectId: string,
-    dto: UpdateProjectDto
+    dto: UpdateProjectDto,
+    userId: string
   ): Promise<{ message: string; id: string; status: string }> {
     try {
       const payload = this.buildUpdateProjectPayload(dto);
+      const apiKey = await this.getApiKey(userId);
+      const headers = {
+        "x-api-key": apiKey,
+        "Content-Type": "application/json",
+      };
 
-      // this.logger.debug(
-      //   `Update payload for project ${projectId}: ${JSON.stringify(
-      //     payload,
-      //     null,
-      //     2
-      //   )}`
-      // );
+      console.log("UPDATE PAYLOAD: ", payload);
 
-      const response = await this.callSubmagicUpdateAPI(projectId, payload);
-      // console.log("UPDATE RESPONSE: ", response);
+      const response = await firstValueFrom(
+        this.httpService.put(
+          `${this.subMagicApiUrl}/v1/projects/${projectId}`,
+          payload,
+          { headers }
+        )
+      );
 
       this.logger.log(`Project ${projectId} updated successfully`);
       return response.data;
     } catch (error) {
       this.logger.error(`Failed to update project ${projectId}:`, error);
 
-      // Re-throw the error if it's already a SubmagicApiException
       if (error instanceof SubmagicApiException) {
         throw error;
       }
 
-      // For any other errors, throw a generic internal server error
-      throw new InternalServerErrorException("Failed to update project");
+      this.handleSubmagicApiError(error);
     }
   }
 
   async exportProject(
     projectId: string,
-    exportData: ExportProjectDto
+    exportData: ExportProjectDto,
+    userId: string,
+    token?: string
   ): Promise<any> {
     try {
       this.logger.log(`Exporting project: ${projectId}`);
 
       const payload = this.buildExportProjectPayload(exportData);
-      // this.logger.log(`Export payload: ${JSON.stringify(payload, null, 2)}`);
-
      
       const response = await this.callSubmagicExportAPI(
         projectId,
-        payload
+        payload,
+        userId
       );
+      
+      // Track export usage
+      await this.usageService.trackJobStart(userId, 'video_export', { 
+        projectId, 
+        ...exportData 
+      }, token);
+      
       this.logger.log(
         `Export response: ${JSON.stringify(response.data, null, 2)}`
       );
@@ -177,11 +208,11 @@ export class SubmagicService {
     }
   }
 
-  async getProject(projectId: string): Promise<any> {
+  async getProject(projectId: string, userId: string): Promise<any> {
     try {
       this.logger.log(`Getting project details: ${projectId}`);
 
-      const response = await this.callSubmagicGetAPI(projectId);
+      const response = await this.callSubmagicGetAPI(projectId, userId);
       this.logger.log(`Project details retrieved for: ${projectId}`);
 
       return response.data;
@@ -192,11 +223,9 @@ export class SubmagicService {
   }
 
   async getTemplates(
-    apiKeyOverride?: string
+    userId: string
   ): Promise<{ templates: string[] }> {
-    const apiKey = await this.redisService.getSubmagicApiKey();
-    if (!apiKey)
-      throw new UnauthorizedException("Submagic API key is required");
+    const apiKey = await this.getApiKey(userId);
     const headers = {
       "x-api-key": apiKey,
       "Content-Type": "application/json",
@@ -213,11 +242,8 @@ export class SubmagicService {
     }
   }
 
-  private async callSubmagicGetAPI(projectId: string): Promise<AxiosResponse> {
-    const apiKey = await this.redisService.getSubmagicApiKey();
-    console.log("API KEY GOT: ", apiKey);
-    if (!apiKey)
-      throw new UnauthorizedException("Submagic API key is required");
+  private async callSubmagicGetAPI(projectId: string, userId: string): Promise<AxiosResponse> {
+    const apiKey = await this.getApiKey(userId);
     const headers = {
       "x-api-key": apiKey,
       "Content-Type": "application/json",
@@ -260,11 +286,10 @@ export class SubmagicService {
 
   private async callSubmagicExportAPI(
     projectId: string,
-    payload: any
+    payload: any,
+    userId: string
   ): Promise<any> {
-    const apiKey = await this.redisService.getSubmagicApiKey();
-    if (!apiKey)
-      throw new UnauthorizedException("Submagic API key is required");
+    const apiKey = await this.getApiKey(userId);
     const headers = {
       "x-api-key": apiKey,
       "Content-Type": "application/json",
@@ -304,6 +329,7 @@ export class SubmagicService {
         dto.magicBrollsPercentage,
         this.defaultMagicBrollsPercentage
       ),
+      hookTitle: dto.hookTitle,
     };
 
     if (dto.title) {
@@ -347,21 +373,22 @@ export class SubmagicService {
     return payload;
   }
 
-  private async callSubmagicAPI(
-    payload: any
+  private async createProject(
+    payload: any,
+    userId: string
   ): Promise<AxiosResponse> {
     // Remove videoFile from payload if it exists (we don't handle file uploads)
     const { videoFile, ...jsonPayload } = payload;
 
-    const apiKey = await this.redisService.getSubmagicApiKey();
-    if (!apiKey)
-      throw new UnauthorizedException("Submagic API key is required");
+    const apiKey = await this.getApiKey(userId);
     const headers = {
       "x-api-key": apiKey,
       "Content-Type": "application/json",
     };
 
     try {
+      console.error('PAYLOAD: ', jsonPayload);
+      
       return await firstValueFrom(
         this.httpService.post(
           `${this.subMagicApiUrl}/v1/projects`,
@@ -374,30 +401,6 @@ export class SubmagicService {
     }
   }
 
-  private async callSubmagicUpdateAPI(
-    projectId: string,
-    payload: any
-  ): Promise<AxiosResponse> {
-    const apiKey = await this.redisService.getSubmagicApiKey();
-    if (!apiKey)
-      throw new UnauthorizedException("Submagic API key is required");
-    const headers = {
-      "x-api-key": apiKey,
-      "Content-Type": "application/json",
-    };
-
-    try {
-      return await firstValueFrom(
-        this.httpService.put(
-          `${this.subMagicApiUrl}/v1/projects/${projectId}`,
-          payload,
-          { headers }
-        )
-      );
-    } catch (error) {
-      this.handleSubmagicApiError(error);
-    }
-  }
 
   private handleSubmagicApiError(error: any): never {
     console.error("Submagic API Error:", error);
@@ -447,7 +450,8 @@ export class SubmagicService {
   }
 
   async uploadUserMedia(
-    files: Express.Multer.File[]
+    files: Express.Multer.File[],
+    userId: string
   ): Promise<
     {
       userMediaId: string;
@@ -472,12 +476,12 @@ export class SubmagicService {
         // this.logger.log(`Uploading batch ${i / CONCURRENCY + 1} (${batch.length} files)`);
         const batchResults = await Promise.all(
           batch.map((file) =>
-            this.uploadSingleFileWithRetry(file, 3)
+            this.uploadSingleFileWithRetry(file, 3, userId)
           )
         );
         results.push(...batchResults);
       }
-      const existing = (await this.redisService.getMediaItems()) ?? [];
+      const existing = (await this.redisService.getMediaItems(userId)) ?? [];
       const combinedMap: Map<
         string,
         { userMediaId: string; description: string; tags: string[] }
@@ -493,7 +497,7 @@ export class SubmagicService {
         combinedMap.set(res.item.userMediaId, res.item);
       const combined = Array.from(combinedMap.values());
       console.log("Saved Media Items", combined.length);
-      await this.redisService.saveMediaItems(combined);
+      await this.redisService.saveMediaItems(combined, userId);
       return results;
     } catch (error) {
       this.logger.error(
@@ -513,7 +517,8 @@ export class SubmagicService {
   }
 
   private async uploadSingleFile(
-    file: Express.Multer.File
+    file: Express.Multer.File,
+    userId: string
   ): Promise<{
     userMediaId: string;
     referencePath: string;
@@ -531,7 +536,7 @@ export class SubmagicService {
       contentType: file.mimetype,
     });
 
-    const apiKey = await this.redisService.getSubmagicApiKey();
+    const apiKey = await this.getApiKey(userId);
 
     const headers = {
       "x-api-key": apiKey,
@@ -547,7 +552,7 @@ export class SubmagicService {
         headers,
         maxBodyLength: Infinity,
         maxContentLength: Infinity,
-        timeout: 120000,
+        timeout: 600000, // 10 minutes
         httpsAgent,
       })
     );
@@ -569,7 +574,8 @@ export class SubmagicService {
 
   private async uploadSingleFileWithRetry(
     file: Express.Multer.File,
-    retries: number
+    retries: number,
+    userId: string
   ): Promise<{
     userMediaId: string;
     referencePath: string;
@@ -588,7 +594,7 @@ export class SubmagicService {
             })`
           );
         }
-        return await this.uploadSingleFile(file);
+        return await this.uploadSingleFile(file, userId);
       } catch (err: any) {
         lastError = err;
         // Retry on transient network errors

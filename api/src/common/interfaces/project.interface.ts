@@ -14,16 +14,26 @@ export interface Project {
   createdAt?: string;
   completedAt?: string;
   batchId?: string;
+  userId?: string;
+  error?: string;
+  uploadStatus?: 'pending' | 'completed' | 'failed';
+  previewUrl?: string;
 }
 
 export interface Batch {
   id: string;
+  userId: string;
   createdAt: string;
   projects: BatchProject[];
   totalCount: number;
   completedCount: number;
   failedCount: number;
   status?: string;
+  language?: string;
+  templateName?: string;
+  magicZooms?: boolean;
+  magicBrolls?: boolean;
+  magicBrollsPercentage?: number;
 }
 
 export interface BatchProject {
@@ -42,6 +52,9 @@ export interface CompletionData {
   downloadUrl?: string;
   exports?: any[];
   receivedAt: string;
+  thumbnailUrl?: string;
+  duration?: number;
+  fileSize?: number;
 }
 
 export interface StartProjectRequest {

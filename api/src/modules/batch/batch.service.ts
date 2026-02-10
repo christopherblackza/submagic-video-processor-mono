@@ -1,6 +1,5 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { SubmagicService } from '../submagic/submagic.service';
-import { StorageService } from '../storage/storage.service';
 import { BatchStartDto, VideoInputDto } from '../../common/dto/start-project.dto';
 import { Batch, BatchProject, Project } from '../../common/interfaces/project.interface';
 import { 
@@ -11,6 +10,7 @@ import {
   RateLimitExceededException, 
   SubmagicServerException 
 } from '../../common/exceptions/submagic-api.exceptions';
+import { ProjectService } from '../project/project.service';
 
 @Injectable()
 export class BatchService {
@@ -18,10 +18,10 @@ export class BatchService {
 
   constructor(
     private readonly submagicService: SubmagicService,
-    private readonly storageService: StorageService,
+    private readonly projectService: ProjectService,
   ) {}
 
-  async startBatch(dto: BatchStartDto): Promise<{ batchId: string; projectIds: string[] }> {
+  async startBatch(dto: BatchStartDto, userId: string, token?: string): Promise<{ batchId: string; projectIds: string[] }> {
     const batchId = this.generateBatchId();
     const projectIds: string[] = [];
     const batchProjects: BatchProject[] = [];
@@ -49,17 +49,19 @@ export class BatchService {
           templateName: dto.templateName,
           webhookUrl: dto.webhookUrl,
           magicZooms: dto.magicZooms,
-          magicBrolls: false, // Set to false to allow later B-roll updates
+          magicBrolls: dto.magicBrolls, 
           magicBrollsPercentage: dto.magicBrollsPercentage,
           dictionary: dto.dictionary,
+          hookTitle: dto.hookTitle,
         };
 
-        const projectResult = await this.submagicService.startProject(projectDto);
+        const projectResult = await this.submagicService.startProject(projectDto, userId, token);
         projectIds.push(projectResult.projectId);
 
         // Create project record
         const project: Project = {
           id: projectResult.projectId,
+          userId: userId,
           title: video.title,
           originalTitle: video.title,
           language: dto.language,
@@ -73,10 +75,9 @@ export class BatchService {
           status: 'processing',
           createdAt: new Date().toISOString(),
           batchId,
+          uploadStatus: 'completed',
         };
-
-        console.log("SAVING PROJECT:", project);
-        this.storageService.saveProject(project);
+        this.projectService.saveProject(project);
 
         // Create batch project record
         batchProjects.push({
@@ -145,6 +146,7 @@ export class BatchService {
     // Create batch record even if some projects failed
     const batch: Batch = {
       id: batchId,
+      userId,
       createdAt: new Date().toISOString(),
       projects: batchProjects,
       totalCount: batchProjects.length,
@@ -153,7 +155,7 @@ export class BatchService {
       status: 'processing',
     };
 
-    this.storageService.saveBatch(batch);
+    this.projectService.saveBatch(batch);
 
     const successfulProjects = projectIds.length;
     this.logger.log(`🎉 Batch ${batchId} completed: ${successfulProjects} successful, ${failedCount} failed`);

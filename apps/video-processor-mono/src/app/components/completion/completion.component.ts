@@ -39,6 +39,7 @@ export class CompletionComponent implements OnInit {
   private loadCompletionData() {
     this.projectService.getCompletionDetails(this.projectId).subscribe({
       next: (data: CompletionData) => {
+        console.log("COMPLETION DATA", data);
         this.completionData = data;
         this.loading = false;
       },
@@ -58,9 +59,10 @@ export class CompletionComponent implements OnInit {
 
   goBack() {
     if (this.fromBatch && this.completionData?.batchId) {
+      // Navigate bach with history
       this.router.navigate(['/batch-success', this.completionData.batchId]);
     } else {
-      this.router.navigate(['/upload']);
+      this.router.navigate(['/dashboard']);
     }
   }
 
@@ -71,6 +73,12 @@ export class CompletionComponent implements OnInit {
   downloadVideo() {
     if (this.completionData?.downloadUrl) {
       window.open(this.completionData.downloadUrl, '_blank');
+    }
+  }
+
+  previewVideo() {
+    if (this.completionData?.project) {
+      window.open(this.completionData.project.previewUrl, '_blank');
     }
   }
 

@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
 import { ProjectController } from './project.controller';
 import { SubmagicModule } from '../submagic/submagic.module';
-import { StorageModule } from '../storage/storage.module';
+import { ProjectService } from './project.service';
 
 @Module({
-  imports: [SubmagicModule, StorageModule],
+  imports: [SubmagicModule],
   controllers: [ProjectController],
+  providers: [ProjectService],
+  exports: [ProjectService],
 })
 export class ProjectModule {}

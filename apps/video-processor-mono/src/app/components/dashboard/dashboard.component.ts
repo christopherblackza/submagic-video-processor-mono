@@ -3,20 +3,24 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, FormArray, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ProjectService } from '../../services/project.service';
+import { ApiKeyService } from '../../services/api-key.service';
 import { BatchStartRequest, VideoInput } from '../../models/project.model';
 import pkg from '../../../../../../package.json';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-video-upload',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
-  templateUrl: './video-upload.component.html',
-  styleUrl: './video-upload.component.scss'
+  templateUrl: './dashboard.component.html',
+  styleUrl: './dashboard.component.scss'
 })
-export class VideoUploadComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   uploadForm!: FormGroup;
   isSubmitting = false;
   errorMessage = '';
+  hasOpenAiKey = false;
+  hasSubmagicKey = false;
   version = (pkg as any).version as string;
   templates: string[] = [
     "Ali",
@@ -51,14 +55,26 @@ export class VideoUploadComponent implements OnInit {
     "William"
   ];
   constructor(
+    private authService: AuthService,
     private fb: FormBuilder,
     private projectService: ProjectService,
+    private apiKeyService: ApiKeyService,
     private router: Router
   ) {}
 
   ngOnInit() {
     this.initializeForm();
+    this.checkApiKeys();
+  }
 
+  private checkApiKeys() {
+    this.apiKeyService.getApiKeys().subscribe({
+      next: (keys) => {
+        this.hasOpenAiKey = keys.some(k => k.key_name === 'openai');
+        this.hasSubmagicKey = keys.some(k => k.key_name === 'submagic');
+      },
+      error: (err) => console.error('Failed to load API keys', err)
+    });
   }
 
   private initializeForm() {
@@ -67,7 +83,7 @@ export class VideoUploadComponent implements OnInit {
       templateName: ['Hormozi 2', Validators.required],
       webhookUrl: [''],
       magicZooms: [false],
-      magicBrolls: [true],
+      magicBrolls: [false],
       magicBrollsPercentage: [60, [Validators.min(0), Validators.max(100)]],
       dictionary: [''],
       videos: this.fb.array([this.createVideoGroup()])
@@ -75,6 +91,12 @@ export class VideoUploadComponent implements OnInit {
 
     
 
+  }
+
+  logout() {
+    this.authService.logout().then(() => {
+      this.router.navigate(["/login"]);
+    });
   }
 
   private createVideoGroup(): FormGroup {
@@ -125,7 +147,19 @@ export class VideoUploadComponent implements OnInit {
 
     try {
       const formValue = this.uploadForm.value;
-      
+
+      // Ensure they have api keys set 
+      if (!this.hasOpenAiKey) {
+        this.errorMessage = 'Please configure your OpenAI API key in the Account page.';
+        this.isSubmitting = false;
+        return;
+      }
+
+      if (!this.hasSubmagicKey) {
+        this.errorMessage = 'Please configure your Submagic API key in the Account page.';
+        this.isSubmitting = false;
+        return;
+      }
 
       // Prepare videos array
       const videos: VideoInput[] = formValue.videos.map((video: any) => ({
@@ -144,9 +178,10 @@ export class VideoUploadComponent implements OnInit {
         videos,
         language: formValue.language,
         templateName: formValue.templateName,
-        webhookUrl: 'https://submagic-video-processor-mono-production.up.railway.app/webhook/submagic',
+        webhookUrl: 'https://muzhtlcrhsfbjxizaenf.supabase.co/functions/v1/submagic-webhook',
         magicZooms: formValue.magicZooms,
         magicBrolls: formValue.magicBrolls,
+        hookTitle: true,
         magicBrollsPercentage: formValue.magicBrollsPercentage,
         dictionary: formValue.dictionary || undefined,
         systemPrompt: localStorage.getItem('submagic_system_prompt') || undefined,

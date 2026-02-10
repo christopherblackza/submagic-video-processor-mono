@@ -1,59 +1,96 @@
-<div class="upload-container">
+<div class="media-upload-container">
   <div class="header">
-    <h1>Upload Your Media</h1>
-    <p>Select multiple files to upload to your media library.</p>
+    <div class="header-content">
+      <h1>Media Upload</h1>
+      <p class="version">Manage and upload your video assets</p>
+    </div>
   </div>
 
-  <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()" class="upload-form">
-    <div class="files-section">
-      <h2>Files</h2>
-      
-      <div class="form-row">
-        <div class="form-group">
-          <label for="file-input">Select Files</label>
+  <div class="card">
+    <div class="card-header">
+      <h2>Upload Files</h2>
+    </div>
+    <div class="card-body">
+      <form [formGroup]="uploadForm" (ngSubmit)="onSubmit()">
+        
+        <!-- Dropzone Area -->
+        <div class="dropzone" [class.has-files]="selectedFiles.length > 0">
           <input 
             type="file" 
             id="file-input"
-            class="form-control file-input"
+            class="file-input"
             multiple
             (change)="onFileSelected($event)"
-            formControlName="files"
           >
-          <div class="error-message" *ngIf="isFieldInvalid()">
-            At least one file is required.
+          <div class="dz-content">
+            <div class="upload-icon">☁️</div>
+            <div class="dz-text">
+              <label for="file-input" class="btn-link">Click to upload</label> or drag and drop
+            </div>
+            <div class="dz-hint">Supported formats: MP4, MOV, AVI (Max 500MB)</div>
           </div>
         </div>
-      </div>
 
-      <div class="selected-files" *ngIf="selectedFiles.length > 0">
-        <h3>Selected Files:</h3>
-        <ul>
-          <li *ngFor="let file of selectedFiles">{{ file.name }}</li>
-        </ul>
-      </div>
+        <!-- File List Table -->
+        <div class="file-table-wrapper" *ngIf="selectedFiles.length > 0">
+          <table class="file-table">
+            <thead>
+              <tr>
+                <th>File Name</th>
+                <th>Size</th>
+                <th>Type</th>
+                <th class="text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let file of selectedFiles; let i = index">
+                <td class="file-name">
+                  <span class="file-icon">📄</span>
+                  {{ file.name }}
+                </td>
+                <td class="file-size">{{ formatFileSize(file.size) }}</td>
+                <td class="file-type">{{ file.type || 'Unknown' }}</td>
+                <td class="text-right">
+                  <button type="button" class="icon-btn delete" (click)="removeFile(i)" title="Remove file">
+                    ✕
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
 
+        <!-- Error Message -->
+        <div class="alert alert-error" *ngIf="errorMessage">
+          <span class="icon">⚠️</span>
+          {{ errorMessage }}
+        </div>
+
+        <!-- Submit Action -->
+        <div class="form-actions">
+          <button 
+            type="submit" 
+            class="btn-primary"
+            [disabled]="isSubmitting || selectedFiles.length === 0"
+          >
+            <span *ngIf="!isSubmitting">Upload {{ selectedFiles.length }} File{{ selectedFiles.length !== 1 ? 's' : '' }}</span>
+            <span *ngIf="isSubmitting" class="loading-spinner">Uploading...</span>
+          </button>
+        </div>
+
+      </form>
     </div>
+  </div>
+</div>
 
-    <!-- Error Message -->
-    <div class="error-message global-error" *ngIf="errorMessage">
-      {{ errorMessage }}
+<!-- Toast Notifications -->
+<div class="toast-container" *ngIf="successMessage">
+  <div class="toast success">
+    <span class="icon">✓</span>
+    <div class="toast-content">
+      <div class="toast-title">Success</div>
+      <div class="toast-message">{{ successMessage }}</div>
     </div>
-
-    <!-- Success Message -->
-    <div class="success-message global-success" *ngIf="successMessage">
-      {{ successMessage }}
-    </div>
-
-    <!-- Submit Button -->
-    <div class="submit-section">
-      <button 
-        type="submit" 
-        class="submit-btn"
-        [disabled]="isSubmitting || uploadForm.invalid"
-      >
-        <span *ngIf="!isSubmitting">Upload Files</span>
-        <span *ngIf="isSubmitting">Uploading...</span>
-      </button>
-    </div>
-  </form>
+    <button class="toast-close" (click)="successMessage = ''">✕</button>
+  </div>
 </div>

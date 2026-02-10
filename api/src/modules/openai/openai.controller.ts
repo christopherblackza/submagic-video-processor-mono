@@ -1,20 +1,19 @@
-import { Controller, Post, Body, Param, HttpCode, HttpStatus, Headers, BadRequestException, Get } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiHeader } from '@nestjs/swagger';
+import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Request } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { OpenAIService } from './openai.service';
 import { 
   MediaMatchingRequestDto, 
   MediaMatchingResponseDto, 
-  MediaItemDto,
   UpdateProjectRequestDto 
 } from '../../common/dto/media-matching.dto';
-import { RedisService } from '../redis/redis.service';
+import { SupabaseAuthGuard } from '../../common/guards/supabase-auth.guard';
 
 @ApiTags('OpenAI')
+@ApiBearerAuth()
 @Controller('openai')
+@UseGuards(SupabaseAuthGuard)
 export class OpenAIController {
-  constructor(private readonly openaiService: OpenAIService,
-    private redisService: RedisService
-  ) {}
+  constructor(private readonly openaiService: OpenAIService) {}
 
   @Post('analyze-media-matching')
   @HttpCode(HttpStatus.OK)
@@ -35,36 +34,11 @@ export class OpenAIController {
     status: 500, 
     description: 'Internal server error during analysis' 
   })
-  async analyzeMediaMatching(@Body() request: MediaMatchingRequestDto): Promise<MediaMatchingResponseDto> {
-    const apiKey = await this.redisService.getOpenAiApiKey();
-    if (!apiKey || apiKey.trim() === "") {
-      throw new BadRequestException("OpenAI API key not found in Redis");
-    }
-    
-    return this.openaiService.analyzeProjectForMediaMatching(request);
+  async analyzeMediaMatching(@Request() req, @Body() request: MediaMatchingRequestDto): Promise<MediaMatchingResponseDto> {
+    const userId = req.user.id;
+    const token = req.token;
+    return this.openaiService.analyzeProjectForMediaMatching(request, userId, token);
   }
-
-    @Get("load-api-key")
-    @ApiOperation({ summary: "Load OpenAI API key from Redis" })
-    async loadApiKey() {
-      const apiKey = await this.redisService.getOpenAiApiKey();
-      if (!apiKey || apiKey.trim() === "") {
-        throw new BadRequestException("OpenAI API key not found in Redis");
-      }
-      return { apiKey };
-    }
-  
-    @Post("save-api-key")
-    @ApiOperation({ summary: "Save OpenAI API key to Redis" })
-    @ApiHeader({ name: "x-api-key", description: "OpenAI API key", required: true })
-    async saveApiKey(@Headers("x-api-key") apiKey?: string) {
-      if (!apiKey || apiKey.trim() === "") {
-        throw new BadRequestException("x-api-key header is required");
-      }
-      await this.redisService.setOpenAiApiKey(apiKey);
-      return { message: "API key saved" };
-    }
-  
 
   @Post('analyze-and-update')
   @HttpCode(HttpStatus.OK)
@@ -85,8 +59,11 @@ export class OpenAIController {
     description: 'Internal server error during processing' 
   })
   async updateProject(
+    @Request() req,
     @Body() request: UpdateProjectRequestDto
   ): Promise<any> {
-    return this.openaiService.updateProject(request);
+    const userId = req.user.id;
+    const token = req.token;
+    return this.openaiService.updateProject(request, userId, token);
   }
 }

@@ -6,22 +6,27 @@ import {
   Body,
   NotFoundException,
   Logger,
-  Res
+  Res,
+  UseGuards,
+  Request,
 } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody, ApiBearerAuth } from '@nestjs/swagger';
 import { Response } from 'express';
-import { StorageService } from '../storage/storage.service';
 import { SubmagicService } from '../submagic/submagic.service';
 import { UpdateProjectDto, ExportProjectDto } from '../../common/dto/start-project.dto';
 import { formatDate } from '../../common/utils/helpers';
+import { SupabaseAuthGuard } from '../../common/guards/supabase-auth.guard';
+import { ProjectService } from './project.service';
 
 @ApiTags('Projects')
+@ApiBearerAuth()
 @Controller()
+@UseGuards(SupabaseAuthGuard)
 export class ProjectController {
   private readonly logger = new Logger(ProjectController.name);
 
   constructor(
-    private readonly storageService: StorageService,
+    private readonly projectService: ProjectService,
     private readonly submagicService: SubmagicService
   ) {}
 
@@ -30,15 +35,16 @@ export class ProjectController {
   @ApiParam({ name: 'projectId', description: 'Project ID' })
   @ApiResponse({ status: 200, description: 'Project status page' })
   @ApiResponse({ status: 404, description: 'Project not found' })
-  async getProjectStatus(@Param('projectId') projectId: string, @Res() res: Response) {
+  async getProjectStatus(@Request() req, @Param('projectId') projectId: string, @Res() res: Response) {
     this.logger.log(`Getting project status for ${projectId}`);
+    const userId = req.user.id;
     
-    const project = this.storageService.getProject(projectId);
-    if (!project) {
+    const project = await this.projectService.syncProjectStatus(projectId);
+    if (!project || project.userId !== userId) {
       throw new NotFoundException('Project not found');
     }
 
-    const completion = this.storageService.getCompletion(projectId);
+    const completion = await this.projectService.getCompletion(projectId);
     
     const templateData = {
       project: {
@@ -71,18 +77,20 @@ export class ProjectController {
   @ApiResponse({ status: 404, description: 'Project not found' })
   @ApiBody({ type: UpdateProjectDto })
   async updateProjectWithBrolls(
+    @Request() req,
     @Param('projectId') projectId: string,
     @Body() updateDto: UpdateProjectDto
   ) {
     this.logger.log(`Updating project ${projectId} with B-roll items xD`);
+    const userId = req.user.id;
     
-    // const project = this.storageService.getProject(projectId);
-    // if (!project) {
-    //   throw new NotFoundException('Project not found');
-    // }
+    const project = await this.projectService.getProject(projectId);
+    if (!project || project.userId !== userId) {
+      throw new NotFoundException('Project not found');
+    }
 
     // Call Submagic API to update the project
-    const result = await this.submagicService.updateProject(projectId, updateDto);
+    const result = await this.submagicService.updateProject(projectId, updateDto, userId);
     
     this.logger.log(`Project ${projectId} updated successfully`);
     return result;
@@ -95,13 +103,21 @@ export class ProjectController {
   @ApiResponse({ status: 404, description: 'Project not found' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
   async exportProject(
+    @Request() req,
     @Param('projectId') projectId: string,
     @Body() exportProjectDto: ExportProjectDto
   ) {
     this.logger.log(`Exporting project: ${projectId}`);
+    const userId = req.user.id;
+    const token = req.token;
+    
+    const project = await this.projectService.getProject(projectId);
+    if (!project || project.userId !== userId) {
+      throw new NotFoundException('Project not found');
+    }
     
     try {
-      const result = await this.submagicService.exportProject(projectId, exportProjectDto);
+      const result = await this.submagicService.exportProject(projectId, exportProjectDto, userId, token);
       this.logger.log(`Project ${projectId} export started successfully`);
       return result;
     } catch (error) {
@@ -117,12 +133,20 @@ export class ProjectController {
   @ApiResponse({ status: 404, description: 'Project not found' })
   @ApiResponse({ status: 401, description: 'Unauthorized - Invalid API key' })
   async getProjectDetails(
+    @Request() req,
     @Param('projectId') projectId: string
   ) {
     this.logger.log(`Getting project details from Submagic API for ${projectId}`);
+    const userId = req.user.id;
+
+    // Verify ownership first
+    const project = await this.projectService.getProject(projectId);
+    if (!project || project.userId !== userId) {
+      throw new NotFoundException('Project not found');
+    }
     
     try {
-      const result = await this.submagicService.getProject(projectId);
+      const result = await this.submagicService.getProject(projectId, userId);
       this.logger.log(`Project details retrieved for ${projectId}`);
       return result;
     } catch (error) {
@@ -136,15 +160,16 @@ export class ProjectController {
   @ApiParam({ name: 'projectId', description: 'Project ID' })
   @ApiResponse({ status: 200, description: 'Project completion page' })
   @ApiResponse({ status: 404, description: 'Project not found' })
-  async getCompletionPage(@Param('projectId') projectId: string, @Res() res: Response) {
+  async getCompletionPage(@Request() req, @Param('projectId') projectId: string, @Res() res: Response) {
     this.logger.log(`Getting completion page for ${projectId}`);
+    const userId = req.user.id;
     
-    const project = this.storageService.getProject(projectId);
-    if (!project) {
+    const project = await this.projectService.syncProjectStatus(projectId);
+    if (!project || project.userId !== userId) {
       throw new NotFoundException('Project not found');
     }
 
-    const completion = this.storageService.getCompletion(projectId);
+    const completion = await this.projectService.getCompletion(projectId);
     
     const isCompleted = project.status === 'completed';
     const isFailed = project.status === 'failed';

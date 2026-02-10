@@ -1,32 +1,173 @@
 .login-container {
   max-width: 420px;
-  margin: 10vh auto;
-  padding: 24px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  margin: 15vh auto;
+  padding: 32px;
+  background-color: var(--white);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  text-align: center;
+
+  h1 {
+    margin-bottom: 24px;
+    font-size: 28px;
+    color: var(--primary-color);
+    font-weight: 700;
+  }
+}
+
+.auth-card {
+  h2 {
+    margin-bottom: 24px;
+    font-size: 20px;
+    color: var(--text-color);
+    font-weight: 600;
+  }
 }
 
 .login-form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
+  text-align: left;
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+
+  label {
+    font-weight: 500;
+    color: var(--text-color);
+    font-size: 14px;
+  }
+}
+
+.field-error {
+  color: var(--error-color);
+  font-size: 12px;
+  margin-top: 4px;
 }
 
 .form-control {
-  padding: 10px 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+
+  &:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
+  }
 }
 
 .submit-btn {
-  padding: 10px 12px;
+  padding: 14px;
+  margin-top: 8px;
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  border-radius: var(--border-radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover:not([disabled]) {
+    background-color: var(--primary-hover);
+  }
+
+  &:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+    color: var(--text-secondary);
+  }
 }
 
 .error {
-  color: #c62828;
+  color: var(--error-color);
+  font-size: 14px;
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--error-color);
 }
 
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 20px 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  span {
+    padding: 0 10px;
+  }
+}
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.social-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--white);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: var(--text-color);
+
+  &:hover:not([disabled]) {
+    background-color: #f5f5f5;
+  }
+
+  &:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+  }
+
+  &.google {
+    /* Add google icon styling here if needed */
+  }
+
+  &.github {
+    /* Add github icon styling here if needed */
+  }
+}
+
+.toggle-mode {
+  margin-top: 16px;
+  font-size: 14px;
+  color: var(--text-secondary);
+
+  a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+    margin-left: 5px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

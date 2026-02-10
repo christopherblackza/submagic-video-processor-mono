@@ -34,9 +34,39 @@ export class MediaUploadComponent implements OnInit {
     const target = event.target as HTMLInputElement;
     const files = target.files;
     if (files) {
-      this.selectedFiles = Array.from(files);
+      // Append new files instead of replacing
+      const newFiles = Array.from(files);
+      // Filter out duplicates based on name and size
+      const uniqueNewFiles = newFiles.filter(newFile => 
+        !this.selectedFiles.some(existing => 
+          existing.name === newFile.name && existing.size === newFile.size
+        )
+      );
+      
+      this.selectedFiles = [...this.selectedFiles, ...uniqueNewFiles];
       this.uploadForm.patchValue({ files: this.selectedFiles });
+      
+      // Reset input value to allow selecting the same file again if needed (though we filter duplicates)
+      target.value = '';
     }
+  }
+
+  removeFile(index: number) {
+    this.selectedFiles.splice(index, 1);
+    this.uploadForm.patchValue({ files: this.selectedFiles });
+    
+    // If no files left, mark as untouched or handle validation if needed
+    if (this.selectedFiles.length === 0) {
+      this.uploadForm.get('files')?.setErrors({ required: true });
+    }
+  }
+
+  formatFileSize(bytes: number): string {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
 
   async onSubmit() {

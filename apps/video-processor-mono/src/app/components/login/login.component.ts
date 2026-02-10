@@ -14,6 +14,8 @@ import { AuthService } from '../../services/auth.service';
 export class LoginComponent {
   form!: FormGroup;
   error = '';
+  loading = false;
+  isSignUp = false;
 
   constructor(
     private fb: FormBuilder,
@@ -22,23 +24,62 @@ export class LoginComponent {
     private route: ActivatedRoute
   ) {
     this.form = this.fb.group({
-      username: ['', Validators.required],
-      password: ['', Validators.required]
+      email: ['christopher.black.sa@gmail.com', [Validators.required, Validators.email]],
+      password: ['JesusFreak25*', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  onSubmit() {
+  toggleMode() {
+    this.isSignUp = !this.isSignUp;
+    this.error = '';
+    this.form.reset();
+  }
+
+  async onSubmit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
-    const { username, password } = this.form.value as { username: string; password: string };
-    const ok = this.auth.login(username, password);
-    if (!ok) {
-      this.error = 'Invalid username or password';
-      return;
+    this.loading = true;
+    this.error = '';
+    const { email, password } = this.form.value;
+    
+    try {
+      const { error } = this.isSignUp 
+        ? await this.auth.signUp(email, password)
+        : await this.auth.login(email, password);
+
+      if (error) {
+        this.error = error.message;
+        return;
+      }
+
+      if (this.isSignUp) {
+         this.error = 'Registration successful! Please check your email for confirmation.';
+         // Don't redirect immediately on signup if email confirmation is required, 
+         // but for now we'll assume it might be auto-confirmed or they can login.
+         // Actually, let's just stay here and ask them to check email.
+      } else {
+        const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/dashboard';
+        this.router.navigateByUrl(redirect);
+      }
+    } catch (e) {
+      this.error = 'An unexpected error occurred';
+    } finally {
+      this.loading = false;
     }
-    const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/setup';
-    this.router.navigateByUrl(redirect);
+  }
+
+  async loginWithProvider(provider: 'google' | 'github' | 'twitter') {
+    this.loading = true;
+    this.error = '';
+    try {
+      const { error } = await this.auth.signInWithProvider(provider);
+      if (error) this.error = error.message;
+    } catch (e) {
+      this.error = 'An unexpected error occurred';
+    } finally {
+      this.loading = false;
+    }
   }
 }

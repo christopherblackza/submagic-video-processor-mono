@@ -1,82 +1,71 @@
-# VideoProcessorMono
+# ClipEngine Video Processor (SaaS)
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+This project is a production-ready SaaS platform for automated video processing, leveraging Supabase for authentication and database management, and implementing secure API key management and usage tracking.
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+## Architecture Overview
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+### Authentication & Security
+- **Supabase Auth**: All authentication is handled via Supabase (JWT).
+- **Guards**: `SupabaseAuthGuard` secures all API endpoints.
+- **API Keys**: Third-party API keys (OpenAI, Submagic) are stored encrypted (AES-256) in the database.
+- **Data Isolation**: Row Level Security (RLS) ensures users can only access their own data. All service calls (`Batch`, `OpenAI`, `Submagic`) propagate `userId` to enforce isolation.
 
-## Finish your CI setup
+### Database Schema
+The PostgreSQL database (Supabase) includes the following key tables:
+- `users`: Extends Supabase auth.users.
+- `api_keys`: Stores encrypted API keys.
+- `jobs`: Tracks video processing jobs.
+- `job_assets`: Stores metadata for job-related assets.
+- `usage_logs`: Tracks API usage for billing and rate limiting.
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/3nYwKD8YC6)
+### Backend Services (NestJS)
+- **ApiKeysModule**: Manages secure storage and retrieval of API keys.
+- **BatchModule**: Handles batch video processing with user context.
+- **UsageModule**: Tracks job execution and API usage.
+- **SupabaseModule**: Provides Supabase client (standard and service-role).
 
+### Frontend (Angular)
+- **AuthInterceptor**: Automatically attaches Supabase JWT to all HTTP requests.
+- **AuthService**: Manages user session and login flow.
 
-## Run tasks
+## Setup Instructions
 
-To run the dev server for your app, use:
+### Prerequisites
+- Node.js (v18+)
+- Supabase Project
 
-```sh
+### Database Setup
+Run the SQL script `supabase_schema.sql` in your Supabase SQL Editor to create the necessary tables, policies, and triggers.
+
+### Environment Variables
+Configure your `.env` file (or environment variables in production):
+```env
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+ENCRYPTION_KEY=your_32_byte_encryption_key
+```
+
+### Running the Project
+```bash
+# Install dependencies
+npm install
+
+# Run the API
+npx nx serve api
+
+# Run the Frontend
 npx nx serve video-processor-mono
 ```
 
-To create a production bundle:
-
-```sh
-npx nx build video-processor-mono
+### Testing
+```bash
+# Run API tests
+npx nx test api
 ```
 
-To see all available targets to run for a project, run:
-
-```sh
-npx nx show project video-processor-mono
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
-```
-
-To generate a new library, use:
-
-```sh
-npx nx g @nx/angular:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+## Security Measures
+1. **Encryption**: API keys are never stored in plain text. They are encrypted using AES-256-CBC before storage.
+2. **RLS**: Database policies prevent cross-user data access.
+3. **Validation**: All inputs are validated using DTOs.
+4. **Rate Limiting**: ThrottlerModule is configured for global rate limiting.

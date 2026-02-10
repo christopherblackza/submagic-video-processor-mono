@@ -1,1 +1,48 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global Styles for ClipRelay */
+:root {
+  /* Green Theme Palette */
+  --primary-color: #2E7D32;       /* Forest Green */
+  --primary-hover: #1B5E20;       /* Darker Green for hover */
+  --secondary-color: #E8F5E9;     /* Very Light Green for backgrounds */
+  --accent-color: #43A047;        /* Bright Green for accents */
+  
+  --text-color: #263238;          /* Dark Blue Grey for text */
+  --text-secondary: #546E7A;      /* Medium Blue Grey for secondary text */
+  --border-color: #CFD8DC;        /* Light Blue Grey for borders */
+  
+  --error-color: #C62828;         /* Red for errors */
+  --success-color: #2E7D32;       /* Green for success messages */
+  
+  --white: #FFFFFF;
+  --background-light: #F1F8E9;    /* Light page background */
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Typography */
+  --font-family-base: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --border-radius: 8px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-family-base);
+  color: var(--text-color);
+  background-color: var(--background-light);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Button Reset/Base */
+button {
+  font-family: inherit;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  color: var(--primary-color);
+}

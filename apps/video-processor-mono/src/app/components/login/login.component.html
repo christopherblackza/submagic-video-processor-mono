@@ -1,16 +1,51 @@
 <div class="login-container">
-  <h1>Video Processor Dashboard</h1>
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
-    <div class="form-group">
-      <label for="username">Username</label>
-      <input id="username" type="text" formControlName="username" class="form-control" />
+  <h1>ClipRelay</h1>
+  <div class="auth-card">
+    <h2>{{ isSignUp ? 'Create Account' : 'Welcome Back' }}</h2>
+    
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input id="email" type="email" formControlName="email" class="form-control" placeholder="Enter your email" />
+        <div class="field-error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+          Please enter a valid email
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" class="form-control" placeholder="Enter your password" />
+        <div class="field-error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+          Password must be at least 6 characters
+        </div>
+      </div>
+
+      <div class="error" *ngIf="error">{{ error }}</div>
+      
+      <button type="submit" class="submit-btn" [disabled]="form.invalid || loading">
+        {{ loading ? (isSignUp ? 'Creating Account...' : 'Logging in...') : (isSignUp ? 'Sign Up' : 'Login') }}
+      </button>
+    </form>
+
+    <!-- <div class="divider">
+      <span>OR</span>
     </div>
-    <div class="form-group">
-      <label for="password">Password</label>
-      <input id="password" type="password" formControlName="password" class="form-control" />
+
+    <div class="social-login">
+      <button type="button" class="social-btn google" (click)="loginWithProvider('google')" [disabled]="loading">
+        Continue with Google
+      </button>
+      <button type="button" class="social-btn github" (click)="loginWithProvider('github')" [disabled]="loading">
+        Continue with GitHub
+      </button>
+    </div> -->
+
+    <div class="toggle-mode">
+      {{ isSignUp ? 'Already have an account?' : "Don't have an account?" }}
+      <a href="javascript:void(0)" (click)="toggleMode()">
+        {{ isSignUp ? 'Login' : 'Sign Up' }}
+      </a>
     </div>
-    <div class="error" *ngIf="error">{{ error }}</div>
-    <button type="submit" class="submit-btn" [disabled]="form.invalid">Login</button>
-  </form>
+  </div>
 </div>
 

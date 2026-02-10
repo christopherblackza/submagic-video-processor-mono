@@ -1,4 +1,9 @@
-export type ProjectStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'error';
+export type ProjectStatus =
+  | "pending"
+  | "processing"
+  | "completed"
+  | "failed"
+  | "error";
 
 export interface Project {
   id: string;
@@ -28,6 +33,30 @@ export interface BatchProject {
   status: ProjectStatus;
   createdAt: string;
   error?: string;
+  downloadUrl?: string;
+  previewUrl?: string;
+  directUrl?: string;
+  duration?: string;
+  uploadStatus?: "pending" | "completed" | "failed";
+  mediaMatchingStatus?:
+    | "pending"
+    | "in_progress"
+    | "completed"
+    | "completed_no_matches"
+    | "failed";
+}
+
+export interface BatchStatusResponse {
+  batch: Batch;
+  stats: {
+    totalProjects: number;
+    completedProjects: number;
+    failedProjects: number;
+    processingProjects: number;
+    progressPercentage: number;
+    allComplete: boolean;
+    hasIncompleteProjects: boolean;
+  };
 }
 
 export interface Batch {
@@ -43,7 +72,6 @@ export interface Batch {
   magicBrolls?: boolean;
   magicBrollsPercentage?: number;
   magicZooms?: boolean;
-  
 }
 
 export interface CompletionData {
@@ -55,6 +83,16 @@ export interface CompletionData {
   fileSize?: number;
   batchId?: string;
   stillProcessing?: boolean;
+}
+
+export interface UserMediaItem {
+  id: string;
+  user_id: string;
+  description: string;
+  tags: string[];
+  metadata: Record<string, any>;
+  storage_path: string | null;
+  created_at: string;
 }
 
 export interface VideoInput {
@@ -73,6 +111,8 @@ export interface BatchStartRequest {
   magicBrollsPercentage?: number;
   dictionary?: string;
   systemPrompt?: string;
+
+  hookTitle: boolean | object;
 }
 
 export interface BatchStartResponse {

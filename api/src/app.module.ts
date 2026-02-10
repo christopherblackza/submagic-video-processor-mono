@@ -9,16 +9,20 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AllExceptionsFilter } from './common/filters/http-exception.filter';
+import { UserThrottlerGuard } from './common/guards/user-throttler.guard';
 
 // Modules
 import { HealthModule } from './modules/health/health.module';
-import { StorageModule } from './modules/storage/storage.module';
 import { SubmagicModule } from './modules/submagic/submagic.module';
 import { BatchModule } from './modules/batch/batch.module';
 import { WebhookModule } from './modules/webhook/webhook.module';
 import { ProjectModule } from './modules/project/project.module';
 import { OpenAIModule } from './modules/openai/openai.module';
 import { RedisModule } from './modules/redis/redis.module';
+import { SupabaseModule } from './modules/supabase/supabase.module';
+import { ApiKeysModule } from './modules/api-keys/api-keys.module';
+import { UsageModule } from './modules/usage/usage.module';
+import { UserMediaModule } from './modules/user-media/user-media.module';
 
 const env = process.env.NODE_ENV || 'development';
 
@@ -45,13 +49,16 @@ const env = process.env.NODE_ENV || 'development';
     
     // Feature modules
     HealthModule,
-    StorageModule,
     SubmagicModule,
     BatchModule,
     WebhookModule,
     ProjectModule,
     OpenAIModule,
     RedisModule,
+    SupabaseModule,
+    ApiKeysModule,
+    UsageModule,
+    UserMediaModule
   ],
   controllers: [AppController],
   providers: [
@@ -62,7 +69,7 @@ const env = process.env.NODE_ENV || 'development';
     },
     {
       provide: APP_GUARD,
-      useClass: ThrottlerGuard,
+      useClass: UserThrottlerGuard,
     },
   ],
 })

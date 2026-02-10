@@ -69,6 +69,11 @@ export class StartProjectDto {
   })
   @IsOptional()
   dictionary?: string | string[];
+
+  @ApiPropertyOptional({ description: 'Hook title to video', default: true })
+  @IsOptional()
+  @IsBoolean()
+  hookTitle?: boolean | object;
 }
 
 
@@ -224,4 +229,9 @@ export class BatchStartDto {
   @IsOptional()
   @IsString()
   systemPrompt?: string;
+
+  @ApiPropertyOptional({ description: 'Hook title to video', default: true })
+  @IsOptional()
+  @IsBoolean()
+  hookTitle?: boolean | object;
 }
