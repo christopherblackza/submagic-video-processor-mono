@@ -35,6 +35,8 @@ export class BatchComponent implements OnInit, OnDestroy {
   analyzingProject: BatchProject | null = null;
   analysisResult: any = null;
   isAnalyzing = false;
+
+    isUpdatingMatches = false;
   
   // Batch Operations State
   analysisResults = new Map<string, any>();
@@ -153,7 +155,6 @@ export class BatchComponent implements OnInit, OnDestroy {
           event: 'UPDATE',
           schema: 'public',
           table: 'projects',
-          filter: `batch_id=eq.${this.batchId}`,
         },
         (payload) => {
           console.log('Received project update:', payload);
@@ -201,11 +202,13 @@ export class BatchComponent implements OnInit, OnDestroy {
     
     if (localProject) {
       const oldStatus = localProject.status;
-      const newStatus = project.status;
+      const newStatus = project.status || oldStatus;
       const metadata = project.metadata || {};
 
       // Update status and core fields
-      localProject.status = newStatus;
+      if (project.status) {
+        localProject.status = project.status;
+      }
       
       // Trigger media matching if project just completed
       if (oldStatus !== 'completed' && newStatus === 'completed') {
@@ -440,14 +443,14 @@ export class BatchComponent implements OnInit, OnDestroy {
       if (!this.analyzingProject || !this.analysisResult || !this.analysisResult.matches) return;
       
       const projectId = this.analyzingProject.id;
-      this.isAnalyzing = true; 
+      this.isUpdatingMatches = true; 
       this.cdr.markForCheck();
 
       this.projectService.applyMatches(projectId, this.analysisResult.matches).subscribe({
           next: (res) => {
               this.successMessage = `Matches applied successfully`;
               this.closeAnalyzeModal();
-              this.isAnalyzing = false;
+              this.isUpdatingMatches = false;
               this.updatingProjectIds.add(projectId);
               setTimeout(() => {
                  this.updatingProjectIds.delete(projectId);
@@ -457,7 +460,7 @@ export class BatchComponent implements OnInit, OnDestroy {
           },
           error: (err) => {
               console.error('Failed to apply matches', err);
-              this.isAnalyzing = false;
+              this.isUpdatingMatches = false;
               this.cdr.markForCheck();
               
               if (err.status === 402 || err.error?.errorCode === 'INSUFFICIENT_CREDITS') {

@@ -173,14 +173,14 @@
         background-color: var(--primary-color);
         color: white;
         
-        &:hover:not(:disabled) {
-          background-color: var(--primary-hover);
+     &:hover:not(:disabled) {
+          opacity: 0.9;
           transform: translateY(-1px);
         }
       }
       
       &.update-all-btn {
-        background-color: var(--text-main);
+        background-color: var(--text-secondary);
         color: white;
         
         &:hover:not(:disabled) {

@@ -6,7 +6,7 @@
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-form">
       <div class="form-group">
         <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" class="form-control" placeholder="Enter your email" />
+        <input id="email" type="email" formControlName="email" class="form-control" placeholder="Enter your email" (blur)="trimEmail()" />
         <div class="field-error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
           Please enter a valid email
         </div>

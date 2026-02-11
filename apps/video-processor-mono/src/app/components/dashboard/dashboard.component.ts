@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.initializeForm();
     this.checkApiKeys();
-    // this.loadDummyVideos();
+    this.loadDummyVideos();
   }
 
   private checkApiKeys() {

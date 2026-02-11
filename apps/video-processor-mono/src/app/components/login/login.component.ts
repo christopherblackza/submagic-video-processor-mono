@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { environment } from 'apps/video-processor-mono/src/environments/environment';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -44,7 +44,16 @@ export class LoginComponent {
     this.form.reset();
   }
 
+  trimEmail() {
+    const emailControl = this.form.get('email');
+    if (emailControl?.value && typeof emailControl.value === 'string') {
+      emailControl.setValue(emailControl.value.trim());
+    }
+  }
+
   async onSubmit() {
+    this.trimEmail(); // Ensure email is trimmed before validation check
+    
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -52,11 +61,12 @@ export class LoginComponent {
     this.loading = true;
     this.error = '';
     const { email, password } = this.form.value;
+    const cleanEmail = email.trim();
     
     try {
       const { error } = this.isSignUp 
-        ? await this.auth.signUp(email, password)
-        : await this.auth.login(email, password);
+        ? await this.auth.signUp(cleanEmail, password)
+        : await this.auth.login(cleanEmail, password);
 
       if (error) {
         this.error = error.message;

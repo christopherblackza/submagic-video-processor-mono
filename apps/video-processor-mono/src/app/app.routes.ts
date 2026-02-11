@@ -17,7 +17,7 @@ export const routes: Routes = [
     path: 'dashboard',
     canActivate: [authGuard],
     loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    title: 'Submagic Video Processor'
+    title: 'Clip Relay'
   },
   {
     path: 'system-prompt',

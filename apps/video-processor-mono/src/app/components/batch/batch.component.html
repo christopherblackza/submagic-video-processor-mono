@@ -162,12 +162,18 @@
         <p>Analyzing project for media matches...</p>
       </div>
 
+      <!-- isUpdatingMatches -->
+      <div *ngIf="isUpdatingMatches" class="loading-state">
+        <div class="spinner"></div>
+        <p>Updating matches for project...</p>
+      </div>
+
       <div *ngIf="!isAnalyzing && analysisResult" class="analysis-results">
         <div *ngIf="analysisResult.error" class="error-alert">
             {{ analysisResult.error }}
         </div>
 
-        <div *ngIf="!analysisResult.error">
+        <div *ngIf="!analysisResult.error && !isUpdatingMatches">
             <div class="result-summary">
                 <p>Found <strong>{{ analysisResult.matches?.length || 0 }}</strong> potential media matches.</p>
             </div>
