@@ -1,52 +1,156 @@
 .prompt-container {
-  max-width: 900px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem;
-}
-
-.header {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.prompt-form .form-group {
-  margin-bottom: 1rem;
-}
-
-.form-control {
-  width: 100%;
-  padding: 0.75rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 6px;
-  font-size: 1rem;
-}
-
-.actions {
+  padding: 0 var(--spacing-lg) var(--spacing-lg);
+  height: calc(100vh - 140px); /* Adjust based on header height + padding */
   display: flex;
-  gap: 1rem;
-  margin-top: 1rem;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  
+  .page-header {
+    margin-bottom: 0;
+    
+    h1 {
+      font-size: 1.875rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      margin: 0.25rem 0 0 0;
+      font-size: 0.9rem;
+    }
+  }
+
+  .success-message {
+    color: var(--success-color, #10b981);
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    animation: fadeIn 0.3s ease;
+    padding-bottom: 4px;
+
+    .icon {
+      font-size: 1.1em;
+    }
+  }
+}
+
+.prompt-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface-card);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.editor-container {
+  flex: 1;
+  position: relative;
+  background: #1e1e1e; /* VS Code-like background */
+  min-height: 0; /* Fix for flexbox child height calculation */
+  z-index: 1;
+}
+
+.code-editor {
+  width: 100%;
+  height: 100%;
+  padding: 1.5rem;
+  border: none;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #d4d4d4; /* VS Code default text */
+  background: transparent;
+  resize: none;
+  
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: #6a737d;
+  }
+
+  /* Custom Scrollbar for the editor */
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #1e1e1e;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 5px;
+    border: 2px solid #1e1e1e;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #4f4f4f;
+  }
+}
+
+.actions-bar {
+  padding: 1rem 1.5rem;
+  background: var(--surface-card);
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+
+  .status-text {
+    font-size: 0.85rem;
+    
+    .unsaved {
+      color: var(--warning-color, #f59e0b);
+      font-weight: 500;
+    }
+  }
 }
 
 .save-btn {
-  background: #667eea;
+  background: var(--primary-color);
   color: white;
   border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
+  padding: 0.6rem 1.5rem;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  
+  &:hover:not(:disabled) {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: var(--text-tertiary, #9ca3af);
+  }
 }
 
-.back-btn {
-  background: #6c757d;
-  color: white;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-.success {
-  margin-top: 1rem;
-  color: #28a745;
-}
-

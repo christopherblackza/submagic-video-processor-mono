@@ -1,28 +1,33 @@
 <div class="prompt-container">
-  <div class="header">
-    <h1>System Prompt</h1>
-    <p>Configure the AI system prompt used for media matching.</p>
+  <div class="header-section">
+    <div class="page-header">
+      <h1>System Prompt</h1>
+      <p class="subtitle">Configure the AI system prompt used for media matching.</p>
+    </div>
+    <div class="success-message" *ngIf="saved">
+      <span class="icon">✓</span> Changes saved successfully
+    </div>
   </div>
 
   <form [formGroup]="promptForm" (ngSubmit)="save()" class="prompt-form">
-    <div class="form-group">
-      <label for="systemPrompt">Prompt</label>
+    <div class="editor-container">
       <textarea
         id="systemPrompt"
         formControlName="systemPrompt"
-        rows="10"
-        class="form-control"
-        placeholder="Enter your system prompt"
+        class="code-editor"
+        placeholder="Enter your system prompt..."
+        spellcheck="false"
+        (input)="onChange()"
       ></textarea>
     </div>
 
-    <div class="actions">
-      <button type="submit" class="save-btn" [disabled]="saving">Save</button>
-      <button type="button" class="back-btn" (click)="goToUpload()">Back to Upload</button>
-    </div>
-
-    <div class="success" *ngIf="saved">
-      Prompt saved to local storage.
+    <div class="actions-bar">
+      <div class="status-text">
+        <span *ngIf="promptForm.dirty" class="unsaved">● Unsaved changes</span>
+      </div>
+      <button type="submit" class="save-btn" [disabled]="saving || !promptForm.dirty">
+        {{ saving ? 'Saving...' : 'Save Changes' }}
+      </button>
     </div>
   </form>
 </div>

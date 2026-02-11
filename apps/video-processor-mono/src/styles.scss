@@ -1,20 +1,32 @@
 /* Global Styles for ClipRelay */
 :root {
-  /* Green Theme Palette */
-  --primary-color: #2E7D32;       /* Forest Green */
-  --primary-hover: #1B5E20;       /* Darker Green for hover */
-  --secondary-color: #E8F5E9;     /* Very Light Green for backgrounds */
-  --accent-color: #43A047;        /* Bright Green for accents */
+  /* Modern Emerald Theme Palette */
+  --primary-color: #10B981;       /* Emerald 500 - Vibrant & Modern */
+  --primary-hover: #059669;       /* Emerald 600 */
+  --primary-light: #D1FAE5;       /* Emerald 100 */
   
-  --text-color: #263238;          /* Dark Blue Grey for text */
-  --text-secondary: #546E7A;      /* Medium Blue Grey for secondary text */
-  --border-color: #CFD8DC;        /* Light Blue Grey for borders */
+  --secondary-color: #F3F4F6;     /* Cool Gray 100 */
+  --accent-color: #34D399;        /* Emerald 400 */
   
-  --error-color: #C62828;         /* Red for errors */
-  --success-color: #2E7D32;       /* Green for success messages */
+  --text-main: #111827;           /* Gray 900 */
+  --text-secondary: #4B5563;      /* Gray 600 - Darker for better contrast */
+  --text-tertiary: #6B7280;       /* Gray 500 */
   
-  --white: #FFFFFF;
-  --background-light: #F1F8E9;    /* Light page background */
+  --border-color: #E5E7EB;        /* Gray 200 */
+  --border-hover: #D1D5DB;        /* Gray 300 */
+  
+  --error-color: #EF4444;         /* Red 500 */
+  --error-bg: #FEE2E2;            /* Red 100 */
+  --success-color: #10B981;       /* Emerald 500 */
+  --success-bg: #D1FAE5;          /* Emerald 100 */
+  
+  --surface-card: #FFFFFF;
+  --surface-ground: #F9FAFB;      /* Gray 50 - Much cleaner than green tint */
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   
   /* Spacing */
   --spacing-xs: 4px;
@@ -24,17 +36,38 @@
   --spacing-xl: 32px;
   
   /* Typography */
-  --font-family-base: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  --border-radius: 8px;
+  --font-family-base: 'Inter', system-ui, -apple-system, sans-serif;
+  --border-radius: 12px;          /* Softer corners */
+  --border-radius-sm: 6px;
+}
+
+/* Dark Mode Variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --text-main: #F9FAFB;         /* Gray 50 */
+    --text-secondary: #9CA3AF;    /* Gray 400 */
+    --text-tertiary: #6B7280;     /* Gray 500 */
+    
+    --border-color: #374151;      /* Gray 700 */
+    --border-hover: #4B5563;      /* Gray 600 */
+    
+    --surface-card: #1F2937;      /* Gray 800 */
+    --surface-ground: #111827;    /* Gray 900 */
+    
+    --secondary-color: #374151;
+    
+    --primary-light: rgba(16, 185, 129, 0.1);
+  }
 }
 
 body {
   margin: 0;
   padding: 0;
   font-family: var(--font-family-base);
-  color: var(--text-color);
-  background-color: var(--background-light);
+  color: var(--text-main);
+  background-color: var(--surface-ground);
   -webkit-font-smoothing: antialiased;
+  line-height: 1.5;
 }
 
 /* Button Reset/Base */
@@ -44,5 +77,44 @@ button {
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
-  color: var(--primary-color);
+  color: var(--text-main);
+  font-weight: 600;
+  letter-spacing: -0.025em; /* Modern tight tracking */
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-tertiary);
+}
+
+/* Global Page Header */
+.page-header {
+  margin-bottom: var(--spacing-xl);
+  
+  h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    margin: 0.25rem 0 0 0;
+    font-size: 0.9rem;
+  }
 }

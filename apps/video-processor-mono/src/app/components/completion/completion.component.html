@@ -1,7 +1,7 @@
 <div class="completion-container">
-  <div class="header">
+  <div class="page-header">
     <h1>Project Results</h1>
-    <p *ngIf="completionData">{{ completionData.project.title }}</p>
+    <p class="subtitle" *ngIf="completionData?.project?.title">{{ completionData?.project?.title }}</p>
   </div>
 
   <!-- Loading State -->

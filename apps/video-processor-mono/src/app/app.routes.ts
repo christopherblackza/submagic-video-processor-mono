@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
-import { apiKeyGuard } from './guards/api-key.guard';
 
 export const routes: Routes = [
   {
@@ -33,9 +32,15 @@ export const routes: Routes = [
     title: 'Upload Media'
   },
   {
-    path: 'batch-success/:batchId',
+    path: 'media-library',
+    canActivate: [authGuard],
+    loadComponent: () => import('./components/media-library/media-library.component').then(m => m.MediaLibraryComponent),
+    title: 'Media Library'
+  },
+  {
+    path: 'batch/:batchId',
      canActivate: [authGuard],
-    loadComponent: () => import('./components/batch-success/batch-success.component').then(m => m.BatchSuccessComponent),
+    loadComponent: () => import('./components/batch/batch.component').then(m => m.BatchComponent),
     title: 'Batch Processing Status'
   },
   {

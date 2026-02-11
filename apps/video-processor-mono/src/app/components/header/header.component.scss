@@ -1,0 +1,115 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+  padding: 25px 50px var(--spacing-sm);
+
+  .header-content {
+    .title-group {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      
+      h1 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        color: var(--text-main);
+        margin: 0;
+      }
+
+      .version {
+        font-size: 0.85rem;
+        color: var(--text-tertiary);
+      }
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      margin: 0.25rem 0 0 0;
+      font-size: 0.9rem;
+    }
+
+    .user-email {
+      color: var(--text-tertiary);
+      margin: 0.25rem 0 0 0;
+      font-size: 0.8rem;
+    }
+  }
+
+  .header-buttons {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+
+    /* Header Buttons Styles */
+    .add-video-btn {
+      background: var(--surface-card);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.4rem 1rem;
+      transition: all 0.2s;
+      margin: 0;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+
+      &:hover {
+        background: var(--surface-ground);
+        color: var(--text-main);
+        border-color: var(--border-hover);
+      }
+
+      &.active {
+        background: var(--surface-ground);
+        color: var(--text-main);
+        border-color: var(--primary-color, #007bff);
+        font-weight: 700;
+      }
+    }
+
+    .logout-btn {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      background: transparent;
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: var(--border-radius-sm);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+
+      .icon {
+        font-size: 0.8rem;
+      }
+
+      &:hover {
+        color: var(--text-main);
+        border-color: var(--border-hover);
+        background: var(--surface-card);
+      }
+    }
+  }
+}
+
+// Media query for mobile responsiveness
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    
+    .header-buttons {
+      width: 100%;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+    }
+  }
+}

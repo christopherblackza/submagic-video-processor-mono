@@ -36,7 +36,7 @@ export interface BatchProject {
   downloadUrl?: string;
   previewUrl?: string;
   directUrl?: string;
-  duration?: string;
+  duration?: number;
   uploadStatus?: "pending" | "completed" | "failed";
   mediaMatchingStatus?:
     | "pending"

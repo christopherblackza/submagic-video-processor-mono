@@ -1,4 +1,4 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, Request, BadRequestException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { OpenAIService } from './openai.service';
 import { 
@@ -38,6 +38,34 @@ export class OpenAIController {
     const userId = req.user.id;
     const token = req.token;
     return this.openaiService.analyzeProjectForMediaMatching(request, userId, token);
+  }
+
+  @Post('apply-matches')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ 
+    summary: 'Apply pre-calculated media matches to project',
+    description: 'Updates the project with provided media matches. Requires matches to be present in the request.'
+  })
+  @ApiResponse({ 
+    status: 200, 
+    description: 'Matches applied successfully' 
+  })
+  @ApiResponse({ 
+    status: 400, 
+    description: 'Matches are required' 
+  })
+  async applyMatches(
+    @Request() req,
+    @Body() request: UpdateProjectRequestDto
+  ): Promise<any> {
+    const userId = req.user.id;
+    const token = req.token;
+    
+    if (!request.matches || request.matches.length === 0) {
+      throw new BadRequestException('Matches are required for apply-matches endpoint');
+    }
+
+    return this.openaiService.updateProject(request, userId, token);
   }
 
   @Post('analyze-and-update')

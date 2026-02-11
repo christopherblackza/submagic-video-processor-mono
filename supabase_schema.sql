@@ -17,6 +17,30 @@ alter table public.users enable row level security;
 create policy "Users can view own profile" on public.users for select using (auth.uid() = id);
 create policy "Users can update own profile" on public.users for update using (auth.uid() = id);
 
+-- 10. Batches Table (New)
+CREATE TABLE IF NOT EXISTS public.batches (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE NOT NULL,
+  status TEXT DEFAULT 'pending', -- pending, processing, completed, failed
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
+  metadata JSONB DEFAULT '{}'::jsonb
+);
+
+-- RLS for Batches
+ALTER TABLE public.batches ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can view their own batches" ON public.batches
+  FOR SELECT USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can insert their own batches" ON public.batches
+  FOR INSERT WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Users can update their own batches" ON public.batches
+  FOR UPDATE USING (auth.uid() = user_id);
+
+CREATE POLICY "Users can delete their own batches" ON public.batches
+  FOR DELETE USING (auth.uid() = user_id);
 
 -- 2. Projects Table
 CREATE TABLE IF NOT EXISTS public.projects (
@@ -26,8 +50,12 @@ CREATE TABLE IF NOT EXISTS public.projects (
   status TEXT DEFAULT 'draft', -- draft, processing, completed, failed
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
-  metadata JSONB DEFAULT '{}'::jsonb
+  metadata JSONB DEFAULT '{}'::jsonb,
+  batch_id UUID REFERENCES public.batches(id) ON DELETE SET NULL
 );
+
+-- Index on batch_id
+CREATE INDEX IF NOT EXISTS idx_projects_batch_id ON public.projects(batch_id);
 
 -- RLS for Projects
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;

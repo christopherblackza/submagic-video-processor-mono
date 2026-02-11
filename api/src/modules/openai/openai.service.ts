@@ -7,6 +7,7 @@ import {
   OnModuleInit,
 } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { InsufficientCreditsException } from "../../common/exceptions/submagic-api.exceptions";
 import OpenAI from "openai";
 import { SubmagicService } from "../submagic/submagic.service";
 import { SupabaseService } from "../supabase/supabase.service";
@@ -129,6 +130,7 @@ export class OpenAIService implements OnModuleInit {
 
       // Media items are already sorted by usage count (unused first) from RedisService
       const mediaItems = await this.redisService.getMediaItems(userId);
+     
       console.log(
         "Using ",
         mediaItems.length,
@@ -188,6 +190,7 @@ export class OpenAIService implements OnModuleInit {
         processedAt: new Date().toISOString(),
       };
     } catch (error) {
+      console.log("ERROR: ", error);
       if (jobId) {
         await this.usageService.updateJobStatus(
           jobId,
@@ -195,6 +198,10 @@ export class OpenAIService implements OnModuleInit {
           token,
           error.message,
         );
+      }
+      if (error instanceof InsufficientCreditsException) {
+        console.error('INSufficientCreditsException:', error);
+        throw error;
       }
       this.logger.error(
         `Error analyzing project for media matching: ${error.message}`,
@@ -212,6 +219,27 @@ export class OpenAIService implements OnModuleInit {
   ): Promise<any> {
     let jobId: string | undefined;
     try {
+      // Set status to in_progress immediately
+      const client = this.supabaseService.getServiceRoleClient();
+      const { data: currentProject } = await client
+        .from("projects")
+        .select("metadata")
+        .eq("id", request.projectId)
+        .single();
+
+      if (currentProject) {
+        const currentMetadata = currentProject.metadata || {};
+        await client
+          .from("projects")
+          .update({
+            metadata: {
+              ...currentMetadata,
+              mediaMatchingStatus: "in_progress",
+            },
+          })
+          .eq("id", request.projectId);
+      }
+
       // If matches are not provided, run analysis first
       if (!request.matches || request.matches.length === 0) {
         this.logger.log(
@@ -268,7 +296,6 @@ export class OpenAIService implements OnModuleInit {
       }
 
       // Update metadata in Supabase to mark as completed
-      const client = this.supabaseService.getServiceRoleClient();
       const { data: project } = await client
         .from("projects")
         .select("metadata")
@@ -301,6 +328,9 @@ export class OpenAIService implements OnModuleInit {
           token,
           error.message,
         );
+      }
+      if (error instanceof InsufficientCreditsException) {
+        throw error;
       }
       this.logger.error(
         `Error updating project: ${error.message}`,
@@ -345,6 +375,9 @@ export class OpenAIService implements OnModuleInit {
       //   `Error updating project with matches: ${error.message}`,
       //   error.stack,
       // );
+      if (error instanceof InsufficientCreditsException) {
+        throw error;
+      }
       throw new InternalServerErrorException(
         "Failed to update project with media matches",
       );
@@ -547,9 +580,13 @@ Rules:
         // sort by time for downstream editors
         .sort((a, b) => a.startTime - b.startTime);
 
-      // final safety: clip any negative or NaN
+      // Create a map for quick library lookup
+      const libraryMap = new Map(library.map((item) => [item.userMediaId, item]));
+
+      // final safety: clip any negative or NaN, and enrich with description
       matches = matches.map((m) => ({
         ...m,
+        description: libraryMap.get(m.userMediaId)?.description || "",
         startTime: Math.max(
           0,
           Number.isFinite(m.startTime) ? m.startTime : MIN_START,

@@ -1,3 +1,5 @@
+<app-header title="ClipRelay" [version]="version" [userEmail]="(currentUser$ | async)?.email" *ngIf="currentUser$ | async"></app-header>
+
 <main class="app-main">
   <router-outlet></router-outlet>
 </main>

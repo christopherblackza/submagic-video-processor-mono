@@ -73,9 +73,6 @@ export class ProjectService {
     return this.http.post<SingleProjectResponse>(`${this.apiUrl}/submagic/start`, formData);
   }
 
-  /**
-   * Start batch processing of multiple videos
-   */
   startBatchProcessing(request: BatchStartRequest): Observable<BatchStartResponse> {
     // Send JSON payload instead of FormData for URL-based videos
     const jsonPayload = {
@@ -97,6 +94,12 @@ export class ProjectService {
     const headers = this.buildHeaders(true);
 
     return this.http.post<BatchStartResponse>(`${this.apiUrl}/batch/start`, jsonPayload, { headers });
+  }
+
+  analyzeMediaMatching(projectId: string): Observable<any> {
+    const headers = this.buildHeaders(true);
+    // We don't need to send mediaItems as the backend fetches them from Supabase
+    return this.http.post<any>(`${this.apiUrl}/openai/analyze-media-matching`, { projectId }, { headers });
   }
 
   /**
@@ -124,6 +127,11 @@ export class ProjectService {
   analyzeAndUpdateProject(projectId: string): Observable<any> {
     const headers = this.buildHeaders(true);
     return this.http.post<any>(`${this.apiUrl}/openai/analyze-and-update`, { projectId }, { headers });
+  }
+
+  applyMatches(projectId: string, matches: any[]): Observable<any> {
+    const headers = this.buildHeaders(true);
+    return this.http.post<any>(`${this.apiUrl}/openai/apply-matches`, { projectId, matches }, { headers });
   }
 
   /**

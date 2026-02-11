@@ -6,7 +6,6 @@ import { ProjectService } from "../../services/project.service";
 import { ApiKeyService } from "../../services/api-key.service";
 import { AuthService } from "../../services/auth.service";
 import { ApiKey } from "../../models/api-key.model";
-import { UserMediaItem } from "../../models/project.model";
 
 @Component({
   selector: "app-account",
@@ -26,16 +25,9 @@ export class AccountComponent implements OnInit {
   submagicKey?: ApiKey;
   userEmail: string | null = null;
 
-  userMediaItems: UserMediaItem[] = [];
-  loadingMedia = false;
-
-  uploading = false;
   error = "";
   successMessage = "";
   
-  selectedFiles: File[] = [];
-  dragActive = false;
-
   constructor(
     private fb: FormBuilder,
     private projectService: ProjectService,
@@ -54,26 +46,11 @@ export class AccountComponent implements OnInit {
   ngOnInit() {
     this.loadApiKeys();
     this.loadUserEmail();
-    this.loadUserMedia();
   }
 
   loadUserEmail() {
     this.authService.currentUser$.subscribe(user => {
       this.userEmail = user?.email || null;
-    });
-  }
-
-  loadUserMedia() {
-    this.loadingMedia = true;
-    this.projectService.getUserMediaItems().subscribe({
-      next: (items) => {
-        this.userMediaItems = items;
-        this.loadingMedia = false;
-      },
-      error: (err) => {
-        console.error("Failed to load user media", err);
-        this.loadingMedia = false;
-      }
     });
   }
 
@@ -170,83 +147,15 @@ export class AccountComponent implements OnInit {
     setTimeout(() => this.error = "", 5000);
   }
 
-  // File Upload Logic
-  onFileSelected(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const files = target.files;
-    if (files) {
-      this.selectedFiles = Array.from(files);
-    }
-  }
-
-  async uploadMedia(event?: Event) {
-    if (event) event.preventDefault();
-    if (this.selectedFiles.length === 0) {
-      this.error = "Please select at least one file.";
-      return;
-    }
-    this.uploading = true;
-    this.error = "";
-    this.successMessage = "";
-    
-    try {
-      await this.projectService.uploadMediaFiles(this.selectedFiles).toPromise();
-      this.successMessage = "Files uploaded successfully";
-      this.selectedFiles = [];
-      const input = document.getElementById("file-input") as HTMLInputElement | null;
-      if (input) input.value = "";
-      this.loadUserMedia();
-    } catch (e: any) {
-      this.error = e?.error?.message || e?.message || "Failed to upload files.";
-    } finally {
-      this.uploading = false;
-    }
-  }
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    this.dragActive = true;
-  }
-
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    this.dragActive = false;
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    this.dragActive = false;
-    const files = event.dataTransfer?.files;
-    if (files && files.length > 0) {
-      this.selectedFiles = [...this.selectedFiles, ...Array.from(files)];
-    }
-  }
-
-  openFileDialog() {
-    const input = document.getElementById("file-input") as HTMLInputElement | null;
-    if (input) input.click();
-  }
-
-  removeFile(index: number) {
-    this.selectedFiles.splice(index, 1);
-  }
-
-  clearFiles() {
-    this.selectedFiles = [];
-    const input = document.getElementById("file-input") as HTMLInputElement | null;
-    if (input) input.value = "";
-  }
-
   proceedToNext() {
     if (!this.openaiKey) {
       this.error = "OpenAI API Key is required to proceed.";
       return;
     }
-    // Submagic key might be optional or required, assuming optional for now or add check if needed
-    // if (!this.submagicKey) { ... }
-    
     this.router.navigate(["/upload"]);
   }
-
-
+  
+  goToMediaLibrary() {
+    this.router.navigate(['/media-library']);
+  }
 }

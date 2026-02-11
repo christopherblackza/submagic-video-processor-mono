@@ -8,7 +8,7 @@ export class MediaItemDto {
   userMediaId: string;
 
   @ApiProperty({ description: 'Description of the media content' })
-  @IsString()
+  @IsOptional()
   description: string;
 
   @ApiProperty({ description: 'Tags for the media item' })
@@ -31,7 +31,8 @@ export class MediaMatchingRequestDto {
 
   @ApiProperty({ 
     description: 'Array of available media items',
-    type: [MediaItemDto]
+    type: [MediaItemDto],
+    required: false
   })
   @IsOptional()
   @IsArray()
@@ -116,11 +117,8 @@ export class UpdateProjectRequestDto {
   @IsString()
   projectId: string;
 
-  @ApiProperty({ 
-    description: 'Array of media matches to apply',
-    type: [MediaMatchDto],
-    required: false
-  })
+
+
   @IsOptional()
   @IsArray()
   @ValidateNested({ each: true })

@@ -1,0 +1,219 @@
+<div class="batch-container" role="main" aria-label="Batch Processing Status">
+  <div class="page-header">
+    <div class="header-content">
+      <h1>Batch Processing Status</h1>
+      <button class="home-btn" (click)="goHome()" aria-label="Process more videos">
+        <span aria-hidden="true">🏠</span> Process More
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state" role="status" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+    <p>Loading batch information...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-state" role="alert">
+    <div class="error-icon" aria-hidden="true">⚠️</div>
+    <h2>Error</h2>
+    <p>{{ error }}</p>
+    <button class="retry-btn" (click)="refreshBatch()" aria-label="Retry loading batch">Try Again</button>
+    <button class="home-btn" (click)="goHome()" aria-label="Return to upload page">Go Home</button>
+  </div>
+
+  <!-- Batch Content -->
+  <div *ngIf="batch && !loading" class="batch-content">
+    
+    <!-- Batch Details Card -->
+    <div class="settings-card mb-4">
+      <div class="card-header flex-between">
+        <h2>Batch Details</h2>
+        <span class="batch-id" *ngIf="batch">ID: {{ batchId }}</span>
+      </div>
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <label>Created</label>
+            <div class="value">{{ batch.createdAt | date:'medium' }}</div>
+          </div>
+          <div class="info-item">
+            <label>Language</label>
+            <div class="value">{{ batch.language }}</div>
+          </div>
+          <div class="info-item">
+            <label>Template</label>
+            <div class="value">{{ batch.templateName }}</div>
+          </div>
+          <div class="info-item" *ngIf="batch.magicZooms">
+            <label>Magic Zooms</label>
+            <div class="value">Enabled</div>
+          </div>
+          <div class="info-item" *ngIf="batch.magicBrolls">
+            <label>Magic B-rolls</label>
+            <div class="value">{{ batch.magicBrollsPercentage }}%</div>
+          </div>
+        </div>
+
+        <!-- Progress Section inside Details Card -->
+        <div class="progress-section mt-4" aria-label="Overall Progress">
+          <div class="progress-header">
+            <h3>Overall Progress</h3>
+            <span class="progress-text">
+              {{ getCompletedCount() }} of {{ getTotalCount() }} videos completed ({{ getProgressPercentage() }}%)
+            </span>
+          </div>
+          <div class="progress-bar" role="progressbar" [attr.aria-valuenow]="getProgressPercentage()" aria-valuemin="0" aria-valuemax="100">
+            <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Batch Operations Card -->
+    <div class="settings-card mb-4">
+      <div class="card-header flex-between">
+        <h2>Batch Operations</h2>
+      </div>
+      <div class="card-body">
+        <div class="batch-actions-container">
+           <p class="description">Perform bulk operations on all completed videos in this batch.</p>
+           <div class="batch-actions">
+            <button class="action-btn analyze-all-btn" (click)="analyzeAll()" [disabled]="isBatchAnalyzing || isBatchUpdating">
+              <span *ngIf="isBatchAnalyzing" class="spinner-small"></span>
+              <span *ngIf="!isBatchAnalyzing">📊</span>
+              Analyze All
+            </button>
+            <button class="action-btn update-all-btn" (click)="updateAll()" [disabled]="isBatchAnalyzing || isBatchUpdating || analysisResults.size === 0">
+              <span *ngIf="isBatchUpdating" class="spinner-small"></span>
+              <span *ngIf="!isBatchUpdating">⚡</span>
+              Update All
+            </button>
+           </div>
+        </div>
+        
+        <div *ngIf="successMessage" class="success-alert mt-3">
+            {{ successMessage }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Projects List -->
+    <div class="projects-list" role="list" aria-label="Videos in batch">
+      <div *ngFor="let project of batch.projects; trackBy: trackByProjectId" class="project-card" role="listitem">
+        <div class="project-info">
+          <div class="status-indicator" [class]="project.status" aria-hidden="true"></div>
+          <div class="project-details">
+            <h3 class="project-title">Video #{{ getProjectIndex(project) }}</h3>
+            <span class="status-badge" [class]="project.status">{{ project.status | titlecase }}</span>
+            <div *ngIf="project.status === 'completed'" class="video-meta">
+               <span *ngIf="project.duration" class="duration">⏱️ {{ formatDuration(project.duration) }}</span>
+            </div>
+            
+             <!-- Batch Analysis Status -->
+             <div *ngIf="analysisResults.has(project.id)" class="analysis-badge mt-2">
+                <span class="badge success">Matches Found: {{ analysisResults.get(project.id).matches?.length || 0 }}</span>
+             </div>
+          </div>
+        </div>
+
+        <div class="project-actions">
+           <!-- Analyze Button -->
+           <button *ngIf="project.status === 'completed'" 
+                   class="action-btn secondary-btn" 
+                   (click)="analyzeProject(project)"
+                   [disabled]="isAnalyzing && analyzingProject?.id === project.id">
+               <span *ngIf="isAnalyzing && analyzingProject?.id === project.id" class="spinner-small"></span>
+               <span *ngIf="!(isAnalyzing && analyzingProject?.id === project.id)">🔍</span>
+               Analyze
+           </button>
+
+          <a *ngIf="project.downloadUrl" 
+             [href]="project.downloadUrl" 
+             class="action-btn download-btn" 
+             download
+             aria-label="Download video">
+            ⬇️ Download
+          </a>
+          <a *ngIf="project.previewUrl" 
+             [href]="project.previewUrl" 
+             target="_blank" 
+             class="action-btn preview-btn"
+             aria-label="Preview video">
+            ▶️ Preview
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Analyze Modal -->
+<div *ngIf="showAnalyzeModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Media Matching Analysis</h2>
+      <button class="close-btn" (click)="closeAnalyzeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="isAnalyzing" class="loading-state">
+        <div class="spinner"></div>
+        <p>Analyzing project for media matches...</p>
+      </div>
+
+      <div *ngIf="!isAnalyzing && analysisResult" class="analysis-results">
+        <div *ngIf="analysisResult.error" class="error-alert">
+            {{ analysisResult.error }}
+        </div>
+
+        <div *ngIf="!analysisResult.error">
+            <div class="result-summary">
+                <p>Found <strong>{{ analysisResult.matches?.length || 0 }}</strong> potential media matches.</p>
+            </div>
+            
+            <div class="matches-list" *ngIf="analysisResult.matches?.length > 0">
+                <div *ngFor="let match of analysisResult.matches" class="match-item">
+                    <div class="match-header">
+                        <span class="timestamp">{{ formatTime(match.startTime) }} - {{ formatTime(match.endTime) }}</span>
+                        <span class="confidence" [class.high]="match.confidence > 0.8">
+                            {{ (match.confidence * 100) | number:'1.0-0' }}% Match
+                        </span>
+                    </div>
+                    <div class="match-details">
+                         <div class="info-row">
+                             <span class="label">Matched Text:</span>
+                             <p class="text">"{{ match.matchedText }}"</p>
+                         </div>
+                         <div class="info-row">
+                             <span class="label">Reason:</span>
+                             <p class="reason">{{ match.reason }}</p>
+                         </div>
+                         <div class="info-row">
+                            <span class="label">Media Description:</span>
+                            <p class="description-text">{{ match.description || match.mediaDescription || match.filename || 'No description available' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="action-btn primary-btn" (click)="applyMatchesToProject()" [disabled]="isAnalyzing">
+                    Apply Matches
+                </button>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast Notification -->
+<div *ngIf="toastMessage" class="toast-notification" [ngClass]="toastType" role="alert">
+  <div class="toast-content">
+    <span class="toast-icon" *ngIf="toastType === 'success'">✅</span>
+    <span class="toast-icon" *ngIf="toastType === 'error'">⚠️</span>
+    <span class="toast-message">{{ toastMessage }}</span>
+  </div>
+  <button class="toast-close" (click)="toastMessage = null" aria-label="Close notification">×</button>
+</div>

@@ -52,8 +52,10 @@ export class ProjectService {
             batchId: project.batchId,
             error: project.error,
             uploadStatus: project.uploadStatus,
+            mediaMatchingStatus: project.mediaMatchingStatus,
             completedAt: project.completedAt,
-          }
+          },
+          batch_id: project.batchId // Set the foreign key column
         };
 
         const { error: projectError } = await client
@@ -181,59 +183,129 @@ export class ProjectService {
   }
 
   // Batch methods
-  async saveBatch(batch: Batch): Promise<void> {
-    // We save individual projects. 
-    // Ideally we should have a 'batches' table too, but prompt didn't ask for it specifically 
-    // and 'projects' table has metadata. 
-    // We'll iterate and save projects.
-    for (const p of batch.projects) {
-        const project: Project = {
-            id: p.id,
-            userId: batch.userId,
-            title: p.title,
-            language: batch.language || 'en',
-            templateName: batch.templateName || 'Unknown',
-            status: p.status || 'pending',
-            createdAt: p.createdAt,
-            batchId: batch.id,
-            error: p.error,
-            completedAt: p.status === 'completed' ? new Date().toISOString() : undefined
-        };
-        await this.saveProject(project);
-    }
-    this.logger.debug(`Processed batch ${batch.id} save request`);
-  }
-
-  async getBatch(id: string): Promise<Batch | undefined> {
-    return this.withRetry(async () => {
+  async createBatch(batch: Batch): Promise<void> {
+    await this.withRetry(async () => {
       try {
         const client = this.supabaseService.getServiceRoleClient();
-        // Query projects by batchId in metadata
-        const { data: projects, error } = await client
-          .from('projects')
-          .select('*')
-          .contains('metadata', { batchId: id });
+        
+        const batchData = {
+          id: batch.id,
+          user_id: batch.userId,
+          status: batch.status || 'pending',
+          created_at: batch.createdAt,
+          updated_at: new Date().toISOString(),
+          metadata: {
+            language: batch.language,
+            templateName: batch.templateName,
+            magicZooms: batch.magicZooms,
+            magicBrolls: batch.magicBrolls,
+            magicBrollsPercentage: batch.magicBrollsPercentage,
+            totalCount: batch.totalCount,
+            completedCount: batch.completedCount,
+            failedCount: batch.failedCount
+          }
+        };
+
+        const { error } = await client
+          .from('batches')
+          .insert(batchData);
 
         if (error) throw error;
-        if (!projects || projects.length === 0) return undefined;
-
-        const mappedProjects = projects.map(p => this.mapDbProjectToProject(p));
-        console.log("MAPPED PROJECTS", mappedProjects);
-        return this.reconstructBatch(id, mappedProjects);
+        this.logger.debug(`Created batch ${batch.id}`);
       } catch (error) {
-        this.logger.error(`Failed to get batch ${id}: ${error.message}`, error.stack);
-        throw new InternalServerErrorException('Failed to get batch');
+        this.logger.error(`Failed to create batch ${batch.id}: ${error.message}`, error.stack);
+        throw new InternalServerErrorException('Failed to create batch');
       }
     });
   }
 
-  async updateBatch(id: string, updates: Partial<Batch>): Promise<Batch | undefined> {
-      // Re-fetch batch
-      return this.getBatch(id);
+  async updateBatchStatus(batchId: string, status: string, additionalMetadata?: any): Promise<void> {
+    await this.withRetry(async () => {
+      try {
+        const client = this.supabaseService.getServiceRoleClient();
+        
+        const updates: any = {
+          status,
+          updated_at: new Date().toISOString()
+        };
+
+        if (additionalMetadata) {
+            // We need to fetch current metadata to merge? Or just update specific fields?
+            // Supabase doesn't support deep merge in simple update easily without RPC or fetching first.
+            // For now, let's fetch and merge.
+            const { data: currentBatch } = await client
+                .from('batches')
+                .select('metadata')
+                .eq('id', batchId)
+                .single();
+            
+            if (currentBatch) {
+                updates.metadata = { ...currentBatch.metadata, ...additionalMetadata };
+            }
+        }
+
+        const { error } = await client
+          .from('batches')
+          .update(updates)
+          .eq('id', batchId);
+
+        if (error) throw error;
+        this.logger.debug(`Updated batch ${batchId} status to ${status}`);
+      } catch (error) {
+        this.logger.error(`Failed to update batch ${batchId} status: ${error.message}`, error.stack);
+        throw new InternalServerErrorException('Failed to update batch status');
+      }
+    });
   }
 
-  async getAllBatches(): Promise<Batch[]> {
-     return []; // Not implemented fully as it requires scanning all projects or a batches table
+  async getBatch(batchId: string): Promise<Batch | undefined> {
+      return this.withRetry(async () => {
+          try {
+              const client = this.supabaseService.getServiceRoleClient();
+              const { data, error } = await client
+                  .from('batches')
+                  .select('*, projects(*)') // Fetch associated projects too?
+                  .eq('id', batchId)
+                  .single();
+
+              if (error) {
+                  if (error.code === 'PGRST116') return undefined;
+                  throw error;
+              }
+
+              // Map DB batch to Batch interface
+              const batch: Batch = {
+                  id: data.id,
+                  userId: data.user_id,
+                  createdAt: data.created_at,
+                  status: data.status,
+                  totalCount: data.metadata?.totalCount || 0,
+                  completedCount: data.metadata?.completedCount || 0,
+                  failedCount: data.metadata?.failedCount || 0,
+                  language: data.metadata?.language,
+                  templateName: data.metadata?.templateName,
+                  magicZooms: data.metadata?.magicZooms,
+                  magicBrolls: data.metadata?.magicBrolls,
+                  magicBrollsPercentage: data.metadata?.magicBrollsPercentage,
+                  projects: data.projects ? data.projects.map(p => ({
+                      id: p.id,
+                      title: p.name, // 'name' in DB, 'title' in interface
+                      status: p.status,
+                      createdAt: p.created_at,
+                      error: p.metadata?.error,
+                      downloadUrl: p.metadata?.result?.downloadUrl || p.metadata?.result?.videoUrl || p.metadata?.result?.url,
+                      duration: p.metadata?.result?.duration,
+                      uploadStatus: p.metadata?.uploadStatus,
+                      mediaMatchingStatus: p.metadata?.mediaMatchingStatus
+                  })) : []
+              };
+
+              return batch;
+          } catch (error) {
+              this.logger.error(`Failed to get batch ${batchId}: ${error.message}`, error.stack);
+              throw new InternalServerErrorException('Failed to get batch');
+          }
+      });
   }
 
   // Completion methods
@@ -405,14 +477,11 @@ export class ProjectService {
       const batch = await this.getBatch(batchId);
       if (!batch) return [];
       
-      // Batch object has 'projects' property but it's BatchProject[]. 
-      // We want full Project objects.
-      // We can query them.
       const client = this.supabaseService.getServiceRoleClient();
       const { data, error } = await client
           .from('projects')
           .select('*')
-          .contains('metadata', { batchId: batchId });
+          .eq('batch_id', batchId); // Use foreign key
           
       if (error) return [];
       return data.map(p => this.mapDbProjectToProject(p));
@@ -420,8 +489,7 @@ export class ProjectService {
 
   // Private helpers
   private mapDbProjectToProject(dbProject: any): Project {
-      const metadata = dbProject.metadata.result.raw || {};
-      console.log("METADATA", metadata);
+      const metadata = dbProject.metadata || {};
       return {
           id: dbProject.id,
           userId: dbProject.user_id,
@@ -438,51 +506,12 @@ export class ProjectService {
           magicBrolls: metadata.magicBrolls,
           magicBrollsPercentage: metadata.magicBrollsPercentage,
           dictionary: metadata.dictionary,
-          batchId: metadata.batchId,
+          batchId: dbProject.batch_id || metadata.batchId, // Use column or metadata
           error: metadata.error,
           completedAt: metadata.completedAt,
-          previewUrl: metadata.previewUrl
+          previewUrl: metadata.previewUrl,
+          uploadStatus: metadata.uploadStatus,
+          mediaMatchingStatus: metadata.mediaMatchingStatus
       };
-  }
-  
-  private reconstructBatch(batchId: string, projects: Project[]): Batch {
-     if (!projects || projects.length === 0) return undefined as any;
-     
-     const firstProject = projects[0];
-     
-     const batchProjects: BatchProject[] = projects.map(p => ({
-         id: p.id,
-         title: p.title,
-         status: p.status,
-         error: p.error,
-         errorCode: p.error ? 'ERROR' : undefined,
-         createdAt: p.createdAt,
-         previewUrl: p.previewUrl
-     }));
-
-     const completedCount = projects.filter(p => p.status === 'completed').length;
-     const failedCount = projects.filter(p => p.status === 'failed').length;
-     const totalCount = projects.length;
-     
-     let status = 'processing';
-     if (completedCount + failedCount === totalCount) {
-         status = failedCount > 0 ? 'completed_with_errors' : 'completed';
-     }
-
-     return {
-         id: batchId,
-         userId: firstProject.userId,
-         createdAt: firstProject.createdAt,
-         projects: batchProjects,
-         totalCount: totalCount,
-         completedCount: completedCount,
-         failedCount: failedCount,
-         status: status,
-         language: firstProject.language,
-         templateName: firstProject.templateName,
-         magicZooms: firstProject.magicZooms,
-         magicBrolls: firstProject.magicBrolls,
-         magicBrollsPercentage: firstProject.magicBrollsPercentage
-     };
   }
 }

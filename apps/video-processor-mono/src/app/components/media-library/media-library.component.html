@@ -1,0 +1,127 @@
+<div class="media-library-container">
+  <!-- <div class="page-header">
+    <h1>Media Library</h1>
+    <p class="subtitle">Manage your uploaded videos and assets</p>
+  </div> -->
+
+  <div class="library-grid">
+    <!-- Media Upload Section -->
+    <div class="card media-section">
+      <div class="card-header flex-between">
+        <h2>Upload Media</h2>
+        <div class="header-actions" *ngIf="selectedFiles.length > 0">
+           <button class="btn-text" (click)="clearFiles()">Clear All</button>
+        </div>
+      </div>
+      
+      <div class="card-body p-0">
+        <div class="dropzone" [class.active]="dragActive" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" (drop)="onDrop($event)">
+          
+          <!-- Empty State / Drop Prompt -->
+          <div class="dz-content" *ngIf="selectedFiles.length === 0">
+            <div class="upload-icon">☁️</div>
+            <div class="dz-text">
+              Drag & drop files here, or <button class="btn-link" (click)="openFileDialog()">browse</button>
+            </div>
+            <div class="dz-hint">Supports MP4, MOV, AVI (Max 500MB)</div>
+          </div>
+
+          <!-- File List (Table View) -->
+          <div class="file-table-wrapper" *ngIf="selectedFiles.length > 0">
+            <div class="file-table">
+              <div class="table-header">
+                <div class="col-name">File Name</div>
+                <div class="col-size">Size</div>
+                <div class="col-action"></div>
+              </div>
+              <div class="file-row" *ngFor="let file of selectedFiles; let i = index">
+                <div class="col-name">
+                  <span class="file-icon">📄</span>
+                  {{ file.name }}
+                </div>
+                <div class="col-size">{{ (file.size / 1024 / 1024) | number:'1.1-2' }} MB</div>
+                <div class="col-action">
+                  <button type="button" class="icon-btn remove" (click)="removeFile(i)">✕</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="dz-mini-actions">
+              <button class="btn-link" (click)="openFileDialog()">+ Add more files</button>
+              <button class="btn-primary-action" (click)="uploadMedia()" [disabled]="uploading">
+                {{ uploading ? 'Uploading...' : 'Upload ' + selectedFiles.length + ' Files' }}
+              </button>
+            </div>
+          </div>
+          
+          <input type="file" id="file-input" class="hidden-input" multiple (change)="onFileSelected($event)" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Uploaded Media Items Section -->
+    <div class="card uploaded-media-section">
+      <div class="card-header">
+        <h2>Your Media Items ({{ userMediaItems.length }})</h2>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loadingMedia" class="loading-state">
+           <div class="spinner"></div> Loading media items...
+        </div>
+        
+        <div *ngIf="!loadingMedia && userMediaItems.length === 0" class="empty-state">
+          No media items uploaded yet.
+        </div>
+
+        <div class="media-list-container" *ngIf="!loadingMedia && userMediaItems.length > 0">
+           <table class="media-table">
+             <thead>
+               <tr>
+                 <th class="col-desc">Description</th>
+                 <th class="col-date">Date</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr *ngFor="let item of paginatedMediaItems">
+                 <td class="col-desc" [title]="item.description">
+                   <div class="desc-content">
+                     <span class="icon">🎥</span>
+                     <span class="text">{{ item.description }}</span>
+                   </div>
+                 </td>
+                
+                 <td class="col-date">{{ item.created_at | date:'mediumDate' }}</td>
+      
+               </tr>
+             </tbody>
+           </table>
+
+           <!-- Pagination Controls -->
+           <div class="pagination-controls">
+             <div class="items-per-page">
+               <span>Rows per page:</span>
+               <select (change)="onItemsPerPageChange($event)" [value]="itemsPerPage">
+                 <option *ngFor="let opt of itemsPerPageOptions" [value]="opt">{{ opt }}</option>
+               </select>
+             </div>
+             
+             <div class="page-info">
+               {{ (currentPage - 1) * itemsPerPage + 1 }} - {{ (currentPage * itemsPerPage) > userMediaItems.length ? userMediaItems.length : (currentPage * itemsPerPage) }} of {{ userMediaItems.length }}
+             </div>
+
+             <div class="page-nav">
+               <button class="icon-btn" (click)="prevPage()" [disabled]="currentPage === 1">‹</button>
+               <button class="icon-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">›</button>
+             </div>
+           </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Feedback -->
+  <div class="feedback-toast" *ngIf="error || successMessage">
+     <div class="toast error" *ngIf="error">{{ error }}</div>
+     <div class="toast success" *ngIf="successMessage">{{ successMessage }}</div>
+  </div>
+</div>

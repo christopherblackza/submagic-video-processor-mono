@@ -65,6 +65,7 @@ export class DashboardComponent implements OnInit {
   ngOnInit() {
     this.initializeForm();
     this.checkApiKeys();
+    // this.loadDummyVideos();
   }
 
   private checkApiKeys() {
@@ -77,13 +78,24 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  loadDummyVideos() {
+    const dummyVideos: VideoInput[] = [
+      { title: 'Electric Scales Short', videoUrl: 'https://drive.google.com/file/d/1W7uPIzPTTUtdCZCrLzPw8__ToeLmMdRm/view?usp=drive_link' },
+      { title: 'Eat Less Short', videoUrl: 'https://drive.google.com/file/d/1VpPQdOnaAPQWvjU0BsCzUjajVoLaG0MF/view?usp=drive_link' },
+      // { title: 'Video 3', videoUrl: 'https://example.com/video3.mp4' },
+    ];
+    this.videosArray.clear();
+    dummyVideos.forEach(video => this.videosArray.push(this.createVideoGroup(video)));
+  }
+
   private initializeForm() {
     this.uploadForm = this.fb.group({
       language: ['en', Validators.required],
-      templateName: ['Hormozi 2', Validators.required],
+      templateName: ['Nema', Validators.required],
       webhookUrl: [''],
       magicZooms: [false],
       magicBrolls: [false],
+      hookTitle: [false],
       magicBrollsPercentage: [60, [Validators.min(0), Validators.max(100)]],
       dictionary: [''],
       videos: this.fb.array([this.createVideoGroup()])
@@ -99,10 +111,10 @@ export class DashboardComponent implements OnInit {
     });
   }
 
-  private createVideoGroup(): FormGroup {
+  private createVideoGroup(video?: VideoInput): FormGroup {
     return this.fb.group({
-      title: ['', Validators.required],
-      videoUrl: ['', Validators.required],
+      title: [video?.title || '', Validators.required],
+      videoUrl: [video?.videoUrl || '', Validators.required],
       file: [null]
     });
   }
@@ -181,7 +193,7 @@ export class DashboardComponent implements OnInit {
         webhookUrl: 'https://muzhtlcrhsfbjxizaenf.supabase.co/functions/v1/submagic-webhook',
         magicZooms: formValue.magicZooms,
         magicBrolls: formValue.magicBrolls,
-        hookTitle: true,
+        hookTitle: formValue.hookTitle,
         magicBrollsPercentage: formValue.magicBrollsPercentage,
         dictionary: formValue.dictionary || undefined,
         systemPrompt: localStorage.getItem('submagic_system_prompt') || undefined,
@@ -191,8 +203,8 @@ export class DashboardComponent implements OnInit {
 
       const response = await this.projectService.startBatchProcessing(request).toPromise();
       console.log('RESPONSE IS: ', response);
-      if (response?.batchId && response?.projectIds?.length > 0) {
-        this.router.navigate(['/batch-success', response.batchId]);
+      if (response?.batchId) {
+        this.router.navigate(['/batch', response.batchId]);
       } else {
         this.errorMessage = 'Failed to start batch processing. Please try again.';
       }

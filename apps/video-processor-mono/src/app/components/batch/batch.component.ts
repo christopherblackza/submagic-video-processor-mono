@@ -6,16 +6,18 @@ import { AuthService } from '../../services/auth.service';
 import { AnalyticsService } from '../../services/analytics.service';
 import { Batch, BatchProject, BatchStatusResponse } from '../../models/project.model';
 import { RealtimeChannel, SupabaseClient } from '@supabase/supabase-js';
+import { forkJoin, of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-batch-success',
+  selector: 'app-batch',
   standalone: true,
   imports: [CommonModule, RouterModule],
-  templateUrl: './batch-success.component.html',
-  styleUrl: './batch-success.component.scss',
+  templateUrl: './batch.component.html',
+  styleUrl: './batch.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BatchSuccessComponent implements OnInit, OnDestroy {
+export class BatchComponent implements OnInit, OnDestroy {
   batchId: string = '';
   batch: Batch | null = null;
   loading = true;
@@ -28,6 +30,21 @@ export class BatchSuccessComponent implements OnInit, OnDestroy {
   private readonly MAX_RETRIES = 3;
   
   updatingProjectIds = new Set<string>();
+  
+  showAnalyzeModal = false;
+  analyzingProject: BatchProject | null = null;
+  analysisResult: any = null;
+  isAnalyzing = false;
+  
+  // Batch Operations State
+  analysisResults = new Map<string, any>();
+  isBatchAnalyzing = false;
+  isBatchUpdating = false;
+
+  // Toast Notification
+  toastMessage: string | null = null;
+  toastType: 'success' | 'error' = 'success';
+  private toastTimeout: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,6 +55,21 @@ export class BatchSuccessComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef
   ) {
     this.supabase = this.authService.client;
+  }
+
+  showToast(message: string, type: 'success' | 'error' = 'success') {
+    this.toastMessage = message;
+    this.toastType = type;
+    this.cdr.markForCheck();
+    
+    if (this.toastTimeout) {
+      clearTimeout(this.toastTimeout);
+    }
+    
+    this.toastTimeout = setTimeout(() => {
+      this.toastMessage = null;
+      this.cdr.markForCheck();
+    }, 5000);
   }
 
   ngOnInit() {
@@ -70,14 +102,31 @@ export class BatchSuccessComponent implements OnInit, OnDestroy {
       next: (response: BatchStatusResponse) => {
         console.log("RESPONSE:", response);
         this.batch = response.batch;
+        
+        // Show content as soon as we have batch data
         this.loading = false;
+        
+        // Continue polling if still processing
+        if (this.batch.status === 'pending' || this.batch.status === 'processing') {
+          setTimeout(() => this.loadBatchData(), 3000);
+        }
+
         this.cdr.markForCheck();
       },
       error: (error: any) => {
         console.error('Error loading batch data:', error);
-        this.error = 'Failed to load batch information';
-        this.loading = false;
-        this.analytics.logError('Batch Load Error', error);
+        
+        // Retry on error (e.g. 404 if created but not yet available, or network issue)
+        if (this.retryCount < this.MAX_RETRIES) {
+          this.retryCount++;
+          console.log(`Retrying batch load (${this.retryCount}/${this.MAX_RETRIES})...`);
+          setTimeout(() => this.loadBatchData(), 3000);
+        } else {
+          this.error = 'Failed to load batch information';
+          this.loading = false;
+          this.analytics.logError('Batch Load Error', error);
+        }
+        
         this.cdr.markForCheck();
       }
     });
@@ -95,6 +144,8 @@ export class BatchSuccessComponent implements OnInit, OnDestroy {
     const channelName = `batch_updates_${this.batchId}_${Date.now()}`;
     this.channel = this.supabase.channel(channelName);
 
+    console.log('BATCH ID SUB:', this.batchId);
+
     this.channel
       .on(
         'postgres_changes',
@@ -102,7 +153,7 @@ export class BatchSuccessComponent implements OnInit, OnDestroy {
           event: 'UPDATE',
           schema: 'public',
           table: 'projects',
-          filter: `user_id=eq.${user.id}`,
+          filter: `batch_id=eq.${this.batchId}`,
         },
         (payload) => {
           console.log('Received project update:', payload);
@@ -248,8 +299,181 @@ export class BatchSuccessComponent implements OnInit, OnDestroy {
     return this.batch?.projects?.length || 0;
   }
 
-  trackByProject(index: number, project: BatchProject): string {
+  trackByProjectId(index: number, project: BatchProject): string {
     return project.id;
+  }
+
+  formatDuration(seconds: number): string {
+    if (!seconds && seconds !== 0) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  }
+
+  formatTime(seconds: number): string {
+    return this.formatDuration(seconds);
+  }
+
+  getProjectIndex(project: BatchProject): number {
+    if (!this.batch || !this.batch.projects) return 0;
+    return this.batch.projects.findIndex(p => p.id === project.id) + 1;
+  }
+
+  analyzeAll() {
+    if (!this.batch?.projects) return;
+    const completedProjects = this.batch.projects.filter(p => p.status === 'completed');
+    if (completedProjects.length === 0) return;
+
+    this.isBatchAnalyzing = true;
+    this.cdr.markForCheck();
+
+    const observables = completedProjects.map(p => 
+      this.projectService.analyzeMediaMatching(p.id).pipe(
+        catchError(err => {
+          console.error(`Analysis failed for ${p.id}`, err);
+          return of({ error: true, projectId: p.id, message: err.message });
+        })
+      )
+    );
+    
+    forkJoin(observables).subscribe({
+      next: (results) => {
+        results.forEach((res: any) => {
+          if (res && !res.error && res.projectId) {
+            this.analysisResults.set(res.projectId, res);
+          }
+        });
+        this.isBatchAnalyzing = false;
+        this.cdr.markForCheck();
+      },
+      error: (err) => {
+        console.error('Batch analysis failed', err);
+        this.isBatchAnalyzing = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  updateAll() {
+    const projectsToUpdate: {projectId: string, matches: any[]}[] = [];
+    console.log("analysisResults", this.analysisResults);
+    this.analysisResults.forEach((result, projectId) => {
+        const project = this.batch?.projects?.find(p => p.id === projectId);
+        if (project && project.status === 'completed' && result.matches) {
+            projectsToUpdate.push({ projectId, matches: result.matches });
+        }
+    });
+
+    if (projectsToUpdate.length === 0) return;
+
+    this.isBatchUpdating = true;
+    this.cdr.markForCheck();
+
+    const observables = projectsToUpdate.map(item => 
+        this.projectService.applyMatches(item.projectId, item.matches).pipe(
+            catchError(err => {
+                console.error(`Update failed for ${item.projectId}`, err);
+                return of({ error: true, projectId: item.projectId, message: err.message });
+            })
+        )
+    );
+
+    forkJoin(observables).subscribe({
+        next: (results) => {
+            const successCount = results.filter((r: any) => !r.error).length;
+            this.successMessage = `Batch update completed. Processed ${successCount} projects.`;
+            this.isBatchUpdating = false;
+            this.cdr.markForCheck();
+            setTimeout(() => {
+                this.successMessage = '';
+                this.cdr.markForCheck();
+            }, 5000);
+        },
+        error: (err) => {
+             console.error('Batch update failed', err);
+             this.isBatchUpdating = false;
+             this.cdr.markForCheck();
+        }
+    });
+  }
+
+  analyzeProject(project: BatchProject) {
+    this.analyzingProject = project;
+    this.showAnalyzeModal = true;
+    
+    if (this.analysisResults.has(project.id)) {
+        this.analysisResult = this.analysisResults.get(project.id);
+        console.log('Analysis result:', this.analysisResult);
+        this.isAnalyzing = false;
+        this.cdr.markForCheck();
+    } else {
+        this.analysisResult = null;
+        this.isAnalyzing = true;
+        this.cdr.markForCheck();
+
+        this.projectService.analyzeMediaMatching(project.id).subscribe({
+        next: (result) => {
+            this.analysisResult = result;
+            this.analysisResults.set(project.id, result);
+            this.isAnalyzing = false;
+            this.cdr.markForCheck();
+        },
+        error: (error) => {
+            console.error('Error analyzing project:', error);
+            this.isAnalyzing = false;
+            
+            if (error.status === 402 || error.error?.errorCode === 'INSUFFICIENT_CREDITS') {
+                this.analysisResult = { error: 'Insufficient credits.' };
+                this.showToast('Insufficient credits. Please upgrade your plan.', 'error');
+            } else {
+                this.analysisResult = { error: 'Failed to analyze project.' };
+                this.showToast('Failed to analyze project. Please try again.', 'error');
+            }
+            
+            this.cdr.markForCheck();
+        }
+        });
+    }
+  }
+
+  applyMatchesToProject() {
+      if (!this.analyzingProject || !this.analysisResult || !this.analysisResult.matches) return;
+      
+      const projectId = this.analyzingProject.id;
+      this.isAnalyzing = true; 
+      this.cdr.markForCheck();
+
+      this.projectService.applyMatches(projectId, this.analysisResult.matches).subscribe({
+          next: (res) => {
+              this.successMessage = `Matches applied successfully`;
+              this.closeAnalyzeModal();
+              this.isAnalyzing = false;
+              this.updatingProjectIds.add(projectId);
+              setTimeout(() => {
+                 this.updatingProjectIds.delete(projectId);
+                 this.cdr.markForCheck();
+              }, 2000);
+              this.cdr.markForCheck();
+          },
+          error: (err) => {
+              console.error('Failed to apply matches', err);
+              this.isAnalyzing = false;
+              this.cdr.markForCheck();
+              
+              if (err.status === 402 || err.error?.errorCode === 'INSUFFICIENT_CREDITS') {
+                  this.showToast('Insufficient credits. Please upgrade your plan.', 'error');
+              } else {
+                  this.showToast(`Failed to apply matches: ${err.message || 'Unknown error'}`, 'error');
+              }
+          }
+      });
+  }
+
+  closeAnalyzeModal() {
+    this.showAnalyzeModal = false;
+    this.analyzingProject = null;
+    this.analysisResult = null;
+    this.cdr.markForCheck();
   }
 
   viewProject(project: BatchProject) {
@@ -307,8 +531,12 @@ export class BatchSuccessComponent implements OnInit, OnDestroy {
         console.error(`Failed to update project ${project.id}`, err);
         this.updatingProjectIds.delete(project.id);
         this.cdr.markForCheck();
-        // Ideally show a toast or error message here
-        alert(`Failed to update project: ${err.message || 'Unknown error'}`);
+        
+        if (err.status === 402 || err.error?.errorCode === 'INSUFFICIENT_CREDITS') {
+            this.showToast('Insufficient credits. Please upgrade your plan.', 'error');
+        } else {
+            this.showToast(`Failed to update project: ${err.message || 'Unknown error'}`, 'error');
+        }
       }
     });
   }
@@ -321,6 +549,6 @@ export class BatchSuccessComponent implements OnInit, OnDestroy {
   }
 
   goHome() {
-    this.router.navigate(['/upload']);
+    this.router.navigate(['/dashboard']);
   }
 }

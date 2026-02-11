@@ -31,9 +31,9 @@ Rules:
 
 
 
-    const existing = localStorage.getItem('submagic_system_prompt') || '';
+    const existing = localStorage.getItem('submagic_system_prompt');
     this.promptForm = this.fb.group({
-      systemPrompt: [defaultPrompt ? defaultPrompt : existing]
+      systemPrompt: [existing ? existing : defaultPrompt]
     });
 
   }
@@ -43,12 +43,23 @@ Rules:
     this.saved = false;
     const value = this.promptForm.value.systemPrompt || '';
     localStorage.setItem('submagic_system_prompt', value);
-    this.saving = false;
-    this.saved = true;
+    
+    // Simulate a brief delay for better UX
+    setTimeout(() => {
+      this.saving = false;
+      this.saved = true;
+      this.promptForm.markAsPristine(); // Disable button until next change
+    }, 500);
+  }
+
+  onChange() {
+    if (this.promptForm.pristine) {
+      this.promptForm.markAsDirty();
+    }
   }
 
   goToUpload() {
-    this.router.navigate(['/upload']);
+    this.router.navigate(['/dashboard']);
   }
 }
 

@@ -17,6 +17,7 @@ export interface Project {
   userId?: string;
   error?: string;
   uploadStatus?: 'pending' | 'completed' | 'failed';
+  mediaMatchingStatus?: 'pending' | 'in_progress' | 'completed' | 'completed_no_matches' | 'failed';
   previewUrl?: string;
 }
 
@@ -43,6 +44,10 @@ export interface BatchProject {
   error?: string;
   errorCode?: string;
   createdAt: string;
+  downloadUrl?: string;
+  duration?: number;
+  uploadStatus?: 'pending' | 'completed' | 'failed';
+  mediaMatchingStatus?: 'pending' | 'in_progress' | 'completed' | 'completed_no_matches' | 'failed';
 }
 
 export interface CompletionData {

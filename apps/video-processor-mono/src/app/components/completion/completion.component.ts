@@ -60,7 +60,7 @@ export class CompletionComponent implements OnInit {
   goBack() {
     if (this.fromBatch && this.completionData?.batchId) {
       // Navigate bach with history
-      this.router.navigate(['/batch-success', this.completionData.batchId]);
+      this.router.navigate(['/batch', this.completionData.batchId]);
     } else {
       this.router.navigate(['/dashboard']);
     }

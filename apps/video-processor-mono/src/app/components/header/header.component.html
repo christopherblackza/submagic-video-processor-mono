@@ -1,0 +1,28 @@
+<div class="header">
+  <div class="header-content">
+    <div class="title-group">
+      <h1>{{ title }}</h1>
+      <div class="version" *ngIf="version">v{{ version }}</div>
+    </div>
+    <p class="subtitle" *ngIf="subtitle">{{ subtitle }}</p>
+    <p class="user-email" *ngIf="userEmail">{{ userEmail }}</p>
+  </div>
+  <div class="header-buttons">
+    <button type="button" class="add-video-btn" routerLink="/dashboard" routerLinkActive="active">
+      Dashboard
+    </button>
+    <button type="button" class="add-video-btn" routerLink="/media-library" routerLinkActive="active">
+      Media Library
+    </button> 
+    <button type="button" class="add-video-btn" routerLink="/account" routerLinkActive="active">
+      Account
+    </button>
+    <button type="button" class="add-video-btn" routerLink="/system-prompt" routerLinkActive="active">
+      Prompt
+    </button>
+    <!-- Logout -->
+    <button type="button" class="logout-btn" (click)="logout()">
+      <span class="icon">➜</span> Logout
+    </button>
+  </div>
+</div>

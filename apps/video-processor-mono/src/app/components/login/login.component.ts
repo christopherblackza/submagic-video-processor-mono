@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { environment } from 'apps/video-processor-mono/src/environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -23,10 +24,18 @@ export class LoginComponent {
     private router: Router,
     private route: ActivatedRoute
   ) {
-    this.form = this.fb.group({
-      email: ['christopher.black.sa@gmail.com', [Validators.required, Validators.email]],
-      password: ['JesusFreak25*', [Validators.required, Validators.minLength(6)]]
-    });
+
+    if (environment.production) {
+      this.form = this.fb.group({
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]]
+      });
+    } else {
+      this.form = this.fb.group({
+        email: ['christopher.black.sa@gmail.com', [Validators.required, Validators.email]],
+        password: ['JesusFreak25*', [Validators.required, Validators.minLength(6)]]
+      });
+    }
   }
 
   toggleMode() {
